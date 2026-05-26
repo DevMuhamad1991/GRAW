@@ -89,13 +89,19 @@ function setNav(btn, section) {
 
 // --- Modals ---
 function openProfile() {
-  document.getElementById('profileModal').classList.add('open');
+  const m = document.getElementById('profileModal');
+  m.style.display = 'flex';
+  requestAnimationFrame(() => m.classList.add('open'));
 }
 function openSettings() {
-  document.getElementById('settingsModal').classList.add('open');
+  const m = document.getElementById('settingsModal');
+  m.style.display = 'flex';
+  requestAnimationFrame(() => m.classList.add('open'));
 }
 function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
+  const m = document.getElementById(id);
+  m.classList.remove('open');
+  setTimeout(() => { m.style.display = 'none'; }, 300);
 }
 
 // Close modal on ESC
@@ -166,15 +172,17 @@ document.addEventListener('click', e => {
 document.addEventListener('click', e => {
   if (e.target.classList.contains('logout-btn')) {
     closeModal('settingsModal');
-    setTimeout(() => {
-      showScreen('splash2');
-    }, 300);
+    setTimeout(() => { showScreen('splash2'); }, 350);
   }
 });
 
 // --- INIT ---
 window.addEventListener('DOMContentLoaded', () => {
+  // Make sure all modals are closed on start
+  document.querySelectorAll('.modal').forEach(m => {
+    m.classList.remove('open');
+    m.style.display = 'none';
+  });
   showScreen('splash1');
   startSplash1();
 });
-
