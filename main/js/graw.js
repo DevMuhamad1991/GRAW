@@ -1,1 +1,180 @@
+// ===== GRAW APP JS =====
+
+// --- Game Data ---
+const games = [
+  { name: "Storm Blade",   emoji: "⚔️",  bg: "#FFE0B2", rating: "★ 4.8", players: "8.2K", isNew: true  },
+  { name: "Neon Drift",    emoji: "🏎️",  bg: "#E3F2FD", rating: "★ 4.7", players: "5.1K", isNew: false },
+  { name: "Sky Raid",      emoji: "✈️",  bg: "#F3E5F5", rating: "★ 4.9", players: "11K",  isNew: true  },
+  { name: "Pixel Quest",   emoji: "🕹️",  bg: "#E8F5E9", rating: "★ 4.5", players: "3.4K", isNew: false },
+  { name: "Fire Arena",    emoji: "🔥",  bg: "#FFF3E0", rating: "★ 4.6", players: "6.7K", isNew: false },
+  { name: "Cyber Run",     emoji: "🤖",  bg: "#F0F4FD", rating: "★ 4.8", players: "9.3K", isNew: true  },
+];
+
+// --- Render Game Grid ---
+function renderGames() {
+  const grid = document.getElementById('gameGrid');
+  grid.innerHTML = games.map(g => `
+    <div class="game-card" onclick="playGame('${g.name}')">
+      <div class="game-thumb" style="background:${g.bg}">
+        ${g.emoji}
+        ${g.isNew ? '<span class="game-new-badge">نوێ</span>' : ''}
+      </div>
+      <div class="game-info">
+        <div class="game-name">${g.name}</div>
+        <div class="game-rating">${g.rating} · ${g.players} یاریزان</div>
+        <button class="game-play" onclick="event.stopPropagation(); playGame('${g.name}')">▶ یاریبکە</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// --- Splash 1: Loading Bar ---
+function startSplash1() {
+  const bar = document.getElementById('loadingBar');
+  let pct = 0;
+  const interval = setInterval(() => {
+    pct += Math.random() * 14 + 4;
+    if (pct >= 100) {
+      pct = 100;
+      bar.style.width = '100%';
+      clearInterval(interval);
+      setTimeout(showSplash2, 500);
+    } else {
+      bar.style.width = pct + '%';
+    }
+  }, 120);
+}
+
+// --- Transition Helpers ---
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+    s.style.pointerEvents = 'none';
+  });
+  const target = document.getElementById(id);
+  target.classList.add('active');
+  target.style.pointerEvents = 'all';
+}
+
+function showSplash2() {
+  showScreen('splash2');
+}
+
+function goHome() {
+  showScreen('home');
+  renderGames();
+  animateHomeCards();
+}
+
+// --- Home Animations ---
+function animateHomeCards() {
+  const cards = document.querySelectorAll('.game-card');
+  cards.forEach((c, i) => {
+    c.style.opacity = '0';
+    c.style.transform = 'translateY(24px)';
+    c.style.transition = 'none';
+    setTimeout(() => {
+      c.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      c.style.opacity = '1';
+      c.style.transform = 'translateY(0)';
+    }, 80 + i * 70);
+  });
+}
+
+// --- Navigation ---
+function setNav(btn, section) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// --- Modals ---
+function openProfile() {
+  document.getElementById('profileModal').classList.add('open');
+}
+function openSettings() {
+  document.getElementById('settingsModal').classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// Close modal on ESC
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open'));
+  }
+});
+
+// --- Play Game ---
+function playGame(name) {
+  const toast = document.createElement('div');
+  toast.textContent = `⚡ ${name} دەکرێتەوە...`;
+  Object.assign(toast.style, {
+    position: 'fixed', bottom: '90px', left: '50%',
+    transform: 'translateX(-50%) translateY(20px)',
+    background: '#111', color: '#FFD700',
+    fontFamily: "'Noto Kufi Arabic', 'Cairo', sans-serif",
+    fontSize: '14px', fontWeight: '700',
+    padding: '12px 24px', borderRadius: '50px',
+    zIndex: '999', opacity: '0',
+    transition: 'opacity 0.3s, transform 0.3s',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+    direction: 'rtl', whiteSpace: 'nowrap'
+  });
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+  });
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%) translateY(20px)';
+    setTimeout(() => toast.remove(), 350);
+  }, 2200);
+}
+
+// --- Category Buttons ---
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('cat-btn')) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+  }
+});
+
+// --- Ad CTA ---
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('ad-cta')) {
+    const toast = document.createElement('div');
+    toast.textContent = '🎉 سوپاس! بەم زووانە پەیوەندیت پێ دەکرێت.';
+    Object.assign(toast.style, {
+      position: 'fixed', top: '80px', left: '50%',
+      transform: 'translateX(-50%)',
+      background: '#FFD700', color: '#111',
+      fontFamily: "'Noto Kufi Arabic', 'Cairo', sans-serif",
+      fontSize: '13px', fontWeight: '800',
+      padding: '12px 22px', borderRadius: '50px',
+      zIndex: '999', boxShadow: '0 4px 20px rgba(255,215,0,0.4)',
+      direction: 'rtl', whiteSpace: 'nowrap',
+      animation: 'slideUp 0.3s ease'
+    });
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
+  }
+});
+
+// --- Logout ---
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('logout-btn')) {
+    closeModal('settingsModal');
+    setTimeout(() => {
+      showScreen('splash2');
+    }, 300);
+  }
+});
+
+// --- INIT ---
+window.addEventListener('DOMContentLoaded', () => {
+  showScreen('splash1');
+  startSplash1();
+});
 
