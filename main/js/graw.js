@@ -211,6 +211,13 @@ window.addEventListener('DOMContentLoaded', () => {
     m.classList.remove('open');
     m.style.display = 'none';
   });
-  showScreen('splash1');
-  startSplash1();
+  
+  if(window.location.hash === '#home') {
+    showScreen('home');
+  } else {
+    showScreen('splash1');
+    startSplash1();
+  }
 });
+
+
