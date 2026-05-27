@@ -2,8 +2,8 @@
 <html lang="ku" dir="rtl">
 
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>یاری وشە</title>
 
@@ -23,8 +23,7 @@ font-family:'Noto Sans Arabic',sans-serif;
 }
 
 body{
-background:
-linear-gradient(135deg,#fff7cf 0%,#ffd84d 100%);
+background:linear-gradient(135deg,#fff7cf 0%,#ffd84d 100%);
 min-height:100vh;
 overflow:hidden;
 color:#1b1b1b;
@@ -39,13 +38,13 @@ position:absolute;
 inset:0;
 padding:22px;
 overflow-y:auto;
-animation:fade .45s ease;
+animation:fade .4s ease;
 }
 
 @keyframes fade{
 from{
 opacity:0;
-transform:translateY(25px);
+transform:translateY(20px);
 }
 to{
 opacity:1;
@@ -56,22 +55,21 @@ transform:translateY(0);
 .glass{
 background:rgba(255,255,255,.72);
 backdrop-filter:blur(18px);
-border:1px solid rgba(255,255,255,.55);
+border:1px solid rgba(255,255,255,.5);
 border-radius:28px;
-box-shadow:
-0 10px 35px rgba(0,0,0,.08);
+box-shadow:0 10px 35px rgba(0,0,0,.08);
 }
 
 .title{
-font-size:35px;
+font-size:36px;
 font-weight:800;
 margin-bottom:8px;
 }
 
 .sub{
 opacity:.7;
-margin-bottom:25px;
 font-size:15px;
+margin-bottom:25px;
 }
 
 .input-card{
@@ -96,7 +94,6 @@ border-radius:18px;
 padding:0 18px;
 font-size:16px;
 background:#fff;
-box-shadow:inset 0 2px 10px rgba(0,0,0,.05);
 }
 
 .players-box{
@@ -113,18 +110,6 @@ gap:14px;
 padding:12px;
 background:#fff;
 border-radius:20px;
-animation:pop .35s ease;
-}
-
-@keyframes pop{
-from{
-transform:scale(.7);
-opacity:0;
-}
-to{
-transform:scale(1);
-opacity:1;
-}
 }
 
 .avatar{
@@ -151,23 +136,20 @@ font-weight:700;
 .add-btn{
 height:58px;
 border:none;
-border-radius:18px;
 padding:0 22px;
+border-radius:18px;
 background:#111;
 color:#fff;
 font-size:16px;
 font-weight:800;
 cursor:pointer;
-transition:.25s;
 }
 
-.add-btn:active{
-transform:scale(.96);
-}
-
-.start-btn{
+.start-btn,
+.play-btn,
+.restart-btn{
 width:100%;
-height:68px;
+height:66px;
 border:none;
 border-radius:24px;
 margin-top:22px;
@@ -176,46 +158,11 @@ font-weight:800;
 cursor:pointer;
 background:linear-gradient(135deg,#ffd400,#ffbc00);
 color:#111;
-box-shadow:
-0 15px 30px rgba(255,200,0,.45);
-transition:.3s;
 }
 
-.start-btn:active{
-transform:scale(.97);
-}
-
-.ad-card{
-padding:18px;
-margin-top:20px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:15px;
-}
-
-.ad-img{
-width:78px;
-height:78px;
-border-radius:22px;
-overflow:hidden;
-background:#fff;
-}
-
-.ad-img img{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-.ad-info h3{
-font-size:19px;
-margin-bottom:5px;
-}
-
-.ad-info p{
-font-size:14px;
-opacity:.7;
+.dark-btn{
+background:#111;
+color:#fff;
 }
 
 .category-grid{
@@ -232,16 +179,12 @@ position:relative;
 overflow:hidden;
 min-height:170px;
 cursor:pointer;
-transition:.35s;
-}
-
-.category:hover{
-transform:translateY(-7px);
+transition:.3s;
 }
 
 .category.active{
 outline:4px solid #111;
-transform:translateY(-7px) scale(1.03);
+transform:scale(1.03);
 }
 
 .category h2{
@@ -260,7 +203,7 @@ position:absolute;
 bottom:-10px;
 left:-10px;
 width:95px;
-opacity:.14;
+opacity:.12;
 }
 
 .cat1{background:#fff4ba;}
@@ -283,15 +226,11 @@ font-size:14px;
 font-weight:700;
 }
 
-.turn-box{
-text-align:center;
-padding-top:15px;
-}
-
 .player-turn{
-font-size:29px;
+font-size:30px;
 font-weight:800;
-margin-bottom:10px;
+text-align:center;
+margin-bottom:25px;
 }
 
 .player-turn span{
@@ -301,20 +240,19 @@ color:#b88600;
 .card-area{
 display:flex;
 justify-content:center;
-margin-top:35px;
 perspective:1200px;
 }
 
 .word-card{
-width:270px;
-height:370px;
+width:280px;
+height:380px;
 position:relative;
 transform-style:preserve-3d;
 transition:1s;
 }
 
 .word-card.flip{
-transform:rotateY(180deg) translateY(-14px);
+transform:rotateY(180deg);
 }
 
 .card-face{
@@ -326,18 +264,15 @@ backface-visibility:hidden;
 display:flex;
 flex-direction:column;
 justify-content:space-between;
-box-shadow:
-0 18px 40px rgba(0,0,0,.12);
+box-shadow:0 18px 40px rgba(0,0,0,.12);
 }
 
 .card-front{
-background:
-linear-gradient(145deg,#fff,#ffe68b);
+background:linear-gradient(145deg,#fff,#ffe68b);
 }
 
 .card-back{
-background:
-linear-gradient(145deg,#111,#2b2b2b);
+background:linear-gradient(145deg,#111,#2b2b2b);
 color:#fff;
 transform:rotateY(180deg);
 }
@@ -354,7 +289,6 @@ height:74px;
 border-radius:50%;
 overflow:hidden;
 background:#fff;
-border:3px solid rgba(255,255,255,.4);
 }
 
 .avatar-big img{
@@ -377,32 +311,18 @@ opacity:.7;
 font-weight:700;
 }
 
-.hold-text{
-animation:pulse 1.3s infinite;
-}
-
-@keyframes pulse{
-0%,100%{
-opacity:.4;
-}
-50%{
-opacity:1;
-}
-}
-
 .next-btn{
 width:100%;
 height:66px;
 border:none;
 border-radius:24px;
-margin-top:35px;
+margin-top:30px;
 font-size:20px;
 font-weight:800;
 background:#111;
 color:#fff;
 opacity:.35;
 pointer-events:none;
-transition:.4s;
 }
 
 .next-btn.active{
@@ -411,22 +331,10 @@ pointer-events:auto;
 }
 
 .start-player-box{
-margin-top:80px;
 padding:35px 25px;
-text-align:center;
 border-radius:35px;
-animation:fadeScale .6s ease;
-}
-
-@keyframes fadeScale{
-from{
-opacity:0;
-transform:scale(.8);
-}
-to{
-opacity:1;
-transform:scale(1);
-}
+text-align:center;
+margin-top:50px;
 }
 
 .start-avatar{
@@ -436,7 +344,6 @@ border-radius:50%;
 overflow:hidden;
 margin:auto;
 border:6px solid #fff;
-box-shadow:0 15px 35px rgba(0,0,0,.15);
 }
 
 .start-avatar img{
@@ -448,7 +355,7 @@ object-fit:cover;
 .start-name{
 font-size:40px;
 font-weight:800;
-margin-top:24px;
+margin-top:20px;
 }
 
 .start-text{
@@ -457,13 +364,18 @@ opacity:.7;
 margin-top:8px;
 }
 
+.timer{
+font-size:72px;
+font-weight:800;
+margin-top:25px;
+text-align:center;
+}
 
 .timer-controls{
 display:flex;
 justify-content:center;
 gap:18px;
 margin-top:30px;
-animation:fade .4s ease;
 }
 
 .icon-btn{
@@ -472,17 +384,10 @@ height:70px;
 border:none;
 border-radius:24px;
 background:#fff;
+cursor:pointer;
 display:flex;
 align-items:center;
 justify-content:center;
-cursor:pointer;
-transition:.25s;
-box-shadow:
-0 10px 25px rgba(0,0,0,.08);
-}
-
-.icon-btn:active{
-transform:scale(.92);
 }
 
 .icon-btn svg{
@@ -499,59 +404,32 @@ background:#111;
 fill:#fff;
 }
 
-.timer.paused{
-opacity:.4;
-transform:scale(.96);
-}
-
-
-
-.play-btn{
-width:100%;
-height:66px;
-border:none;
-border-radius:24px;
-background:linear-gradient(135deg,#ffd400,#ffbc00);
-font-size:22px;
-font-weight:800;
-margin-top:28px;
-cursor:pointer;
-}
-
-.timer{
+.result-box{
+padding:25px;
 margin-top:25px;
-font-size:72px;
-font-weight:800;
 text-align:center;
 }
 
-.sound-wave{
+.spy-list{
+margin-top:20px;
 display:flex;
-justify-content:center;
-gap:5px;
-margin-top:18px;
+flex-direction:column;
+gap:12px;
 }
 
-.bar{
-width:6px;
-height:24px;
-background:#111;
-border-radius:10px;
-animation:sound 1s infinite ease-in-out;
+.spy-item{
+padding:14px;
+border-radius:18px;
+background:#fff;
+font-size:18px;
+font-weight:800;
 }
 
-.bar:nth-child(2){animation-delay:.1s}
-.bar:nth-child(3){animation-delay:.2s}
-.bar:nth-child(4){animation-delay:.3s}
-.bar:nth-child(5){animation-delay:.4s}
-
-@keyframes sound{
-0%,100%{
-height:12px;
-}
-50%{
-height:42px;
-}
+.end-buttons{
+display:flex;
+flex-direction:column;
+gap:14px;
+margin-top:25px;
 }
 
 </style>
@@ -573,9 +451,7 @@ height:42px;
 
 <div class="glass input-card">
 
-<label>
-ناوی یاریزانەکان
-</label>
+<label>ناوی یاریزانەکان</label>
 
 <div style="display:flex;gap:10px;">
 
@@ -585,71 +461,50 @@ placeholder="ناوی یاریزان">
 
 <button class="add-btn"
 onclick="addPlayer()">
+
 زیادکردن
+
 </button>
 
 </div>
 
 <div class="players-box"
-id="playersBox">
-</div>
+id="playersBox"></div>
 
 </div>
 
 <div class="glass input-card">
 
-<label>
-ژمارەی سیخورەکان
-</label>
+<label>ژمارەی سیخور</label>
 
 <select id="spyCount">
+
 <option value="1">1 سیخور</option>
 <option value="2">2 سیخور</option>
 <option value="3">3 سیخور</option>
+
 </select>
 
 <br><br>
 
-<label>
-ئاماژەی بە سیخور بکرێت؟
-</label>
-
-<select id="showHint">
-<option value="yes">بەڵێ</option>
-<option value="no">نەخێر</option>
-</select>
-
-<br><br>
-
-<label>
-کاتی یاری
-</label>
+<label>کاتی یاری</label>
 
 <select id="gameTime">
+
 <option value="60">1 خولەک</option>
 <option value="120">2 خولەک</option>
 <option value="180">3 خولەک</option>
 <option value="300">5 خولەک</option>
+
 </select>
-
-</div>
-
-<div class="glass ad-card">
-
-<div class="ad-info">
-<h3>Premium Cards</h3>
-<p>کارت و وشەی زیاتر</p>
-</div>
-
-<div class="ad-img">
-<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Premium">
-</div>
 
 </div>
 
 <button class="start-btn"
 onclick="goCategory()">
+
 دەستپێکردنی یاری
+
 </button>
 
 </section>
@@ -660,11 +515,11 @@ onclick="goCategory()">
 id="screen2">
 
 <div class="title">
-کەتەگۆری وشە
+کەتەگۆری
 </div>
 
 <div class="sub">
-دەتوانیت زیاتر لە یەک کەتەگۆری هەڵبژێریت
+لانیکەم یەک کەتەگۆری هەڵبژێرە
 </div>
 
 <div class="category-grid">
@@ -674,9 +529,7 @@ onclick="selectCategory(this,'Movies')">
 
 <h2>فیلم</h2>
 
-<p>
-فیلم و دراما و ئەکتەرە ناسراوەکان
-</p>
+<p>فیلم و دراما</p>
 
 <img src="https://cdn-icons-png.flaticon.com/512/2503/2503508.png">
 
@@ -687,9 +540,7 @@ onclick="selectCategory(this,'Countries')">
 
 <h2>وڵات</h2>
 
-<p>
-شار و وڵات و شوێنی ناسراو
-</p>
+<p>شار و وڵات</p>
 
 <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png">
 
@@ -700,9 +551,7 @@ onclick="selectCategory(this,'Food')">
 
 <h2>خواردن</h2>
 
-<p>
-خواردن و خواردنەوە و شیرینی
-</p>
+<p>خواردن و شیرینی</p>
 
 <img src="https://cdn-icons-png.flaticon.com/512/5787/5787016.png">
 
@@ -713,9 +562,7 @@ onclick="selectCategory(this,'Games')">
 
 <h2>یاری</h2>
 
-<p>
-ناوی یاری و کاراکتەرەکان
-</p>
+<p>ناوی یارییەکان</p>
 
 <img src="https://cdn-icons-png.flaticon.com/512/686/686589.png">
 
@@ -725,7 +572,9 @@ onclick="selectCategory(this,'Games')">
 
 <button class="start-btn"
 onclick="startCards()">
+
 بەردەوامبە
+
 </button>
 
 </section>
@@ -738,20 +587,18 @@ id="screen3">
 <div class="top-status">
 
 <div class="badge"
-id="playerCounter">
-</div>
+id="playerCounter"></div>
 
 <div class="badge"
-id="categoryBadge">
-</div>
+id="categoryBadge"></div>
 
 </div>
-
-<div class="turn-box">
 
 <div class="player-turn">
+
 کارتی
 <span id="turnPlayer"></span>
+
 </div>
 
 <div class="card-area">
@@ -763,13 +610,10 @@ id="wordCard">
 
 <div class="card-top">
 
-<div>
-کارت
-</div>
+<div>کارت</div>
 
 <div class="avatar-big"
-id="avatarFront">
-</div>
+id="avatarFront"></div>
 
 </div>
 
@@ -777,7 +621,7 @@ id="avatarFront">
 ؟
 </div>
 
-<div class="card-hint hold-text">
+<div class="card-hint">
 دەستت لەسەر کارتەکە راگرە
 </div>
 
@@ -787,20 +631,15 @@ id="avatarFront">
 
 <div class="card-top">
 
-<div id="roleText">
-Player
-</div>
+<div id="roleText"></div>
 
 <div class="avatar-big"
-id="avatarBack">
-</div>
+id="avatarBack"></div>
 
 </div>
 
 <div class="secret-word"
-id="secretWord">
-WORD
-</div>
+id="secretWord"></div>
 
 <div class="card-hint">
 وشەکە لەبیر بگرە
@@ -820,11 +659,9 @@ onclick="nextPlayer()">
 
 </button>
 
-</div>
-
 </section>
 
-<!-- SCREEN 4 ـەکە بەم شێوەیە بگۆڕە -->
+<!-- SCREEN 4 -->
 
 <section class="screen hidden"
 id="screen4">
@@ -836,42 +673,37 @@ id="screen4">
 <div class="glass start-player-box">
 
 <div class="start-avatar">
+
 <img id="starterAvatar" src="">
+
 </div>
 
 <div class="start-name"
-id="starterName">
-Player
-</div>
+id="starterName"></div>
 
 <div class="start-text">
-تۆ سەرەتا دەست پێ بکە
+تۆ دەست پێ بکە
 </div>
-
-<!-- START BUTTON -->
 
 <button class="play-btn"
 id="startRoundBtn"
 onclick="startTimer()">
 
-باشە
+دەستپێکردنی خول
 
 </button>
 
-<!-- TIMER -->
-
 <div class="timer"
 id="timer">
-00:00
-</div>
 
-<!-- CONTROL BUTTONS -->
+00:00
+
+</div>
 
 <div class="timer-controls hidden"
 id="timerControls">
 
 <button class="icon-btn"
-id="pauseBtn"
 onclick="togglePause()">
 
 <svg viewBox="0 0 24 24">
@@ -901,21 +733,49 @@ onclick="restartTimer()">
 
 </div>
 
-<div class="sound-wave">
+</div>
 
-<div class="bar"></div>
-<div class="bar"></div>
-<div class="bar"></div>
-<div class="bar"></div>
-<div class="bar"></div>
+</section>
+
+<!-- SCREEN 5 -->
+
+<section class="screen hidden"
+id="screen5">
+
+<div class="title">
+کۆتایی خول
+</div>
+
+<div class="glass result-box">
+
+<h2>
+سیخورەکان
+</h2>
+
+<div class="spy-list"
+id="spyList"></div>
+
+<div class="end-buttons">
+
+<button class="restart-btn"
+onclick="playAgain()">
+
+دووبارە یاری بکەن بە وشەی تازە
+
+</button>
+
+<button class="restart-btn dark-btn"
+onclick="resetAll()">
+
+یاریزانە نوێکان تۆمار بکە
+
+</button>
 
 </div>
 
 </div>
 
 </section>
-
-<!-- تەنها ئەم SCRIPT ـەی خوارەوە دابنێ لەجیاتی SCRIPT ـی پێشوو -->
 
 <script>
 
@@ -942,9 +802,7 @@ Movies:[
 "Titanic",
 "Joker",
 "Batman",
-"Gladiator",
-"Venom",
-"Frozen"
+"Venom"
 ],
 
 Countries:[
@@ -952,9 +810,6 @@ Countries:[
 "Japan",
 "Brazil",
 "France",
-"Canada",
-"Spain",
-"Egypt",
 "Italy"
 ],
 
@@ -962,22 +817,16 @@ Food:[
 "Burger",
 "Pizza",
 "Kebab",
-"Pasta",
-"Shawarma",
 "Cake",
-"Pepsi",
-"Steak"
+"Pasta"
 ],
 
 Games:[
 "Minecraft",
 "PUBG",
+"Valorant",
 "FIFA",
-"Roblox",
-"Fortnite",
-"Free Fire",
-"Call Of Duty",
-"Valorant"
+"Fortnite"
 ]
 
 };
@@ -986,14 +835,26 @@ let players = [];
 let selectedCategories = [];
 let selectedCategory = "";
 let currentIndex = 0;
-
 let spyIndexes = [];
 let gameWord = "";
 
 let holdTimer;
 let cardOpened = false;
 
+let timerInterval;
+let currentTime = 0;
 let timerStarted = false;
+let isPaused = false;
+
+function showScreen(id){
+
+document.querySelectorAll(".screen")
+.forEach(s=>s.classList.add("hidden"));
+
+document.getElementById(id)
+.classList.remove("hidden");
+
+}
 
 function addPlayer(){
 
@@ -1058,11 +919,7 @@ return;
 
 }
 
-document.getElementById("screen1")
-.classList.add("hidden");
-
-document.getElementById("screen2")
-.classList.remove("hidden");
+showScreen("screen2");
 
 }
 
@@ -1083,21 +940,11 @@ selectedCategories.push(cat);
 
 }
 
-function startCards(){
-
-if(selectedCategories.length == 0){
-
-alert("لانیکەم یەک کەتەگۆری هەڵبژێرە");
-return;
-
-}
+function prepareGame(){
 
 const randomCategory =
 selectedCategories[
-Math.floor(
-Math.random() *
-selectedCategories.length
-)
+Math.floor(Math.random()*selectedCategories.length)
 ];
 
 selectedCategory = randomCategory;
@@ -1107,10 +954,7 @@ words[randomCategory];
 
 gameWord =
 randomWords[
-Math.floor(
-Math.random() *
-randomWords.length
-)
+Math.floor(Math.random()*randomWords.length)
 ];
 
 const spyCount =
@@ -1135,158 +979,31 @@ spyIndexes.push(rand);
 
 currentIndex = 0;
 
-document.getElementById("screen2")
-.classList.add("hidden");
+}
 
-document.getElementById("screen3")
-.classList.remove("hidden");
+function startCards(){
+
+if(selectedCategories.length == 0){
+
+alert("لانیکەم یەک کەتەگۆری هەڵبژێرە");
+return;
+
+}
+
+prepareGame();
+
+showScreen("screen3");
 
 showPlayer();
 
 }
 
-let timerInterval;
-let currentTime = 0;
-let isPaused = false;
-
-function startTimer(){
-
-if(timerStarted) return;
-
-timerStarted = true;
-
-document.getElementById("startRoundBtn")
-.classList.add("hidden");
-
-document.getElementById("timerControls")
-.classList.remove("hidden");
-
-currentTime =
-parseInt(
-document.getElementById("gameTime").value
-);
-
-updateTimer(currentTime);
-
-const beep = new Audio(
-"https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
-);
-
-timerInterval = setInterval(()=>{
-
-if(isPaused) return;
-
-currentTime--;
-
-beep.currentTime = 0;
-beep.play();
-
-updateTimer(currentTime);
-
-if(currentTime <= 0){
-
-clearInterval(timerInterval);
-
-document.getElementById("timer")
-.innerText = "END";
-
-document.getElementById("timer")
-.style.color = "#d60000";
-
-}
-
-},1000);
-
-}
-
-function togglePause(){
-
-isPaused = !isPaused;
-
-const timer =
-document.getElementById("timer");
-
-const pauseBtn =
-document.getElementById("pauseBtn");
-
-if(isPaused){
-
-timer.classList.add("paused");
-
-pauseBtn.innerHTML = `
-
-<svg viewBox="0 0 24 24">
-<path d="M8 5v14l11-7z"/>
-</svg>
-
-`;
-
-}else{
-
-timer.classList.remove("paused");
-
-pauseBtn.innerHTML = `
-
-<svg viewBox="0 0 24 24">
-<rect x="6" y="4" width="4" height="16"/>
-<rect x="14" y="4" width="4" height="16"/>
-</svg>
-
-`;
-
-}
-
-}
-
-function finishRound(){
-
-clearInterval(timerInterval);
-
-document.getElementById("timer")
-.innerText = "END";
-
-document.getElementById("timer")
-.style.color = "#d60000";
-
-}
-
-function restartTimer(){
-
-clearInterval(timerInterval);
-
-timerStarted = false;
-
-isPaused = false;
-
-document.getElementById("timer")
-.style.color = "#111";
-
-document.getElementById("timer")
-.classList.remove("paused");
-
-document.getElementById("pauseBtn").innerHTML = `
-
-<svg viewBox="0 0 24 24">
-<rect x="6" y="4" width="4" height="16"/>
-<rect x="14" y="4" width="4" height="16"/>
-</svg>
-
-`;
-
-startTimer();
-
-}
-
-
-
 function showPlayer(){
 
 cardOpened = false;
 
-const card =
-document.getElementById("wordCard");
-
-card.classList.remove("flip");
+document.getElementById("wordCard")
+.classList.remove("flip");
 
 document.getElementById("nextBtn")
 .classList.remove("active");
@@ -1347,8 +1064,6 @@ document.getElementById("wordCard")
 
 function closeCard(){
 
-cardOpened = false;
-
 document.getElementById("wordCard")
 .classList.remove("flip");
 
@@ -1362,11 +1077,7 @@ document.getElementById("wordCard");
 
 card.addEventListener("touchstart",()=>{
 
-holdTimer = setTimeout(()=>{
-
-openCard();
-
-},250);
+holdTimer = setTimeout(openCard,250);
 
 });
 
@@ -1380,11 +1091,7 @@ closeCard();
 
 card.addEventListener("mousedown",()=>{
 
-holdTimer = setTimeout(()=>{
-
-openCard();
-
-},250);
+holdTimer = setTimeout(openCard,250);
 
 });
 
@@ -1410,22 +1117,7 @@ currentIndex++;
 
 if(currentIndex >= players.length){
 
-document.getElementById("screen3")
-.classList.add("hidden");
-
-document.getElementById("screen4")
-.classList.remove("hidden");
-
-const starter =
-Math.floor(Math.random()*players.length);
-
-document.getElementById("starterName")
-.innerText =
-players[starter];
-
-document.getElementById("starterAvatar")
-.src =
-avatars[starter % avatars.length];
+showStarter();
 
 return;
 
@@ -1435,42 +1127,109 @@ showPlayer();
 
 }
 
+function showStarter(){
+
+showScreen("screen4");
+
+const starter =
+Math.floor(Math.random()*players.length);
+
+document.getElementById("starterName")
+.innerText = players[starter];
+
+document.getElementById("starterAvatar")
+.src =
+avatars[starter % avatars.length];
+
+resetTimerUI();
+
+}
+
+function resetTimerUI(){
+
+clearInterval(timerInterval);
+
+timerStarted = false;
+isPaused = false;
+
+document.getElementById("timer")
+.innerText = "00:00";
+
+document.getElementById("timer")
+.style.color = "#111";
+
+document.getElementById("startRoundBtn")
+.classList.remove("hidden");
+
+document.getElementById("timerControls")
+.classList.add("hidden");
+
+}
+
 function startTimer(){
 
 if(timerStarted) return;
 
 timerStarted = true;
 
-let time =
+document.getElementById("startRoundBtn")
+.classList.add("hidden");
+
+document.getElementById("timerControls")
+.classList.remove("hidden");
+
+currentTime =
 parseInt(
 document.getElementById("gameTime").value
 );
 
-updateTimer(time);
+updateTimer(currentTime);
 
-const beep = new Audio(
-"https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
-);
+timerInterval = setInterval(()=>{
 
-const interval = setInterval(()=>{
+if(isPaused) return;
 
-time--;
+currentTime--;
 
-beep.currentTime = 0;
-beep.play();
+updateTimer(currentTime);
 
-updateTimer(time);
+if(currentTime <= 0){
 
-if(time <= 0){
-
-clearInterval(interval);
-
-document.getElementById("timer")
-.innerText = "END";
+finishRound();
 
 }
 
 },1000);
+
+}
+
+function togglePause(){
+
+isPaused = !isPaused;
+
+}
+
+function restartTimer(){
+
+clearInterval(timerInterval);
+
+timerStarted = false;
+
+startTimer();
+
+}
+
+function finishRound(){
+
+clearInterval(timerInterval);
+
+document.getElementById("timer")
+.innerText = "END";
+
+document.getElementById("timer")
+.style.color = "#d60000";
+
+showResults();
 
 }
 
@@ -1489,6 +1248,59 @@ const s =
 document.getElementById("timer")
 .innerText =
 `${m}:${s}`;
+
+}
+
+function showResults(){
+
+showScreen("screen5");
+
+const list =
+document.getElementById("spyList");
+
+list.innerHTML = "";
+
+spyIndexes.forEach(i=>{
+
+list.innerHTML += `
+
+<div class="spy-item">
+
+${players[i]}
+
+</div>
+
+`;
+
+});
+
+}
+
+function playAgain(){
+
+prepareGame();
+
+showScreen("screen3");
+
+showPlayer();
+
+}
+
+function resetAll(){
+
+players = [];
+selectedCategories = [];
+selectedCategory = "";
+currentIndex = 0;
+spyIndexes = [];
+
+document.getElementById("playersBox")
+.innerHTML = "";
+
+document.querySelectorAll(".category")
+.forEach(c=>c.classList.remove("active"));
+
+showScreen("screen1");
 
 }
 
