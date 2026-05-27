@@ -216,7 +216,7 @@
  });
 
 document.getElementById('graw-leave').addEventListener('click', () => {
-   window.location.href = '../../index.html';
+   window.location.href = '../../index.html#home';
 });
 
 })();
