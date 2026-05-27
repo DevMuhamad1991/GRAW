@@ -1,6 +1,6 @@
 const games = [
   { name: "Storm Blade",   emoji: "⚔️",  bg: "#FFE0B2", rating: "★ 4.8", players: "8.2K", isNew: true  },
-  { name: "Neon Drift",    emoji: "🏎️",  bg: "#E3F2FD", rating: "★ 4.7", players: "5.1K", isNew: false },
+{ name: "Neon Drift",    emoji: "🏎️",  bg: "#E3F2FD", rating: "★ 4.7", players: "5.1K", isNew: false, page: "main/game/tower.html" },
   { name: "Sky Raid",      emoji: "✈️",  bg: "#F3E5F5", rating: "★ 4.9", players: "11K",  isNew: true  },
   { name: "Pixel Quest",   emoji: "🕹️",  bg: "#E8F5E9", rating: "★ 4.5", players: "3.4K", isNew: false },
   { name: "Fire Arena",    emoji: "🔥",  bg: "#FFF3E0", rating: "★ 4.6", players: "6.7K", isNew: false },
@@ -104,6 +104,12 @@ document.addEventListener('keydown', e => {
 });
 
 function playGame(name) {
+  const game = games.find(g => g.name === name);
+  if (game && game.page) {
+    window.location.href = game.page;
+    return;
+  }
+
   const toast = document.createElement('div');
   toast.textContent = `⚡ ${name} دەکرێتەوە...`;
   Object.assign(toast.style, {
@@ -129,6 +135,7 @@ function playGame(name) {
     setTimeout(() => toast.remove(), 350);
   }, 2200);
 }
+
 
 document.addEventListener('click', e => {
   if (e.target.classList.contains('cat-btn')) {
