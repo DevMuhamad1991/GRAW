@@ -126,7 +126,7 @@ if (game && game.page) {
       toast.style.transform = 'translateX(-50%) translateY(0)';
     });
     setTimeout(() => {
-      window.location.href = game.page;
+      window.location.replace(game.page);
     }, 900);
     return;
   }
