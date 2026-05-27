@@ -178,7 +178,7 @@
          <line x1="21" y1="12" x2="9" y2="12"/>
        </svg>
      </div>
-     <div id="graw-confirm-title">دڵنیای لە چوونەدەر؟</div>
+     <div id="graw-confirm-title">جێهێشتنی یاری؟</div>
      <div id="graw-confirm-desc">
        ئەگەر بچیتە دەرەوە<br/>
        <span>هەموو خەڵەکانت لە دەست دەچێت!</span>
@@ -188,7 +188,7 @@
          <svg viewBox="0 0 24 24" fill="none" stroke="#4CD964" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
            <polyline points="20 6 9 17 4 12"/>
          </svg>
-         مامبە
+         گەڕانەوە
        </button>
        <button class="graw-btn-leave" id="graw-leave">
          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -196,7 +196,7 @@
            <polyline points="16 17 21 12 16 7"/>
            <line x1="21" y1="12" x2="9" y2="12"/>
          </svg>
-         چوونەدەر
+         جێهێشتن
        </button>
      </div>
    </div>
