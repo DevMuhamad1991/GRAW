@@ -1,10 +1,10 @@
 const games = [
   { name: "سیخوڕ",   img: "main/img/sexur.png",  bg: "#FFE0B2", rating: "★ 4.8", players: "8.2K", isNew: true, page: "main/game/sexur.html"  },
-{ name: "قەڵا",    img: "main/img/qala.png",  bg: "#E3F2FD", rating: "★ 4.7", players: "5.1K", isNew: false, page: "main/game/towerv2.html" },
-  { name: "Sky Raid",      emoji: "✈️",  bg: "#F3E5F5", rating: "★ 4.9", players: "11K",  isNew: true  },
-  { name: "Pixel Quest",   emoji: "🕹️",  bg: "#E8F5E9", rating: "★ 4.5", players: "3.4K", isNew: false },
-  { name: "Fire Arena",    emoji: "🔥",  bg: "#FFF3E0", rating: "★ 4.6", players: "6.7K", isNew: false },
-  { name: "Cyber Run",     emoji: "🤖",  bg: "#F0F4FD", rating: "★ 4.8", players: "9.3K", isNew: true  },
+{ name: "قەڵا",    img: "main/img/qala.png",  bg: "#E3F2FD", rating: "★ 4.7", players: "5.1K", isNew: true, page: "main/game/towerv2.html" },
+  { name: "بەمزووانە ",      emoji: "✈️",  bg: "#F3E5F5", rating: "★ 4.9", players: "11K",  isNew: false  },
+  { name: "بەمزووانە",   emoji: "🕹️",  bg: "#E8F5E9", rating: "★ 4.5", players: "3.4K", isNew: false },
+  { name: "بەمزووانە",    emoji: "🔥",  bg: "#FFF3E0", rating: "★ 4.6", players: "6.7K", isNew: false },
+  { name: "بەمزووانە",     emoji: "🤖",  bg: "#F0F4FD", rating: "★ 4.8", players: "9.3K", isNew: false  },
 ];
 
 function renderGames() {
@@ -183,7 +183,7 @@ document.addEventListener('click', e => {
 document.addEventListener('click', e => {
   if (e.target.classList.contains('ad-cta')) {
     const toast = document.createElement('div');
-    toast.textContent = '🎉 سوپاس! بەم زووانە پەیوەندیت پێ دەکرێت.';
+    toast.textContent = '🎉 بەمزووانە';
     Object.assign(toast.style, {
       position: 'fixed', top: '80px', left: '50%',
       transform: 'translateX(-50%)',
