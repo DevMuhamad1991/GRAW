@@ -18,38 +18,32 @@ body{background:linear-gradient(135deg,#fff7cf 0%,#ffd84d 100%);min-height:100vh
 .sub{font-size:15px;opacity:.7;margin-bottom:25px;}
 .input-card{padding:22px;margin-bottom:18px;}
 label{display:block;margin-bottom:10px;font-weight:700;font-size:15px;}
-input,select{width:100%;height:58px;border:none;outline:none;border-radius:18px;padding:0 18px;font-size:16px;background:#fff;}
+input,select{width:100%;height:58px;border:none;outline:none;border-radius:18px;padding:0 18px;font-size:16px;background:#fff;transition:box-shadow .2s;}
+input:focus{box-shadow:0 0 0 3px rgba(255,188,0,.4);}
 .players-box{display:flex;flex-direction:column;gap:12px;margin-top:15px;}
-.player-item{display:flex;align-items:center;gap:14px;padding:12px;background:#fff;border-radius:20px;}
+.player-item{display:flex;align-items:center;gap:14px;padding:12px;background:#fff;border-radius:20px;animation:slideIn .3s ease;}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0);}}
 .avatar{width:56px;height:56px;border-radius:50%;overflow:hidden;border:3px solid #ffe066;background:#fff;flex-shrink:0;}
 .avatar img{width:100%;height:100%;object-fit:cover;}
 .player-name{font-size:17px;font-weight:700;}
 
-/* FIX 2: Remove button with visible X */
-.remove-player{
-  margin-right:auto;
-  width:42px;
-  height:42px;
-  border:none;
-  border-radius:14px;
-  background:#ff4d4d;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-  font-weight:900;
-  color:#fff;
-  line-height:1;
-  flex-shrink:0;
+/* ── Universal spring-press for every button ── */
+button{
+  -webkit-tap-highlight-color:transparent;
+  transition:
+    transform .22s cubic-bezier(.34,1.56,.64,1),
+    box-shadow .22s ease,
+    background .15s ease,
+    opacity .22s ease;
 }
-
+button:active{ transform:scale(.88) !important; }
 .add-btn{height:58px;padding:0 22px;border:none;border-radius:18px;background:#111;color:#fff;font-size:16px;font-weight:800;cursor:pointer;}
-.start-btn,.play-btn,.restart-btn{width:100%;height:66px;border:none;border-radius:24px;margin-top:22px;font-size:20px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#ffd400,#ffbc00);color:#111;}
-.dark-btn{background:#111;color:#fff;}
+.start-btn,.play-btn,.restart-btn{width:100%;height:66px;border:none;border-radius:24px;margin-top:22px;font-size:20px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#ffd400,#ffbc00);color:#111;box-shadow:0 6px 20px rgba(255,188,0,.35);}
+.dark-btn{background:#111;color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.18);}
 .category-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:20px;}
-.category{padding:20px;border-radius:28px;position:relative;overflow:hidden;min-height:170px;cursor:pointer;transition:.3s;}
-.category.active{outline:4px solid #111;transform:scale(1.03);}
+.category{padding:20px;border-radius:28px;position:relative;overflow:hidden;min-height:170px;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1), outline .15s, box-shadow .2s;}
+.category:active{transform:scale(.96);}
+.category.active{outline:4px solid #111;transform:scale(1.03);box-shadow:0 10px 30px rgba(0,0,0,.12);}
 .category h2{font-size:23px;margin-bottom:10px;}
 .category p{font-size:14px;line-height:1.8;opacity:.7;}
 .category img{position:absolute;bottom:-10px;left:-10px;width:95px;opacity:.12;}
@@ -69,23 +63,23 @@ input,select{width:100%;height:58px;border:none;outline:none;border-radius:18px;
 .avatar-big img{width:100%;height:100%;object-fit:cover;}
 .secret-word{font-size:34px;font-weight:800;text-align:center;line-height:1.5;}
 .card-hint{text-align:center;font-size:15px;opacity:.7;font-weight:700;}
-.next-btn{width:100%;height:66px;border:none;border-radius:24px;margin-top:30px;font-size:20px;font-weight:800;background:#111;color:#fff;opacity:.35;pointer-events:none;}
-.next-btn.active{opacity:1;pointer-events:auto;}
+.next-btn{width:100%;height:66px;border:none;border-radius:24px;margin-top:30px;font-size:20px;font-weight:800;background:#111;color:#fff;opacity:.35;pointer-events:none;transition:opacity .3s,transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s;}
+.next-btn.active{opacity:1;pointer-events:auto;box-shadow:0 6px 20px rgba(0,0,0,.18);}
 .start-player-box{padding:35px 25px;border-radius:35px;text-align:center;margin-top:50px;}
 .start-avatar{width:130px;height:130px;border-radius:50%;overflow:hidden;margin:auto;border:6px solid #fff;}
 .start-avatar img{width:100%;height:100%;object-fit:cover;}
 .start-name{font-size:40px;font-weight:800;margin-top:20px;}
 .start-text{font-size:20px;opacity:.7;margin-top:8px;}
-.timer{font-size:72px;font-weight:800;margin-top:25px;text-align:center;}
+.timer{font-size:72px;font-weight:800;margin-top:25px;text-align:center;transition:color .3s;}
 .timer-controls{display:flex;justify-content:center;gap:18px;margin-top:30px;}
-.icon-btn{width:70px;height:70px;border:none;border-radius:24px;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.icon-btn{width:70px;height:70px;border:none;border-radius:24px;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.08);}
 .icon-btn svg{width:30px;height:30px;fill:#111;}
 .end-btn{background:#111;}
 .end-btn svg{fill:#fff;}
 .result-box{padding:25px;margin-top:25px;text-align:center;}
 .word-result{padding:16px;border-radius:18px;background:#fff4ba;font-size:22px;font-weight:800;margin-bottom:18px;}
 .spy-list{display:flex;flex-direction:column;gap:12px;margin-top:18px;}
-.spy-item{padding:16px;border-radius:18px;background:#fff;font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;}
+.spy-item{padding:16px;border-radius:18px;background:#fff;font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;animation:slideIn .4s ease;}
 .spy-item svg{width:20px;height:20px;fill:#111;}
 .end-buttons{display:flex;flex-direction:column;gap:14px;margin-top:25px;}
 .pause-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:999;opacity:0;pointer-events:none;transition:.3s;}
@@ -95,18 +89,59 @@ input,select{width:100%;height:58px;border:none;outline:none;border-radius:18px;
 .pause-box h2{font-size:34px;margin-bottom:10px;}
 .pause-box p{opacity:.7;font-size:16px;}
 .resume-btn{margin-top:20px;width:100%;height:58px;border:none;border-radius:18px;background:#111;color:#fff;font-size:18px;font-weight:800;cursor:pointer;}
+.remove-player{margin-right:auto;width:42px;height:42px;border:none;border-radius:14px;background:#ff4d4d;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;line-height:1;flex-shrink:0;}
+
+/* Screen 1 top bar */
+.screen1-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.info-btn{
+  display:flex;align-items:center;gap:7px;
+  height:44px;padding:0 14px;
+  border:none;border-radius:22px;
+  background:rgba(255,255,255,.85);
+  border:2px solid rgba(0,0,0,.08);
+  cursor:pointer;
+  font-size:13px;font-weight:800;color:#111;
+  box-shadow:0 3px 10px rgba(0,0,0,.07);
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
+  white-space:nowrap;
+}
+.info-btn svg{width:18px;height:18px;fill:#111;flex-shrink:0;}
+.info-btn:active{transform:scale(.9);box-shadow:0 1px 4px rgba(0,0,0,.06);}
+
+/* Info Modal */
+.info-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:.3s;}
+.info-overlay.active{opacity:1;pointer-events:auto;}
+.info-sheet{background:#fff;border-radius:32px 32px 0 0;padding:28px 24px 40px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;transform:translateY(100%);transition:transform .35s cubic-bezier(.34,1.1,.64,1);}
+.info-overlay.active .info-sheet{transform:translateY(0);}
+.info-handle{width:44px;height:5px;background:#e0e0e0;border-radius:10px;margin:0 auto 20px;}
+.info-title{font-size:26px;font-weight:800;margin-bottom:18px;text-align:center;}
+.info-step{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;padding:14px;background:#fffbe8;border-radius:18px;}
+.info-num{width:36px;height:36px;border-radius:12px;background:#111;color:#ffd400;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.info-text{font-size:15px;line-height:1.9;font-weight:500;}
+.info-close{width:100%;height:58px;border:none;border-radius:18px;background:#111;color:#fff;font-size:17px;font-weight:800;cursor:pointer;margin-top:20px;transition:transform .18s cubic-bezier(.34,1.56,.64,1);}
+.info-close:active{transform:scale(.96);}
+.info-spy-badge{display:inline-block;background:#ff4d4d;color:#fff;border-radius:10px;padding:2px 10px;font-size:13px;font-weight:800;}
+.info-word-badge{display:inline-block;background:#ffd400;color:#111;border-radius:10px;padding:2px 10px;font-size:13px;font-weight:800;}
 </style>
 </head>
 <body>
 
 <!-- SCREEN 1 -->
 <section class="screen" id="screen1">
-  <div class="title">یاری وشە</div>
-  <div class="sub">یارییەکی مۆدێرن بۆ هاورێکانت</div>
+  <div class="screen1-top">
+    <div>
+      <div class="title">یاری وشە</div>
+      <div class="sub">یارییەکی مۆدێرن بۆ هاورێکانت</div>
+    </div>
+    <button class="info-btn" onclick="openInfo()">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+      چۆن یاری بکەین؟
+    </button>
+  </div>
   <div class="glass input-card">
     <label>ناوی یاریزانەکان</label>
     <div style="display:flex;gap:10px;">
-      <input type="text" id="playerInput" placeholder="ناوی یاریزان">
+      <input type="text" id="playerInput" placeholder="ناوی یاریزان" onkeydown="if(event.key==='Enter')addPlayer()">
       <button class="add-btn" onclick="addPlayer()">زیادکردن</button>
     </div>
     <div class="players-box" id="playersBox"></div>
@@ -231,18 +266,54 @@ input,select{width:100%;height:58px;border:none;outline:none;border-radius:18px;
   </div>
 </div>
 
+<!-- INFO MODAL -->
+<div class="info-overlay" id="infoOverlay" onclick="closeInfoOutside(event)">
+  <div class="info-sheet">
+    <div class="info-handle"></div>
+    <div class="info-title">⚡ چۆن یاری بکەین؟</div>
+
+    <div class="info-step">
+      <div class="info-num">١</div>
+      <div class="info-text">ناوی هەموو یاریزانەکان بنووسە و ژمارەی <span class="info-spy-badge">سیخور</span> و کاتی یاریش دیاری بکە.</div>
+    </div>
+    <div class="info-step">
+      <div class="info-num">٢</div>
+      <div class="info-text">کەتەگۆریی دڵخوازت هەڵبژێرە — فیلم، وڵات، خواردن یا یاری.</div>
+    </div>
+    <div class="info-step">
+      <div class="info-num">٣</div>
+      <div class="info-text">هەر یاریزانێک مۆبایلەکەی دەستی بگرێت و دەستی لەسەر کارتەکە راگرێت تا <span class="info-word-badge">وشەکە</span> ببینێت — کەسی تر نەیبینێت!</div>
+    </div>
+    <div class="info-step">
+      <div class="info-num">٤</div>
+      <div class="info-text"><span class="info-spy-badge">سیخور</span> وشەکەی نازانێت. یاریزانی ئاسایی دەبێت وشەکە وەسف بکات بەبێ ئەوەی ڕاستەوخۆ بیبێژێت.</div>
+    </div>
+    <div class="info-step">
+      <div class="info-num">٥</div>
+      <div class="info-text">کاتەکە تەواو بوو، گروپەکە دەنگی دەدات بۆ ئەوەی سیخورەکە دیاری بکەن. ئەگەر سیخورەکە دیاری کرا — یاریزانی ئاسایی بردن! ئەگەر نەیانکرد — <span class="info-spy-badge">سیخور</span> برد!</div>
+    </div>
+
+    <button class="info-close" onclick="closeInfo()">تێگەیشتم ✓</button>
+  </div>
+</div>
+
 <script>
 const avatars = [
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Max",
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Milo",
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Leo",
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Alex",
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Sam",
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Loki",
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Rex",
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Karo",
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Jude",
-  "https://api.dicebear.com/7.x/adventurer/svg?seed=Zino"
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Zara",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Titan",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Blaze",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Nova",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Cleo",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Orion",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Luna",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Axel",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Sage",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Flynn",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Ember",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Dusk",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=River",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Cedar",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Wren"
 ];
 
 const words = {
@@ -253,6 +324,8 @@ const words = {
 };
 
 let players = [];
+// Track which avatar seed index each player uses (random, no repeats)
+let playerAvatarIndexes = [];
 let selectedCategories = [];
 let selectedCategory = "";
 let currentIndex = 0;
@@ -270,6 +343,28 @@ function showScreen(id){
   document.getElementById(id).classList.remove("hidden");
 }
 
+/* Info modal */
+function openInfo(){
+  document.getElementById("infoOverlay").classList.add("active");
+}
+function closeInfo(){
+  document.getElementById("infoOverlay").classList.remove("active");
+}
+function closeInfoOutside(e){
+  if(e.target === document.getElementById("infoOverlay")) closeInfo();
+}
+
+/* Random avatar that hasn't been used yet */
+function getRandomAvatar(){
+  const used = new Set(playerAvatarIndexes);
+  const available = avatars.map((_,i)=>i).filter(i=>!used.has(i));
+  if(available.length === 0){
+    // All used, just pick any random
+    return Math.floor(Math.random()*avatars.length);
+  }
+  return available[Math.floor(Math.random()*available.length)];
+}
+
 function addPlayer(){
   const input = document.getElementById("playerInput");
   const value = input.value.trim();
@@ -277,23 +372,25 @@ function addPlayer(){
   if(players.includes(value)){ alert("ئەم یاریزانە هەیە"); return; }
   if(players.length >= 10){ alert("زیاتر لە 10 یاریزان نابێت"); return; }
   players.push(value);
+  playerAvatarIndexes.push(getRandomAvatar());
   renderPlayers();
   input.value = "";
 }
 
 function removePlayer(index){
   players.splice(index,1);
+  playerAvatarIndexes.splice(index,1);
   renderPlayers();
 }
 
-// FIX 2: Using × character instead of SVG for the X button
 function renderPlayers(){
   const box = document.getElementById("playersBox");
   box.innerHTML = "";
   players.forEach((p,i)=>{
+    const avatarUrl = avatars[playerAvatarIndexes[i]];
     box.innerHTML += `
       <div class="player-item">
-        <div class="avatar"><img src="${avatars[i % avatars.length]}"></div>
+        <div class="avatar"><img src="${avatarUrl}"></div>
         <div class="player-name">${p}</div>
         <button class="remove-player" onclick="removePlayer(${i})">&#x2715;</button>
       </div>`;
@@ -314,23 +411,19 @@ function selectCategory(el,cat){
   }
 }
 
-// FIX 1: Every call to prepareGame generates NEW random spies
 function prepareGame(){
   selectedCategory = selectedCategories[Math.floor(Math.random()*selectedCategories.length)];
-
   let availableWords = words[selectedCategory].filter(w=>!usedWords.includes(w));
   if(availableWords.length === 0){ usedWords = []; availableWords = words[selectedCategory]; }
   gameWord = availableWords[Math.floor(Math.random()*availableWords.length)];
   usedWords.push(gameWord);
 
-  // Always generate fresh random spy indexes
   spyIndexes = [];
   const spyCount = parseInt(document.getElementById("spyCount").value);
   while(spyIndexes.length < spyCount){
     const rand = Math.floor(Math.random()*players.length);
     if(!spyIndexes.includes(rand)) spyIndexes.push(rand);
   }
-
   currentIndex = 0;
 }
 
@@ -342,13 +435,15 @@ function startCards(){
 }
 
 function showPlayer(){
+  cardWasOpened = false;
   document.getElementById("wordCard").classList.remove("flip");
   document.getElementById("nextBtn").classList.remove("active");
   document.getElementById("turnPlayer").innerText = players[currentIndex];
   document.getElementById("playerCounter").innerText = `${currentIndex+1} / ${players.length}`;
   document.getElementById("categoryBadge").innerText = selectedCategory;
-  document.getElementById("avatarFront").innerHTML = `<img src="${avatars[currentIndex%avatars.length]}">`;
-  document.getElementById("avatarBack").innerHTML = `<img src="${avatars[currentIndex%avatars.length]}">`;
+  const avatarUrl = avatars[playerAvatarIndexes[currentIndex]];
+  document.getElementById("avatarFront").innerHTML = `<img src="${avatarUrl}">`;
+  document.getElementById("avatarBack").innerHTML = `<img src="${avatarUrl}">`;
   if(spyIndexes.includes(currentIndex)){
     document.getElementById("roleText").innerText = "سیخور";
     document.getElementById("secretWord").innerText = "تۆ سیخوریت";
@@ -358,21 +453,45 @@ function showPlayer(){
   }
 }
 
+// Track whether card was actually held open
+let cardWasOpened = false;
+
 function openCard(){
+  cardWasOpened = true;
   document.getElementById("wordCard").classList.add("flip");
 }
 
 function closeCard(){
   document.getElementById("wordCard").classList.remove("flip");
-  document.getElementById("nextBtn").classList.add("active");
+  if(cardWasOpened){
+    document.getElementById("nextBtn").classList.add("active");
+  }
+  cardWasOpened = false;
 }
 
 const card = document.getElementById("wordCard");
-card.addEventListener("touchstart",()=>{ holdTimer = setTimeout(openCard,250); });
-card.addEventListener("touchend",()=>{ clearTimeout(holdTimer); closeCard(); });
-card.addEventListener("mousedown",()=>{ holdTimer = setTimeout(openCard,250); });
-card.addEventListener("mouseup",()=>{ clearTimeout(holdTimer); closeCard(); });
-card.addEventListener("mouseleave",()=>{ clearTimeout(holdTimer); closeCard(); });
+card.addEventListener("touchstart", e=>{
+  e.preventDefault();
+  cardWasOpened = false;
+  holdTimer = setTimeout(openCard, 400);
+},{passive:false});
+card.addEventListener("touchend", e=>{
+  e.preventDefault();
+  clearTimeout(holdTimer);
+  if(cardWasOpened) closeCard();
+},{passive:false});
+card.addEventListener("mousedown", ()=>{
+  cardWasOpened = false;
+  holdTimer = setTimeout(openCard, 400);
+});
+card.addEventListener("mouseup", ()=>{
+  clearTimeout(holdTimer);
+  if(cardWasOpened) closeCard();
+});
+card.addEventListener("mouseleave", ()=>{
+  clearTimeout(holdTimer);
+  if(cardWasOpened) closeCard();
+});
 
 function nextPlayer(){
   currentIndex++;
@@ -384,7 +503,7 @@ function showStarter(){
   showScreen("screen4");
   const starter = Math.floor(Math.random()*players.length);
   document.getElementById("starterName").innerText = players[starter];
-  document.getElementById("starterAvatar").src = avatars[starter%avatars.length];
+  document.getElementById("starterAvatar").src = avatars[playerAvatarIndexes[starter]];
   resetTimerUI();
 }
 
@@ -452,7 +571,6 @@ function showResults(){
   });
 }
 
-// FIX 1: playAgain calls prepareGame which generates new random spies
 function playAgain(){
   prepareGame();
   showScreen("screen3");
@@ -461,6 +579,7 @@ function playAgain(){
 
 function resetAll(){
   players = [];
+  playerAvatarIndexes = [];
   selectedCategories = [];
   selectedCategory = "";
   spyIndexes = [];
@@ -472,7 +591,5 @@ function resetAll(){
   showScreen("screen1");
 }
 </script>
-
-<script src="../../main/js/left.js"></script>
 </body>
 </html>
