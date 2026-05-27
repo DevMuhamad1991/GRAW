@@ -1,6 +1,6 @@
 const games = [
   { name: "Storm Blade",   emoji: "⚔️",  bg: "#FFE0B2", rating: "★ 4.8", players: "8.2K", isNew: true  },
-{ name: "Neon Drift",    emoji: "🏎️",  bg: "#E3F2FD", rating: "★ 4.7", players: "5.1K", isNew: false, page: "main/game/towerv2.html" },
+{ name: "Neon Drift",    img: "google.png",  bg: "#E3F2FD", rating: "★ 4.7", players: "5.1K", isNew: false, page: "main/game/towerv2.html" },
   { name: "Sky Raid",      emoji: "✈️",  bg: "#F3E5F5", rating: "★ 4.9", players: "11K",  isNew: true  },
   { name: "Pixel Quest",   emoji: "🕹️",  bg: "#E8F5E9", rating: "★ 4.5", players: "3.4K", isNew: false },
   { name: "Fire Arena",    emoji: "🔥",  bg: "#FFF3E0", rating: "★ 4.6", players: "6.7K", isNew: false },
@@ -11,18 +11,26 @@ function renderGames() {
   const grid = document.getElementById('gameGrid');
   grid.innerHTML = games.map(g => `
     <div class="game-card" onclick="playGame('${g.name}')">
-      <div class="game-thumb" style="background:${g.bg}">
-        ${g.emoji}
-        ${g.isNew ? '<span class="game-new-badge">نوێ</span>' : ''}
-      </div>
-      <div class="game-info">
-        <div class="game-name">${g.name}</div>
-        <div class="game-rating">${g.rating} · ${g.players} یاریزان</div>
-        <button class="game-play" onclick="event.stopPropagation(); playGame('${g.name}')">▶ یاریبکە</button>
-      </div>
+      ${g.img
+        ? `<div class="game-thumb game-thumb-full" style="background:${g.bg}">
+             <img src="${g.img}" alt="${g.name}"/>
+             ${g.isNew ? '<span class="game-new-badge">نوێ</span>' : ''}
+             <button class="game-play-over" onclick="event.stopPropagation(); playGame('${g.name}')">&#9654; یاریبکە</button>
+           </div>`
+        : `<div class="game-thumb" style="background:${g.bg}">
+             ${g.emoji}
+             ${g.isNew ? '<span class="game-new-badge">نوێ</span>' : ''}
+           </div>
+           <div class="game-info">
+             <div class="game-name">${g.name}</div>
+             <div class="game-rating">${g.rating} · ${g.players} یاریزان</div>
+             <button class="game-play" onclick="event.stopPropagation(); playGame('${g.name}')">&#9654; یاریبکە</button>
+           </div>`
+      }
     </div>
   `).join('');
 }
+
 
 function startSplash1() {
   const bar = document.getElementById('loadingBar');
