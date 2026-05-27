@@ -105,10 +105,32 @@ document.addEventListener('keydown', e => {
 
 function playGame(name) {
   const game = games.find(g => g.name === name);
-  if (game && game.page) {
-    window.location.href = game.page;
+if (game && game.page) {
+    const toast = document.createElement('div');
+    toast.textContent = `⚡ ${name} دەکرێتەوە...`;
+    Object.assign(toast.style, {
+      position: 'fixed', bottom: '90px', left: '50%',
+      transform: 'translateX(-50%) translateY(20px)',
+      background: '#111', color: '#FFD700',
+      fontFamily: "'Noto Kufi Arabic', 'Cairo', sans-serif",
+      fontSize: '14px', fontWeight: '700',
+      padding: '12px 24px', borderRadius: '50px',
+      zIndex: '999', opacity: '0',
+      transition: 'opacity 0.3s, transform 0.3s',
+      boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+      direction: 'rtl', whiteSpace: 'nowrap'
+    });
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+    });
+    setTimeout(() => {
+      window.location.href = game.page;
+    }, 900);
     return;
   }
+
 
   const toast = document.createElement('div');
   toast.textContent = `⚡ ${name} دەکرێتەوە...`;
