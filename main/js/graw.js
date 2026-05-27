@@ -1,5 +1,5 @@
 const games = [
-  { name: "Storm Blade",   img: "go.png",  bg: "#FFE0B2", rating: "★ 4.8", players: "8.2K", isNew: true, page: "main/game/tower.html"  },
+  { name: "Storm Blade",   img: "go.png",  bg: "#FFE0B2", rating: "★ 4.8", players: "8.2K", isNew: true, page: "main/game/sexur.html"  },
 { name: "Neon Drift",    img: "google.png",  bg: "#E3F2FD", rating: "★ 4.7", players: "5.1K", isNew: false, page: "main/game/towerv2.html" },
   { name: "Sky Raid",      emoji: "✈️",  bg: "#F3E5F5", rating: "★ 4.9", players: "11K",  isNew: true  },
   { name: "Pixel Quest",   emoji: "🕹️",  bg: "#E8F5E9", rating: "★ 4.5", players: "3.4K", isNew: false },
