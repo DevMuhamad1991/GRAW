@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <script src="https://codepen.io/steveg3003/pen/zBVakw"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+    
+    <title>یاری قەڵای هەولێر - گرافیکی بەرز</title>
+    <link rel="icon" href="https://i.ibb.co/M6KTWnf/pic.jpg" />
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+        position: relative;
+        font-family: "Vazirmatn", sans-serif;
+        background-color: #1a0c02;
+      }
+      
+      /* --- باکگراوندی ڕاستەقینەی قەڵای هەولێر بە کوالێتی بەرز --- */
+      #kurdistan-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 140%; /* گەورەتر بۆ دروستبوونی جوڵەی ستوونی */
+        z-index: 1;
+        pointer-events: none;
+        /* بەکارهێنانی وێنەیەکی ڕاستەقینە و گرافیکی قەڵای هەولێر و ئاسمانی کوردستان */
+        background-image: url('https://images.unsplash.com/photo-1590076215667-873d6f00918c?auto=format&fit=crop&w=1920&q=80'), 
+                          linear-gradient(to bottom, #4a148c, #880e4f);
+        background-size: cover;
+        background-position: center bottom;
+        transition: transform 0.5s ease-out;
+        transform: translateY(0px);
+        filter: brightness(0.9) contrast(1.1);
+      }
+      
+      /* پەردەیەکی تەڵخ و ڕەنگین بۆ جیاکردنەوەی بەردەکان لە باکگراوندەکەی دواوە */
+      #bg-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(26,12,2,0.2), rgba(26,12,2,0.6));
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      #container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        z-index: 3;
+      }
+      #container #score {
+        position: absolute;
+        top: 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 11vh;
+        font-weight: 900;
+        transition: transform 0.5s ease;
+        color: #ffd54f; /* زەردی درەوشاوەی خۆر */
+        transform: translatey(-200px) scale(1);
+        text-shadow: 0 4px 10px rgba(0,0,0,0.7);
+      }
+      
+      /* وەسفکەر و هاندەری یاریزان لە هەر 5 خاڵێکدا */
+      #praise-msg {
+        position: absolute;
+        top: 18vh;
+        width: 100%;
+        text-align: center;
+        font-size: 28px;
+        font-weight: 900;
+        color: #4caf50;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+        opacity: 0;
+        transform: scale(0.7);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 15;
+        pointer-events: none;
+      }
+      #praise-msg.show {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+
+      #container #game {
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+      }
+      #container .game-over {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 85%;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        z-index: 10;
+      }
+      #container .game-over * {
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        opacity: 0; transform: translatey(-50px);
+        color: #ff1744; font-weight: 900;
+      }
+      #container .game-over h2 { font-size: 55px; text-shadow: 0 4px 15px rgba(0,0,0,0.9); }
+      #container .game-over p { color: #ffffff; font-size: 24px; margin-top: 10px; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+      
+      #container .game-ready {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex; flex-direction: column; align-items: center; justify-content: space-around;
+        z-index: 10;
+      }
+      #container .game-ready #start-button {
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        opacity: 0; transform: translatey(-50px);
+        border: 4px solid #ffd54f; 
+        border-radius: 50px; padding: 18px 50px;
+        background: linear-gradient(135deg, #2e7d32, #1b5e20); color: #ffffff;
+        font-size: 38px; font-weight: 900; cursor: pointer;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      }
+      #container .game-ready #start-button:hover {
+        background: linear-gradient(135deg, #ffd54f, #ffb300); color: #1b5e20;
+        box-shadow: 0 15px 30px rgba(255,213,79,0.4);
+      }
+      #container #instructions {
+        position: absolute; width: 100%; top: 28vh; left: 0; text-align: center;
+        font-size: 25px; font-weight: 700; color: #ffffff;
+        transition: opacity 0.5s ease, transform 0.5s ease; opacity: 0;
+        text-shadow: 0 3px 6px rgba(0,0,0,0.9);
+      }
+      #container #instructions.hide { opacity: 0 !important; }
+      #container.playing #score, #container.resetting #score { transform: translatey(0px) scale(1); }
+      #container.playing #instructions { opacity: 1; }
+      #container.ready .game-ready #start-button { opacity: 1; transform: translatey(0); }
+      #container.ended #score { transform: translatey(6vh) scale(1.4); color: #ff1744; }
+      #container.ended .game-over * { opacity: 1; transform: translatey(0); }
+      
+      footer {
+        position: absolute; bottom: 15px; width: 100%; text-align: center;
+        font-size: 16px; color: #ffffff; font-weight: 700; z-index: 5;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      }
+      #audio-control {
+        position: absolute; top: 20px; right: 20px;
+        background: rgba(255, 255, 255, 0.95); border: 2px solid #ffd54f;
+        border-radius: 50%; width: 50px; height: 50px;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; z-index: 20; font-size: 24px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="kurdistan-bg"></div>
+    <div id="bg-overlay"></div>
+
+    <div id="audio-control">🔊</div>
+    <div id="container">
+      <div id="game"></div>
+      <div id="score">٠</div>
+      <div id="praise-msg">دەستپێکێکی نایاب!</div>
+      <div id="instructions">
+        کلیک بکە یان [Space] داگرە بۆ ڕێکخستنی بەردی قەڵای هەولێر
+      </div>
+      <div class="game-over">
+        <h2>قەڵاکە جێگیر نەبوو!</h2>
+        <p>مێژوویەکی بەرزت تۆمارکرد لە لووتکەی قەڵا.</p>
+        <p>کلیک بکە بۆ نوێکردنەوەی قەڵاکە</p>
+      </div>
+      <div class="game-ready">
+        <div id="start-button">بنیادنانی قەڵا</div>
+        <div></div>
+      </div>
+    </div>
+    <footer>دیزاینی کوالێتی بەرز - قەڵای مێژوویی هەولێر</footer>
+
+    <script>
+      console.clear();
+
+      // --- مۆسیقای فۆلکلۆری گۆرانی نەورۆز (ئەمڕۆژی ساڵی نوێیە نەورۆزە هاتەوە) ---
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+      var audioCtx = null;
+      var isMuted = false;
+      var musicInterval = null;
+
+      function initAudio() {
+        if (!audioCtx) {
+          audioCtx = new AudioCtx();
+          startNawrozMusic();
+        }
+      }
+
+      // داڕشتنی نۆتەکانی گۆرانی نەورۆز بۆ مۆسیقای دیجیتاڵی کوالێتی بەرز
+      function startNawrozMusic() {
+        // نۆتەکانی ئاوازی "ئەمڕۆژی ساڵی نوێیە"
+        var nawrozMelody = [
+          440.00, 440.00, 493.88, 523.25, 523.25, 493.88, 440.00, 493.88,
+          493.88, 493.88, 440.00, 392.00, 392.00, 440.00, 493.88, 440.00
+        ];
+        var currentStep = 0;
+
+        musicInterval = setInterval(function() {
+          if (isMuted || !audioCtx || game.state !== "playing") return;
+          
+          var osc = audioCtx.createOscillator();
+          var gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          
+          osc.type = 'sine'; 
+          osc.frequency.setValueAtTime(nawrozMelody[currentStep], audioCtx.currentTime);
+          
+          gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+          
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.35);
+          
+          currentStep = (currentStep + 1) % nawrozMelody.length;
+        }, 350); 
+      }
+
+      function playPlaceSound(isBonus) {
+        if (isMuted) return;
+        initAudio();
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.type = 'triangle';
+        if (isBonus) {
+          osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+          osc.frequency.exponentialRampToValueAtTime(783.99, audioCtx.currentTime + 0.2);
+          gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        } else {
+          osc.frequency.setValueAtTime(349.23, audioCtx.currentTime); 
+          osc.frequency.exponentialRampToValueAtTime(440.00, audioCtx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        }
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.3);
+      }
+
+      function playGameOverSound() {
+        if (isMuted) return;
+        initAudio();
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 0.7);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.7);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.7);
+      }
+
+      document.getElementById('audio-control').addEventListener('click', function(e) {
+        e.stopPropagation();
+        isMuted = !isMuted;
+        this.innerHTML = isMuted ? "🔇" : "🔊";
+      });
+
+      function toKurdishNumbers(num) {
+        var kurdishNums = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        return num.toString().replace(/[0-9]/g, function(w) { return kurdishNums[+w]; });
+      }
+
+      // کۆمەڵێک وەسفی گونجاو لە هەر 5 خاڵێکدا
+      var praises = [
+        "بنیادنەرێکی لێهاتوو!",
+        "شێری بێدەرەتان، زۆر نایابە!",
+        "بەرەو لوتکەی قەڵای هەولێر!",
+        "تەلارسازێکی بێوێنەی کوردستان!",
+        "مێژوویەکی نوێ تۆمار دەکەیت!",
+        "لوتکەی چیاکان چاوەڕێتن!"
+      ];
+
+      function checkAndShowPraise(score) {
+        if (score > 0 && score % 5 === 0) {
+          var msgEl = document.getElementById('praise-msg');
+          var randomPraise = praises[Math.floor(Math.random() * praises.length)];
+          msgEl.innerHTML = randomPraise;
+          msgEl.classList.add('show');
+          setTimeout(function() {
+            msgEl.classList.remove('show');
+          }, 2000);
+        }
+      }
+
+      // ئەپدێتکردنی پاشبنەمای ڕاستەقینە بۆ دروستبوونی کاریگەری تاو کێش
+      function updateBackgroundPosition(height) {
+        var moveAmount = height * -8; // بەرەو خوارەوە نیشاندانی باکگراوندەکە
+        document.getElementById('kurdistan-bg').style.transform = 'translateY(' + moveAmount + 'px)';
+      }
+
+      var Stage = /** @class */ (function () {
+        function Stage() {
+          var _this = this;
+          this.render = function () { this.renderer.render(this.scene, this.camera); };
+          this.add = function (elem) { this.scene.add(elem); };
+          this.remove = function (elem) { this.scene.remove(elem); };
+          this.container = document.getElementById("game");
+          this.renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true,
+          });
+          this.renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
+          this.renderer.setSize(window.innerWidth, window.innerHeight);
+          this.renderer.setClearColor(0x000000, 0); 
+          this.container.appendChild(this.renderer.domElement);
+          this.scene = new THREE.Scene();
+          var aspect = window.innerWidth / window.innerHeight;
+          var d = 20;
+          this.camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, -100, 1000);
+          this.camera.position.set(2, 2, 2);
+          this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+          
+          // ڕووناکی گرافیکی کوالێتی بەرز (Realistic Cast Shadows Effect)
+          this.light = new THREE.DirectionalLight(0xfff5e6, 0.95);
+          this.light.position.set(6, 15, 5);
+          this.scene.add(this.light);
+          
+          this.fillLight = new THREE.DirectionalLight(0x80deea, 0.35); // ڕووناکی شینی لایەنی سێبەرەکان
+          this.fillLight.position.set(-6, -5, -5);
+          this.scene.add(this.fillLight);
+          
+          this.softLight = new THREE.AmbientLight(0xffffff, 0.4);
+          this.scene.add(this.softLight);
+          
+          window.addEventListener("resize", function () { return _this.onResize(); });
+          this.onResize();
+        }
+        Stage.prototype.setCamera = function (y, speed) {
+          if (speed === void 0) speed = 0.3;
+          TweenLite.to(this.camera.position, speed, { y: y + 4, ease: Power1.easeInOut });
+          TweenLite.to(this.camera.lookAt, speed, { y: y, ease: Power1.easeInOut });
+          updateBackgroundPosition(y);
+        };
+        Stage.prototype.onResize = function () {
+          var viewSize = 30;
+          this.renderer.setSize(window.innerWidth, window.innerHeight);
+          this.camera.left = window.innerWidth / -viewSize;
+          this.camera.right = window.innerWidth / viewSize;
+          this.camera.top = window.innerHeight / viewSize;
+          this.camera.bottom = window.innerHeight / -viewSize;
+          this.camera.updateProjectionMatrix();
+        };
+        return Stage;
+      })();
+
+      var Block = /** @class */ (function () {
+        function Block(block) {
+          this.STATES = { ACTIVE: "active", STOPPED: "stopped", MISSED: "missed" };
+          this.MOVE_AMOUNT = 12;
+          this.dimension = { width: 0, height: 0, depth: 0 };
+          this.position = { x: 0, y: 0, z: 0 };
+          this.targetBlock = block;
+          this.index = (this.targetBlock ? this.targetBlock.index : 0) + 1;
+          this.workingPlane = this.index % 2 ? "x" : "z";
+          this.workingDimension = this.index % 2 ? "width" : "depth";
+          this.dimension.width = this.targetBlock ? this.targetBlock.dimension.width : 10;
+          this.dimension.height = this.targetBlock ? this.targetBlock.dimension.height : 1.8; // باریکتر بۆ جوانی زیاتر
+          this.dimension.depth = this.targetBlock ? this.targetBlock.dimension.depth : 10;
+          this.position.x = this.targetBlock ? this.targetBlock.position.x : 0;
+          this.position.y = this.dimension.height * this.index;
+          this.position.z = this.targetBlock ? this.targetBlock.position.z : 0;
+          
+          // پلەی ڕەنگە شاهانەییە مێژووییەکانی بەردی قەڵا
+          var stoneColors = ["#a1887f", "#bcaaa4", "#8d6e63", "#d7ccc8", "#aeafb0", "#795548", "#cfd8dc"];
+          if (!this.targetBlock) {
+            this.color = new THREE.Color("#3e2723"); // بەردی سەرەکی زۆر قورس
+          } else {
+            this.color = new THREE.Color(stoneColors[this.index % stoneColors.length]);
+          }
+          
+          this.state = this.index > 1 ? this.STATES.ACTIVE : this.STATES.STOPPED;
+          this.speed = -0.12 - this.index * 0.006; // کەمێک خێراتر بۆ بەرزکردنەوەی جۆش و خرۆش
+          if (this.speed < -4) this.speed = -4;
+          this.direction = this.speed;
+          
+          var geometry = new THREE.BoxGeometry(this.dimension.width, this.dimension.height, this.dimension.depth);
+          geometry.applyMatrix(new THREE.Matrix4().makeTranslation(this.dimension.width / 2, this.dimension.height / 2, this.dimension.depth / 2));
+          
+          // بەکارهێنانی روکاری پێشکەوتوو بۆ کوالێتی بەرز
+          this.material = new THREE.MeshStandardMaterial({ 
+            color: this.color, 
+            roughness: 0.7,
+            metalness: 0.1,
+            shading: THREE.FlatShading 
+          });
+          this.mesh = new THREE.Mesh(geometry, this.material);
+          this.mesh.position.set(this.position.x, this.position.y, this.position.z);
+          if (this.state == this.STATES.ACTIVE) {
+            this.position[this.workingPlane] = Math.random() > 0.5 ? -this.MOVE_AMOUNT : this.MOVE_AMOUNT;
+          }
+        }
+        Block.prototype.reverseDirection = function () {
+          this.direction = this.direction > 0 ? this.speed : Math.abs(this.speed);
+        };
+        Block.prototype.place = function () {
+          this.state = this.STATES.STOPPED;
+          var overlap = this.targetBlock.dimension[this.workingDimension] - Math.abs(this.position[this.workingPlane] - this.targetBlock.position[this.workingPlane]);
+          var blocksToReturn = { plane: this.workingPlane, direction: this.direction };
+          
+          if (this.dimension[this.workingDimension] - overlap < 0.3) {
+            overlap = this.dimension[this.workingDimension];
+            blocksToReturn.bonus = true;
+            this.position.x = this.targetBlock.position.x;
+            this.position.z = this.targetBlock.position.z;
+          }
+          if (overlap > 0) {
+            var choppedDimensions = { width: this.dimension.width, height: this.dimension.height, depth: this.dimension.depth };
+            choppedDimensions[this.workingDimension] -= overlap;
+            this.dimension[this.workingDimension] = overlap;
+            
+            var placedGeometry = new THREE.BoxGeometry(this.dimension.width, this.dimension.height, this.dimension.depth);
+            placedGeometry.applyMatrix(new THREE.Matrix4().makeTranslation(this.dimension.width / 2, this.dimension.height / 2, this.dimension.depth / 2));
+            var placedMesh = new THREE.Mesh(placedGeometry, this.material);
+            
+            var choppedGeometry = new THREE.BoxGeometry(choppedDimensions.width, choppedDimensions.height, choppedDimensions.depth);
+            choppedGeometry.applyMatrix(new THREE.Matrix4().makeTranslation(choppedDimensions.width / 2, choppedDimensions.height / 2, choppedDimensions.depth / 2));
+            var choppedMesh = new THREE.Mesh(choppedGeometry, this.material);
+            
+            var choppedPosition = { x: this.position.x, y: this.position.y, z: this.position.z };
+            if (this.position[this.workingPlane] < this.targetBlock.position[this.workingPlane]) {
+              this.position[this.workingPlane] = this.targetBlock.position[this.workingPlane];
+            } else {
+              choppedPosition[this.workingPlane] += overlap;
+            }
+            placedMesh.position.set(this.position.x, this.position.y, this.position.z);
+            choppedMesh.position.set(choppedPosition.x, choppedPosition.y, choppedPosition.z);
+            blocksToReturn.placed = placedMesh;
+            if (!blocksToReturn.bonus) blocksToReturn.chopped = choppedMesh;
+          } else {
+            this.state = this.STATES.MISSED;
+          }
+          this.dimension[this.workingDimension] = overlap;
+          return blocksToReturn;
+        };
+        Block.prototype.tick = function () {
+          if (this.state == this.STATES.ACTIVE) {
+            var value = this.position[this.workingPlane];
+            if (value > this.MOVE_AMOUNT || value < -this.MOVE_AMOUNT) this.reverseDirection();
+            this.position[this.workingPlane] += this.direction;
+            this.mesh.position[this.workingPlane] = this.position[this.workingPlane];
+          }
+        };
+        return Block;
+      })();
+
+      var Game = /** @class */ (function () {
+        function Game() {
+          var _this = this;
+          this.STATES = { LOADING: "loading", PLAYING: "playing", READY: "ready", ENDED: "ended", RESETTING: "resetting" };
+          this.blocks = [];
+          this.state = this.STATES.LOADING;
+          this.stage = new Stage();
+          this.mainContainer = document.getElementById("container");
+          this.scoreContainer = document.getElementById("score");
+          this.startButton = document.getElementById("start-button");
+          this.instructions = document.getElementById("instructions");
+          this.scoreContainer.innerHTML = toKurdishNumbers(0);
+          this.newBlocks = new THREE.Group();
+          this.placedBlocks = new THREE.Group();
+          this.choppedBlocks = new THREE.Group();
+          this.stage.add(this.newBlocks);
+          this.stage.add(this.placedBlocks);
+          this.stage.add(this.choppedBlocks);
+          this.addBlock();
+          this.tick();
+          this.updateState(this.STATES.READY);
+          
+          document.addEventListener("keydown", function (e) { if (e.keyCode == 32) _this.onAction(); });
+          document.addEventListener("click", function (e) { _this.onAction(); });
+        }
+        Game.prototype.updateState = function (newState) {
+          for (var key in this.STATES) this.mainContainer.classList.remove(this.STATES[key]);
+          this.mainContainer.classList.add(newState);
+          this.state = newState;
+        };
+        Game.prototype.onAction = function () {
+          initAudio(); 
+          switch (this.state) {
+            case this.STATES.READY: this.startGame(); break;
+            case this.STATES.PLAYING: this.placeBlock(); break;
+            case this.STATES.ENDED: this.restartGame(); break;
+          }
+        };
+        Game.prototype.startGame = function () {
+          if (this.state != this.STATES.PLAYING) {
+            this.scoreContainer.innerHTML = toKurdishNumbers(0);
+            this.updateState(this.STATES.PLAYING);
+            this.addBlock();
+          }
+        };
+        Game.prototype.restartGame = function () {
+          var _this = this;
+          this.updateState(this.STATES.RESETTING);
+          var oldBlocks = this.placedBlocks.children;
+          var removeSpeed = 0.2;
+          var delayAmount = 0.02;
+          var _loop_1 = function (i) {
+            TweenLite.to(oldBlocks[i].scale, removeSpeed, {
+              x: 0, y: 0, z: 0, delay: (oldBlocks.length - i) * delayAmount, ease: Power1.easeIn,
+              onComplete: function () { return _this.placedBlocks.remove(oldBlocks[i]); },
+            });
+          };
+          for (var i = 0; i < oldBlocks.length; i++) { _loop_1(i); }
+          var cameraMoveSpeed = removeSpeed * 2 + oldBlocks.length * delayAmount;
+          this.stage.setCamera(2, cameraMoveSpeed);
+          
+          var countdown = { value: this.blocks.length - 1 };
+          TweenLite.to(countdown, cameraMoveSpeed, {
+            value: 0,
+            onUpdate: function () { _this.scoreContainer.innerHTML = toKurdishNumbers(Math.round(countdown.value)); },
+          });
+          this.blocks = this.blocks.slice(0, 1);
+          setTimeout(function () { _this.startGame(); }, cameraMoveSpeed * 1000);
+        };
+        Game.prototype.placeBlock = function () {
+          var _this = this;
+          var currentBlock = this.blocks[this.blocks.length - 1];
+          var newBlocks = currentBlock.place();
+          this.newBlocks.remove(currentBlock.mesh);
+          
+          if (newBlocks.placed) {
+            this.placedBlocks.add(newBlocks.placed);
+            playPlaceSound(newBlocks.bonus);
+            var currentScore = this.blocks.length - 1;
+            checkAndShowPraise(currentScore); // پشکینین بۆ نیشاندانی وەسف لە هەر 5 خاڵێکدا
+          }
+          
+          if (newBlocks.chopped) {
+            this.choppedBlocks.add(newBlocks.chopped);
+            var positionParams = { y: "-=30", ease: Power1.easeIn, onComplete: function () { return _this.choppedBlocks.remove(newBlocks.chopped); } };
+            if (newBlocks.chopped.position[newBlocks.plane] > newBlocks.placed.position[newBlocks.plane]) {
+              positionParams[newBlocks.plane] = "+=" + 40 * Math.abs(newBlocks.direction);
+            } else {
+              positionParams[newBlocks.plane] = "-=" + 40 * Math.abs(newBlocks.direction);
+            }
+            TweenLite.to(newBlocks.chopped.position, 1, positionParams);
+          }
+          this.addBlock();
+        };
+        Game.prototype.addBlock = function () {
+          var lastBlock = this.blocks[this.blocks.length - 1];
+          if (lastBlock && lastBlock.state == lastBlock.STATES.MISSED) {
+            return this.endGame();
+          }
+          this.scoreContainer.innerHTML = toKurdishNumbers(this.blocks.length - 1);
+          var newKidOnTheBlock = new Block(lastBlock);
+          this.newBlocks.add(newKidOnTheBlock.mesh);
+          this.blocks.push(newKidOnTheBlock);
+          this.stage.setCamera(this.blocks.length * 1.8);
+          if (this.blocks.length >= 5) this.instructions.classList.add("hide");
+        };
+        Game.prototype.endGame = function () {
+          this.updateState(this.STATES.ENDED);
+          playGameOverSound(); 
+        };
+        Game.prototype.tick = function () {
+          var _this = this;
+          this.blocks[this.blocks.length - 1].tick();
+          this.stage.render();
+          requestAnimationFrame(function () { _this.tick(); });
+        };
+        return Game;
+      })();
+      
+      var game = new Game();
+    </script>
+  </body>
+</html>
