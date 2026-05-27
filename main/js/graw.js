@@ -1,6 +1,3 @@
-// ===== GRAW APP JS =====
-
-// --- Game Data ---
 const games = [
   { name: "Storm Blade",   emoji: "⚔️",  bg: "#FFE0B2", rating: "★ 4.8", players: "8.2K", isNew: true  },
   { name: "Neon Drift",    emoji: "🏎️",  bg: "#E3F2FD", rating: "★ 4.7", players: "5.1K", isNew: false },
@@ -10,7 +7,6 @@ const games = [
   { name: "Cyber Run",     emoji: "🤖",  bg: "#F0F4FD", rating: "★ 4.8", players: "9.3K", isNew: true  },
 ];
 
-// --- Render Game Grid ---
 function renderGames() {
   const grid = document.getElementById('gameGrid');
   grid.innerHTML = games.map(g => `
@@ -28,7 +24,6 @@ function renderGames() {
   `).join('');
 }
 
-// --- Splash 1: Loading Bar ---
 function startSplash1() {
   const bar = document.getElementById('loadingBar');
   let pct = 0;
@@ -45,7 +40,6 @@ function startSplash1() {
   }, 120);
 }
 
-// --- Transition Helpers ---
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => {
     s.classList.remove('active');
@@ -56,9 +50,7 @@ function showScreen(id) {
   target.style.pointerEvents = 'all';
 }
 
-function showSplash2() {
-  showScreen('splash2');
-}
+function showSplash2() { showScreen('splash2'); }
 
 function goHome() {
   showScreen('home');
@@ -66,7 +58,6 @@ function goHome() {
   animateHomeCards();
 }
 
-// --- Home Animations ---
 function animateHomeCards() {
   const cards = document.querySelectorAll('.game-card');
   cards.forEach((c, i) => {
@@ -81,13 +72,12 @@ function animateHomeCards() {
   });
 }
 
-// --- Navigation ---
-function setNav(btn, section) {
+// FIX: setNav ئێستا بەبێ پارامیتەری section کار دەکات
+function setNav(btn) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
 
-// --- Modals ---
 function openProfile() {
   const m = document.getElementById('profileModal');
   m.style.display = 'flex';
@@ -104,14 +94,15 @@ function closeModal(id) {
   setTimeout(() => { m.style.display = 'none'; }, 300);
 }
 
-// Close modal on ESC
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.modal.open').forEach(m => {
+      m.classList.remove('open');
+      setTimeout(() => { m.style.display = 'none'; }, 300);
+    });
   }
 });
 
-// --- Play Game ---
 function playGame(name) {
   const toast = document.createElement('div');
   toast.textContent = `⚡ ${name} دەکرێتەوە...`;
@@ -139,7 +130,6 @@ function playGame(name) {
   }, 2200);
 }
 
-// --- Category Buttons ---
 document.addEventListener('click', e => {
   if (e.target.classList.contains('cat-btn')) {
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -147,7 +137,6 @@ document.addEventListener('click', e => {
   }
 });
 
-// --- Ad CTA ---
 document.addEventListener('click', e => {
   if (e.target.classList.contains('ad-cta')) {
     const toast = document.createElement('div');
@@ -160,15 +149,13 @@ document.addEventListener('click', e => {
       fontSize: '13px', fontWeight: '800',
       padding: '12px 22px', borderRadius: '50px',
       zIndex: '999', boxShadow: '0 4px 20px rgba(255,215,0,0.4)',
-      direction: 'rtl', whiteSpace: 'nowrap',
-      animation: 'slideUp 0.3s ease'
+      direction: 'rtl', whiteSpace: 'nowrap'
     });
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2500);
   }
 });
 
-// --- Logout ---
 document.addEventListener('click', e => {
   if (e.target.classList.contains('logout-btn')) {
     closeModal('settingsModal');
@@ -176,9 +163,7 @@ document.addEventListener('click', e => {
   }
 });
 
-// --- INIT ---
 window.addEventListener('DOMContentLoaded', () => {
-  // Make sure all modals are closed on start
   document.querySelectorAll('.modal').forEach(m => {
     m.classList.remove('open');
     m.style.display = 'none';
