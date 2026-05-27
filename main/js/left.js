@@ -215,7 +215,8 @@
    modal.classList.remove('show');
  });
 
- document.getElementById('graw-leave').addEventListener('click', () => {
-   window.history.back();
- });
+document.getElementById('graw-leave').addEventListener('click', () => {
+   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+   document.getElementById('home').classList.add('active');
+});
 })();
