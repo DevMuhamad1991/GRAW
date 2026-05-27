@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>یاری وشە</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Noto Sans Arabic',sans-serif;
+-webkit-tap-highlight-color:transparent;
+}
+
+body{
+background:
+linear-gradient(135deg,#fff7cf 0%,#ffd84d 100%);
+min-height:100vh;
+overflow:hidden;
+color:#1b1b1b;
+}
+
+.hidden{
+display:none !important;
+}
+
+.screen{
+position:absolute;
+inset:0;
+padding:22px;
+overflow-y:auto;
+animation:fade .45s ease;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(25px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.glass{
+background:rgba(255,255,255,.72);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.55);
+border-radius:28px;
+box-shadow:
+0 10px 35px rgba(0,0,0,.08);
+}
+
+.title{
+font-size:35px;
+font-weight:800;
+margin-bottom:8px;
+}
+
+.sub{
+opacity:.7;
+margin-bottom:25px;
+font-size:15px;
+}
+
+.input-card{
+padding:22px;
+margin-bottom:18px;
+}
+
+label{
+display:block;
+margin-bottom:10px;
+font-weight:700;
+font-size:15px;
+}
+
+input,
+select{
+width:100%;
+height:58px;
+border:none;
+outline:none;
+border-radius:18px;
+padding:0 18px;
+font-size:16px;
+background:#fff;
+box-shadow:inset 0 2px 10px rgba(0,0,0,.05);
+}
+
+.players-box{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-top:15px;
+}
+
+.player-item{
+display:flex;
+align-items:center;
+gap:14px;
+padding:12px;
+background:#fff;
+border-radius:20px;
+animation:pop .35s ease;
+}
+
+@keyframes pop{
+from{
+transform:scale(.7);
+opacity:0;
+}
+to{
+transform:scale(1);
+opacity:1;
+}
+}
+
+.avatar{
+width:56px;
+height:56px;
+border-radius:50%;
+overflow:hidden;
+border:3px solid #ffe066;
+flex-shrink:0;
+background:#fff;
+}
+
+.avatar img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.player-name{
+font-size:17px;
+font-weight:700;
+}
+
+.add-btn{
+height:58px;
+border:none;
+border-radius:18px;
+padding:0 22px;
+background:#111;
+color:#fff;
+font-size:16px;
+font-weight:800;
+cursor:pointer;
+transition:.25s;
+}
+
+.add-btn:active{
+transform:scale(.96);
+}
+
+.start-btn{
+width:100%;
+height:68px;
+border:none;
+border-radius:24px;
+margin-top:22px;
+font-size:20px;
+font-weight:800;
+cursor:pointer;
+background:linear-gradient(135deg,#ffd400,#ffbc00);
+color:#111;
+box-shadow:
+0 15px 30px rgba(255,200,0,.45);
+transition:.3s;
+}
+
+.start-btn:active{
+transform:scale(.97);
+}
+
+.ad-card{
+padding:18px;
+margin-top:20px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:15px;
+}
+
+.ad-img{
+width:78px;
+height:78px;
+border-radius:22px;
+overflow:hidden;
+background:#fff;
+}
+
+.ad-img img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.ad-info h3{
+font-size:19px;
+margin-bottom:5px;
+}
+
+.ad-info p{
+font-size:14px;
+opacity:.7;
+}
+
+.category-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:18px;
+margin-top:20px;
+}
+
+.category{
+padding:20px;
+border-radius:28px;
+position:relative;
+overflow:hidden;
+min-height:170px;
+cursor:pointer;
+transition:.35s;
+}
+
+.category:hover{
+transform:translateY(-7px);
+}
+
+.category.active{
+outline:4px solid #111;
+transform:translateY(-7px) scale(1.03);
+}
+
+.category h2{
+font-size:23px;
+margin-bottom:10px;
+}
+
+.category p{
+font-size:14px;
+line-height:1.8;
+opacity:.7;
+}
+
+.category img{
+position:absolute;
+bottom:-10px;
+left:-10px;
+width:95px;
+opacity:.14;
+}
+
+.cat1{background:#fff4ba;}
+.cat2{background:#fff0c7;}
+.cat3{background:#fff7dd;}
+.cat4{background:#fff2a2;}
+
+.top-status{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+}
+
+.badge{
+padding:10px 18px;
+border-radius:100px;
+background:#fff;
+font-size:14px;
+font-weight:700;
+}
+
+.turn-box{
+text-align:center;
+padding-top:15px;
+}
+
+.player-turn{
+font-size:29px;
+font-weight:800;
+margin-bottom:10px;
+}
+
+.player-turn span{
+color:#b88600;
+}
+
+.card-area{
+display:flex;
+justify-content:center;
+margin-top:35px;
+perspective:1200px;
+}
+
+.word-card{
+width:270px;
+height:370px;
+position:relative;
+transform-style:preserve-3d;
+transition:1s;
+}
+
+.word-card.flip{
+transform:rotateY(180deg) translateY(-14px);
+}
+
+.card-face{
+position:absolute;
+inset:0;
+border-radius:34px;
+padding:24px;
+backface-visibility:hidden;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+box-shadow:
+0 18px 40px rgba(0,0,0,.12);
+}
+
+.card-front{
+background:
+linear-gradient(145deg,#fff,#ffe68b);
+}
+
+.card-back{
+background:
+linear-gradient(145deg,#111,#2b2b2b);
+color:#fff;
+transform:rotateY(180deg);
+}
+
+.card-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.avatar-big{
+width:74px;
+height:74px;
+border-radius:50%;
+overflow:hidden;
+background:#fff;
+border:3px solid rgba(255,255,255,.4);
+}
+
+.avatar-big img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.secret-word{
+font-size:34px;
+font-weight:800;
+text-align:center;
+line-height:1.5;
+}
+
+.card-hint{
+text-align:center;
+font-size:15px;
+opacity:.7;
+font-weight:700;
+}
+
+.hold-text{
+animation:pulse 1.3s infinite;
+}
+
+@keyframes pulse{
+0%,100%{
+opacity:.4;
+}
+50%{
+opacity:1;
+}
+}
+
+.next-btn{
+width:100%;
+height:66px;
+border:none;
+border-radius:24px;
+margin-top:35px;
+font-size:20px;
+font-weight:800;
+background:#111;
+color:#fff;
+opacity:.35;
+pointer-events:none;
+transition:.4s;
+}
+
+.next-btn.active{
+opacity:1;
+pointer-events:auto;
+}
+
+.start-player-box{
+margin-top:80px;
+padding:35px 25px;
+text-align:center;
+border-radius:35px;
+animation:fadeScale .6s ease;
+}
+
+@keyframes fadeScale{
+from{
+opacity:0;
+transform:scale(.8);
+}
+to{
+opacity:1;
+transform:scale(1);
+}
+}
+
+.start-avatar{
+width:130px;
+height:130px;
+border-radius:50%;
+overflow:hidden;
+margin:auto;
+border:6px solid #fff;
+box-shadow:0 15px 35px rgba(0,0,0,.15);
+}
+
+.start-avatar img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.start-name{
+font-size:40px;
+font-weight:800;
+margin-top:24px;
+}
+
+.start-text{
+font-size:20px;
+opacity:.7;
+margin-top:8px;
+}
+
+
+.timer-controls{
+display:flex;
+justify-content:center;
+gap:18px;
+margin-top:30px;
+animation:fade .4s ease;
+}
+
+.icon-btn{
+width:70px;
+height:70px;
+border:none;
+border-radius:24px;
+background:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+transition:.25s;
+box-shadow:
+0 10px 25px rgba(0,0,0,.08);
+}
+
+.icon-btn:active{
+transform:scale(.92);
+}
+
+.icon-btn svg{
+width:30px;
+height:30px;
+fill:#111;
+}
+
+.end-btn{
+background:#111;
+}
+
+.end-btn svg{
+fill:#fff;
+}
+
+.timer.paused{
+opacity:.4;
+transform:scale(.96);
+}
+
+
+
+.play-btn{
+width:100%;
+height:66px;
+border:none;
+border-radius:24px;
+background:linear-gradient(135deg,#ffd400,#ffbc00);
+font-size:22px;
+font-weight:800;
+margin-top:28px;
+cursor:pointer;
+}
+
+.timer{
+margin-top:25px;
+font-size:72px;
+font-weight:800;
+text-align:center;
+}
+
+.sound-wave{
+display:flex;
+justify-content:center;
+gap:5px;
+margin-top:18px;
+}
+
+.bar{
+width:6px;
+height:24px;
+background:#111;
+border-radius:10px;
+animation:sound 1s infinite ease-in-out;
+}
+
+.bar:nth-child(2){animation-delay:.1s}
+.bar:nth-child(3){animation-delay:.2s}
+.bar:nth-child(4){animation-delay:.3s}
+.bar:nth-child(5){animation-delay:.4s}
+
+@keyframes sound{
+0%,100%{
+height:12px;
+}
+50%{
+height:42px;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SCREEN 1 -->
+
+<section class="screen" id="screen1">
+
+<div class="title">
+یاری وشە
+</div>
+
+<div class="sub">
+یارییەکی مۆدێرن بۆ هاورێکانت
+</div>
+
+<div class="glass input-card">
+
+<label>
+ناوی یاریزانەکان
+</label>
+
+<div style="display:flex;gap:10px;">
+
+<input type="text"
+id="playerInput"
+placeholder="ناوی یاریزان">
+
+<button class="add-btn"
+onclick="addPlayer()">
+زیادکردن
+</button>
+
+</div>
+
+<div class="players-box"
+id="playersBox">
+</div>
+
+</div>
+
+<div class="glass input-card">
+
+<label>
+ژمارەی سیخورەکان
+</label>
+
+<select id="spyCount">
+<option value="1">1 سیخور</option>
+<option value="2">2 سیخور</option>
+<option value="3">3 سیخور</option>
+</select>
+
+<br><br>
+
+<label>
+ئاماژەی بە سیخور بکرێت؟
+</label>
+
+<select id="showHint">
+<option value="yes">بەڵێ</option>
+<option value="no">نەخێر</option>
+</select>
+
+<br><br>
+
+<label>
+کاتی یاری
+</label>
+
+<select id="gameTime">
+<option value="60">1 خولەک</option>
+<option value="120">2 خولەک</option>
+<option value="180">3 خولەک</option>
+<option value="300">5 خولەک</option>
+</select>
+
+</div>
+
+<div class="glass ad-card">
+
+<div class="ad-info">
+<h3>Premium Cards</h3>
+<p>کارت و وشەی زیاتر</p>
+</div>
+
+<div class="ad-img">
+<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Premium">
+</div>
+
+</div>
+
+<button class="start-btn"
+onclick="goCategory()">
+دەستپێکردنی یاری
+</button>
+
+</section>
+
+<!-- SCREEN 2 -->
+
+<section class="screen hidden"
+id="screen2">
+
+<div class="title">
+کەتەگۆری وشە
+</div>
+
+<div class="sub">
+دەتوانیت زیاتر لە یەک کەتەگۆری هەڵبژێریت
+</div>
+
+<div class="category-grid">
+
+<div class="category cat1"
+onclick="selectCategory(this,'Movies')">
+
+<h2>فیلم</h2>
+
+<p>
+فیلم و دراما و ئەکتەرە ناسراوەکان
+</p>
+
+<img src="https://cdn-icons-png.flaticon.com/512/2503/2503508.png">
+
+</div>
+
+<div class="category cat2"
+onclick="selectCategory(this,'Countries')">
+
+<h2>وڵات</h2>
+
+<p>
+شار و وڵات و شوێنی ناسراو
+</p>
+
+<img src="https://cdn-icons-png.flaticon.com/512/201/201623.png">
+
+</div>
+
+<div class="category cat3"
+onclick="selectCategory(this,'Food')">
+
+<h2>خواردن</h2>
+
+<p>
+خواردن و خواردنەوە و شیرینی
+</p>
+
+<img src="https://cdn-icons-png.flaticon.com/512/5787/5787016.png">
+
+</div>
+
+<div class="category cat4"
+onclick="selectCategory(this,'Games')">
+
+<h2>یاری</h2>
+
+<p>
+ناوی یاری و کاراکتەرەکان
+</p>
+
+<img src="https://cdn-icons-png.flaticon.com/512/686/686589.png">
+
+</div>
+
+</div>
+
+<button class="start-btn"
+onclick="startCards()">
+بەردەوامبە
+</button>
+
+</section>
+
+<!-- SCREEN 3 -->
+
+<section class="screen hidden"
+id="screen3">
+
+<div class="top-status">
+
+<div class="badge"
+id="playerCounter">
+</div>
+
+<div class="badge"
+id="categoryBadge">
+</div>
+
+</div>
+
+<div class="turn-box">
+
+<div class="player-turn">
+کارتی
+<span id="turnPlayer"></span>
+</div>
+
+<div class="card-area">
+
+<div class="word-card"
+id="wordCard">
+
+<div class="card-face card-front">
+
+<div class="card-top">
+
+<div>
+کارت
+</div>
+
+<div class="avatar-big"
+id="avatarFront">
+</div>
+
+</div>
+
+<div class="secret-word">
+؟
+</div>
+
+<div class="card-hint hold-text">
+دەستت لەسەر کارتەکە راگرە
+</div>
+
+</div>
+
+<div class="card-face card-back">
+
+<div class="card-top">
+
+<div id="roleText">
+Player
+</div>
+
+<div class="avatar-big"
+id="avatarBack">
+</div>
+
+</div>
+
+<div class="secret-word"
+id="secretWord">
+WORD
+</div>
+
+<div class="card-hint">
+وشەکە لەبیر بگرە
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<button class="next-btn"
+id="nextBtn"
+onclick="nextPlayer()">
+
+یاریزانی دواتر
+
+</button>
+
+</div>
+
+</section>
+
+<!-- SCREEN 4 ـەکە بەم شێوەیە بگۆڕە -->
+
+<section class="screen hidden"
+id="screen4">
+
+<div class="title">
+دەستپێکەر
+</div>
+
+<div class="glass start-player-box">
+
+<div class="start-avatar">
+<img id="starterAvatar" src="">
+</div>
+
+<div class="start-name"
+id="starterName">
+Player
+</div>
+
+<div class="start-text">
+تۆ سەرەتا دەست پێ بکە
+</div>
+
+<!-- START BUTTON -->
+
+<button class="play-btn"
+id="startRoundBtn"
+onclick="startTimer()">
+
+باشە
+
+</button>
+
+<!-- TIMER -->
+
+<div class="timer"
+id="timer">
+00:00
+</div>
+
+<!-- CONTROL BUTTONS -->
+
+<div class="timer-controls hidden"
+id="timerControls">
+
+<button class="icon-btn"
+id="pauseBtn"
+onclick="togglePause()">
+
+<svg viewBox="0 0 24 24">
+<rect x="6" y="4" width="4" height="16"/>
+<rect x="14" y="4" width="4" height="16"/>
+</svg>
+
+</button>
+
+<button class="icon-btn end-btn"
+onclick="finishRound()">
+
+<svg viewBox="0 0 24 24">
+<rect x="5" y="5" width="14" height="14"/>
+</svg>
+
+</button>
+
+<button class="icon-btn"
+onclick="restartTimer()">
+
+<svg viewBox="0 0 24 24">
+<path d="M12 5V1L7 6l5 5V7c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6H4c0 4.4 3.6 8 8 8s8-3.6 8-8-3.6-8-8-8z"/>
+</svg>
+
+</button>
+
+</div>
+
+<div class="sound-wave">
+
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- تەنها ئەم SCRIPT ـەی خوارەوە دابنێ لەجیاتی SCRIPT ـی پێشوو -->
+
+<script>
+
+const avatars = [
+
+"https://api.dicebear.com/7.x/adventurer/svg?seed=Max",
+"https://api.dicebear.com/7.x/adventurer/svg?seed=Milo",
+"https://api.dicebear.com/7.x/adventurer/svg?seed=Leo",
+"https://api.dicebear.com/7.x/adventurer/svg?seed=Alex",
+"https://api.dicebear.com/7.x/adventurer/svg?seed=Sam",
+"https://api.dicebear.com/7.x/adventurer/svg?seed=Loki",
+"https://api.dicebear.com/7.x/adventurer/svg?seed=Rex",
+"https://api.dicebear.com/7.x/adventurer/svg?seed=Karo",
+"https://api.dicebear.com/7.x/adventurer/svg?seed=Jude",
+"https://api.dicebear.com/7.x/adventurer/svg?seed=Zino"
+
+];
+
+const words = {
+
+Movies:[
+"Interstellar",
+"Avatar",
+"Titanic",
+"Joker",
+"Batman",
+"Gladiator",
+"Venom",
+"Frozen"
+],
+
+Countries:[
+"Iraq",
+"Japan",
+"Brazil",
+"France",
+"Canada",
+"Spain",
+"Egypt",
+"Italy"
+],
+
+Food:[
+"Burger",
+"Pizza",
+"Kebab",
+"Pasta",
+"Shawarma",
+"Cake",
+"Pepsi",
+"Steak"
+],
+
+Games:[
+"Minecraft",
+"PUBG",
+"FIFA",
+"Roblox",
+"Fortnite",
+"Free Fire",
+"Call Of Duty",
+"Valorant"
+]
+
+};
+
+let players = [];
+let selectedCategories = [];
+let selectedCategory = "";
+let currentIndex = 0;
+
+let spyIndexes = [];
+let gameWord = "";
+
+let holdTimer;
+let cardOpened = false;
+
+let timerStarted = false;
+
+function addPlayer(){
+
+const input =
+document.getElementById("playerInput");
+
+const value =
+input.value.trim();
+
+if(!value) return;
+
+if(players.length >= 10){
+
+alert("زیاتر لە 10 یاریزان نابێت");
+return;
+
+}
+
+players.push(value);
+
+renderPlayers();
+
+input.value = "";
+
+}
+
+function renderPlayers(){
+
+const box =
+document.getElementById("playersBox");
+
+box.innerHTML = "";
+
+players.forEach((p,i)=>{
+
+box.innerHTML += `
+
+<div class="player-item">
+
+<div class="avatar">
+<img src="${avatars[i % avatars.length]}">
+</div>
+
+<div class="player-name">
+${p}
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+function goCategory(){
+
+if(players.length < 3){
+
+alert("کەمترین ژمارە 3 یاریزانە");
+return;
+
+}
+
+document.getElementById("screen1")
+.classList.add("hidden");
+
+document.getElementById("screen2")
+.classList.remove("hidden");
+
+}
+
+function selectCategory(el,cat){
+
+el.classList.toggle("active");
+
+if(selectedCategories.includes(cat)){
+
+selectedCategories =
+selectedCategories.filter(c=>c !== cat);
+
+}else{
+
+selectedCategories.push(cat);
+
+}
+
+}
+
+function startCards(){
+
+if(selectedCategories.length == 0){
+
+alert("لانیکەم یەک کەتەگۆری هەڵبژێرە");
+return;
+
+}
+
+const randomCategory =
+selectedCategories[
+Math.floor(
+Math.random() *
+selectedCategories.length
+)
+];
+
+selectedCategory = randomCategory;
+
+const randomWords =
+words[randomCategory];
+
+gameWord =
+randomWords[
+Math.floor(
+Math.random() *
+randomWords.length
+)
+];
+
+const spyCount =
+parseInt(
+document.getElementById("spyCount").value
+);
+
+spyIndexes = [];
+
+while(spyIndexes.length < spyCount){
+
+let rand =
+Math.floor(Math.random()*players.length);
+
+if(!spyIndexes.includes(rand)){
+
+spyIndexes.push(rand);
+
+}
+
+}
+
+currentIndex = 0;
+
+document.getElementById("screen2")
+.classList.add("hidden");
+
+document.getElementById("screen3")
+.classList.remove("hidden");
+
+showPlayer();
+
+}
+
+let timerInterval;
+let currentTime = 0;
+let isPaused = false;
+
+function startTimer(){
+
+if(timerStarted) return;
+
+timerStarted = true;
+
+document.getElementById("startRoundBtn")
+.classList.add("hidden");
+
+document.getElementById("timerControls")
+.classList.remove("hidden");
+
+currentTime =
+parseInt(
+document.getElementById("gameTime").value
+);
+
+updateTimer(currentTime);
+
+const beep = new Audio(
+"https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+);
+
+timerInterval = setInterval(()=>{
+
+if(isPaused) return;
+
+currentTime--;
+
+beep.currentTime = 0;
+beep.play();
+
+updateTimer(currentTime);
+
+if(currentTime <= 0){
+
+clearInterval(timerInterval);
+
+document.getElementById("timer")
+.innerText = "END";
+
+document.getElementById("timer")
+.style.color = "#d60000";
+
+}
+
+},1000);
+
+}
+
+function togglePause(){
+
+isPaused = !isPaused;
+
+const timer =
+document.getElementById("timer");
+
+const pauseBtn =
+document.getElementById("pauseBtn");
+
+if(isPaused){
+
+timer.classList.add("paused");
+
+pauseBtn.innerHTML = `
+
+<svg viewBox="0 0 24 24">
+<path d="M8 5v14l11-7z"/>
+</svg>
+
+`;
+
+}else{
+
+timer.classList.remove("paused");
+
+pauseBtn.innerHTML = `
+
+<svg viewBox="0 0 24 24">
+<rect x="6" y="4" width="4" height="16"/>
+<rect x="14" y="4" width="4" height="16"/>
+</svg>
+
+`;
+
+}
+
+}
+
+function finishRound(){
+
+clearInterval(timerInterval);
+
+document.getElementById("timer")
+.innerText = "END";
+
+document.getElementById("timer")
+.style.color = "#d60000";
+
+}
+
+function restartTimer(){
+
+clearInterval(timerInterval);
+
+timerStarted = false;
+
+isPaused = false;
+
+document.getElementById("timer")
+.style.color = "#111";
+
+document.getElementById("timer")
+.classList.remove("paused");
+
+document.getElementById("pauseBtn").innerHTML = `
+
+<svg viewBox="0 0 24 24">
+<rect x="6" y="4" width="4" height="16"/>
+<rect x="14" y="4" width="4" height="16"/>
+</svg>
+
+`;
+
+startTimer();
+
+}
+
+
+
+function showPlayer(){
+
+cardOpened = false;
+
+const card =
+document.getElementById("wordCard");
+
+card.classList.remove("flip");
+
+document.getElementById("nextBtn")
+.classList.remove("active");
+
+let name = players[currentIndex];
+
+document.getElementById("turnPlayer")
+.innerText = name;
+
+document.getElementById("playerCounter")
+.innerText =
+`${currentIndex + 1} / ${players.length}`;
+
+document.getElementById("categoryBadge")
+.innerText = selectedCategory;
+
+document.getElementById("avatarFront")
+.innerHTML =
+`<img src="${avatars[currentIndex % avatars.length]}">`;
+
+document.getElementById("avatarBack")
+.innerHTML =
+`<img src="${avatars[currentIndex % avatars.length]}">`;
+
+const isSpy =
+spyIndexes.includes(currentIndex);
+
+if(isSpy){
+
+document.getElementById("roleText")
+.innerText = "سیخور";
+
+document.getElementById("secretWord")
+.innerText = "تۆ سیخوریت";
+
+}else{
+
+document.getElementById("roleText")
+.innerText = "وشە";
+
+document.getElementById("secretWord")
+.innerText = gameWord;
+
+}
+
+}
+
+function openCard(){
+
+if(cardOpened) return;
+
+cardOpened = true;
+
+document.getElementById("wordCard")
+.classList.add("flip");
+
+}
+
+function closeCard(){
+
+cardOpened = false;
+
+document.getElementById("wordCard")
+.classList.remove("flip");
+
+document.getElementById("nextBtn")
+.classList.add("active");
+
+}
+
+const card =
+document.getElementById("wordCard");
+
+card.addEventListener("touchstart",()=>{
+
+holdTimer = setTimeout(()=>{
+
+openCard();
+
+},250);
+
+});
+
+card.addEventListener("touchend",()=>{
+
+clearTimeout(holdTimer);
+
+closeCard();
+
+});
+
+card.addEventListener("mousedown",()=>{
+
+holdTimer = setTimeout(()=>{
+
+openCard();
+
+},250);
+
+});
+
+card.addEventListener("mouseup",()=>{
+
+clearTimeout(holdTimer);
+
+closeCard();
+
+});
+
+card.addEventListener("mouseleave",()=>{
+
+clearTimeout(holdTimer);
+
+closeCard();
+
+});
+
+function nextPlayer(){
+
+currentIndex++;
+
+if(currentIndex >= players.length){
+
+document.getElementById("screen3")
+.classList.add("hidden");
+
+document.getElementById("screen4")
+.classList.remove("hidden");
+
+const starter =
+Math.floor(Math.random()*players.length);
+
+document.getElementById("starterName")
+.innerText =
+players[starter];
+
+document.getElementById("starterAvatar")
+.src =
+avatars[starter % avatars.length];
+
+return;
+
+}
+
+showPlayer();
+
+}
+
+function startTimer(){
+
+if(timerStarted) return;
+
+timerStarted = true;
+
+let time =
+parseInt(
+document.getElementById("gameTime").value
+);
+
+updateTimer(time);
+
+const beep = new Audio(
+"https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+);
+
+const interval = setInterval(()=>{
+
+time--;
+
+beep.currentTime = 0;
+beep.play();
+
+updateTimer(time);
+
+if(time <= 0){
+
+clearInterval(interval);
+
+document.getElementById("timer")
+.innerText = "END";
+
+}
+
+},1000);
+
+}
+
+function updateTimer(sec){
+
+const m =
+Math.floor(sec/60)
+.toString()
+.padStart(2,"0");
+
+const s =
+(sec%60)
+.toString()
+.padStart(2,"0");
+
+document.getElementById("timer")
+.innerText =
+`${m}:${s}`;
+
+}
+
+</script>
+
+</body>
+</html>
