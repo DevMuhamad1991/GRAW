@@ -851,45 +851,64 @@ select {
     </div>
   </div>
  
-  <div id="customWordPanel" class="hidden" style="grid-column:span 2;">
-  <div class="glass input-card" style="margin-top:0;">
-    
-    <!-- سەرەوە: ناو + دوگمەی X -->
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <label style="margin-bottom:0;">وشەی تایبەت</label>
-      <button onclick="vib();toggleCustomWordPanel()" 
-        style="width:34px;height:34px;border-radius:10px;background:#ff4d4d;border:none;color:#fff;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">✕</button>
-    </div>
 
-    <!-- ئاگادارکردنەوە -->
-    <div style="background:#fffbe8;border-radius:14px;padding:10px 14px;margin-bottom:14px;font-size:13px;font-weight:700;color:#7a5200;display:flex;gap:8px;align-items:flex-start;">
-<span style="width:28px;height:28px;background:#ffd400;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
-  <svg viewBox="0 0 24 24" width="16" height="16" fill="#111">
-    <path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/>
-  </svg>
-</span>
+    <div class="category-grid">
+    <!-- ... هەموو کەتەگۆریەکان ... -->
 
-      <span>مۆبایلەکە بدە بە مێوانێک — وشەکە بنووسێت بەبێ ئەوەی کەسی تر بیبینێت!</span>
-    </div>
-
-    <!-- ئینپوت -->
-    <div style="display:flex;gap:10px;align-items:flex-start;">
-      <div style="position:relative;flex:1;">
-        <input type="password" id="customWordInput" placeholder="وشەیەک بنووسە..." autocomplete="off"
-          onkeydown="if(event.key==='Enter'){vib();addCustomWord();}">
-        <button onclick="vib();toggleCustomWordVisibility()" id="toggleVisBtn"
-          style="position:absolute;left:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;">
-          <svg id="eyeIcon" viewBox="0 0 24 24" width="22" height="22" fill="#999">
-            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-          </svg>
-        </button>
+    <!-- وشەی تایبەت — ناو grid -->
+    <div class="category" style="grid-column:span 2;background:linear-gradient(135deg,#fff7dd,#fff0a0);min-height:clamp(100px,22vw,140px);" 
+      onclick="vib();toggleCustomWordPanel()">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+        </svg>
+        وشەی تایبەت
+      </h2>
+      <p>مێوانێک وشەکە بنووسێت — سوپرایزتر دەبێت!</p>
+      <div class="cat-bg-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+        </svg>
       </div>
-      <button class="add-btn" onclick="vib();addCustomWord()">زیادکردن</button>
     </div>
 
-    <div id="customWordTags" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
-  </div>
-</div>
+    <!-- پانێل — ناو grid -->
+    <div id="customWordPanel" class="hidden" style="grid-column:span 2;">
+      <div class="glass input-card" style="margin-top:0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <label style="margin-bottom:0;">وشەی تایبەت</label>
+          <button onclick="vib();toggleCustomWordPanel()" 
+            style="width:34px;height:34px;border-radius:10px;background:#ff4d4d;border:none;color:#fff;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">✕</button>
+        </div>
+        <div style="background:#fffbe8;border-radius:14px;padding:10px 14px;margin-bottom:14px;font-size:13px;font-weight:700;color:#7a5200;display:flex;gap:8px;align-items:flex-start;">
+          <span style="width:28px;height:28px;background:#ffd400;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="#111">
+              <path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/>
+            </svg>
+          </span>
+          <span>مۆبایلەکە بدە بە مێوانێک — وشەکە بنووسێت بەبێ ئەوەی کەسی تر بیبینێت!</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="position:relative;flex:1;">
+            <input type="password" id="customWordInput" placeholder="وشەیەک بنووسە..." autocomplete="off"
+              onkeydown="if(event.key==='Enter'){vib();addCustomWord();}">
+            <button onclick="vib();toggleCustomWordVisibility()" id="toggleVisBtn"
+              style="position:absolute;left:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;">
+              <svg id="eyeIcon" viewBox="0 0 24 24" width="22" height="22" fill="#999">
+                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+              </svg>
+            </button>
+          </div>
+          <button class="add-btn" onclick="vib();addCustomWord()">زیادکردن</button>
+        </div>
+        <div id="customWordTags" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
+      </div>
+    </div>
+
+  </div><!-- کۆتایی category-grid -->
+
+  <button class="start-btn" onclick="vib();startCards()">بەردەوامبە</button>
+</section>
 
 
   <button class="start-btn" onclick="vib();startCards()">بەردەوامبە</button>
