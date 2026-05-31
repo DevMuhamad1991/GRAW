@@ -302,6 +302,13 @@ select {
 }
 .player-turn span{color:#b88600;}
 
+
+#customWordPanel {
+  transition: all .3s cubic-bezier(.34,1.1,.64,1);
+  overflow: hidden;
+}
+
+
 /* WORD CARD */
 .card-area{display:flex;justify-content:center;perspective:1200px;}
 .word-card{
@@ -1282,13 +1289,28 @@ function toggleCustomWordPanel(){
   const panel = document.getElementById('customWordPanel');
   const cat = document.getElementById('customCat');
   const isHidden = panel.classList.contains('hidden');
-  panel.classList.toggle('hidden');
-  if(!isHidden){
-    if(customWords.length === 0) cat.classList.remove('active');
-  } else {
+  
+  if(isHidden){
+    panel.classList.remove('hidden');
+    panel.style.opacity = '0';
+    panel.style.transform = 'translateY(-10px)';
+    setTimeout(()=>{
+      panel.style.opacity = '1';
+      panel.style.transform = 'translateY(0)';
+    }, 10);
     setTimeout(()=> document.getElementById('customWordInput').focus(), 300);
+  } else {
+    panel.style.opacity = '0';
+    panel.style.transform = 'translateY(-10px)';
+    setTimeout(()=>{
+      panel.classList.add('hidden');
+      panel.style.opacity = '';
+      panel.style.transform = '';
+      if(customWords.length === 0) cat.classList.remove('active');
+    }, 280);
   }
 }
+
 
 
 
