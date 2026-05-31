@@ -853,7 +853,7 @@ select {
 
 
     <!-- وشەی تایبەت — ناو grid -->
-    <div class="category" style="grid-column:span 2;background:linear-gradient(135deg,#fff7dd,#fff0a0);min-height:clamp(100px,22vw,140px);" 
+    <div class="category"  id="customCat" style="grid-column:span 2;background:linear-gradient(135deg,#fff7dd,#fff0a0);min-height:clamp(100px,22vw,140px);" 
       onclick="vib();toggleCustomWordPanel()">
       <h2>
         <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
@@ -1280,12 +1280,18 @@ setTimeout(hideLoader,6000); // fallback
 
 function toggleCustomWordPanel(){
   const panel = document.getElementById('customWordPanel');
+  const cat = document.getElementById('customCat');
   const isHidden = panel.classList.contains('hidden');
   panel.classList.toggle('hidden');
-  if(isHidden){
+  // select تەنیا کاتێک وشە هەبێت
+  if(!isHidden){
+    // داخستن — ئەگەر وشە نەبوو select لاببە
+    if(customWords.length === 0) cat.classList.remove('active');
+  } else {
     setTimeout(()=> document.getElementById('customWordInput').focus(), 300);
   }
 }
+
 
 
 /* ══════════════════════════════════════
@@ -1522,35 +1528,40 @@ function selectCategory(el,cat){
   else{selectedCategories.push(cat);}
 }
 function prepareGame(){
-  selectedCategory=selectedCategories[Math.floor(Math.random()*selectedCategories.length)];
-  let avail = [];
-selectedCategories.forEach(c => {
-  avail.push(...words[c].filter(w => !usedWords.includes(w)));
-});
+ let avail = [];
+ selectedCategories.forEach(c => {
+   avail.push(...(words[c] || []).filter(w => !usedWords.includes(w)));
+ });
+ const availCustom = customWords.filter(w => !usedWords.includes(w));
+ avail.push(...availCustom);
 
-// وشە تایبەتەکان زیاد بکە
-const availCustom = customWords.filter(w => !usedWords.includes(w));
-avail.push(...availCustom);
+ if(avail.length === 0){
+   usedWords = [];
+   selectedCategories.forEach(c => avail.push(...(words[c] || [])));
+   avail.push(...customWords);
+ }
 
-// ئەگەر هەموو بەکارهات
-if(avail.length === 0){
-  usedWords = [];
-  selectedCategories.forEach(c => avail.push(...words[c]));
-  avail.push(...customWords);
+ gameWord = avail[Math.floor(Math.random() * avail.length)];
+ usedWords.push(gameWord);
+
+ if(selectedCategories.length > 0){
+   selectedCategory = selectedCategories[Math.floor(Math.random() * selectedCategories.length)];
+ } else {
+   selectedCategory = "تایبەت";
+ }
+
+ spyIndexes = [];
+ const rawVal = document.getElementById("spyCount").value;
+ const spyCount = rawVal === "random"
+   ? Math.floor(Math.random() * 3) + 1
+   : parseInt(rawVal);
+ while(spyIndexes.length < spyCount){
+   const rand = Math.floor(Math.random() * players.length);
+   if(!spyIndexes.includes(rand)) spyIndexes.push(rand);
+ }
+ currentIndex = 0;
 }
 
-gameWord = avail[Math.floor(Math.random() * avail.length)];
-
-  usedWords.push(gameWord);
-  spyIndexes=[];
-const rawVal = document.getElementById("spyCount").value;
-const spyCount = rawVal === "random"
-  ? Math.floor(Math.random() * 3) + 1
-  : parseInt(rawVal);
-
-  while(spyIndexes.length<spyCount){const rand=Math.floor(Math.random()*players.length);if(!spyIndexes.includes(rand))spyIndexes.push(rand);}
-  currentIndex=0;
-}
 function startCards(){
   if(selectedCategories.length===0){vib('error');showModal({title:"جۆری وشە هەڵبژێرە",msg:"تکایە لانیکەم یەک وشە هەڵبژێرە پێش دەستپێکردن.",icon:"warn"});return;}
   prepareGame();showScreen("screen3");showPlayer();
@@ -1667,11 +1678,10 @@ function playAgain(){prepareGame();showScreen("screen3");showPlayer();}
 function resetAll(){
   spyIndexes=[];
   usedWords=[];
-  customWords=[];
-  renderCustomWordTags();
   document.getElementById("spyCards").innerHTML="";
   showScreen("screen1");
 }
+
 
 const _screens=['screen1','screen2','screen3','screen4','screen5'];
 function showScreen(id){
