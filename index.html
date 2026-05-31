@@ -21,15 +21,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@700;800&display=swap" rel="stylesheet">
-  
-  <link rel="manifest" href="manifest.json">
-<script>
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('/F/sw.js');
-  }
-</script>
-
-  
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Noto Sans Arabic',sans-serif;-webkit-tap-highlight-color:transparent;}
 
@@ -767,10 +758,10 @@ select {
       <div>
         <label>ژمارەی سیخور</label>
         <select id="spyCount" onchange="vib()">
-          <option value="random">راندۆم 🎲</option>
           <option value="1">1 سیخور</option>
           <option value="2">2 سیخور</option>
           <option value="3">3 سیخور</option>
+          <option value="random">🎲 هەڕەمەکی</option>
         </select>
       </div>
       <div>
@@ -791,13 +782,6 @@ select {
     <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
     کەمترین یاریزان ٣ یاریزانە — تکایە یاریزان زیاد بکە
   </div>
-  
-  <button class="start-btn hidden" id="installBtn" 
-  style="background:linear-gradient(135deg,#111,#333);color:#fff;margin-top:10px;"
-  onclick="vib();installApp()">
-  📲 زیادکردن بۆ هۆم سکرین
-</button>
-
 
   <!-- ══ AD BANNER ══ -->
   <div class="ad-banner" id="adBanner">
@@ -1771,30 +1755,6 @@ setTimeout(()=>{
   _wnewCdTick=setInterval(()=>{remaining--;cdEl.textContent=remaining>0?remaining:"";},1000);
   _wnewAutoClose=setTimeout(closeWnew,SECS*1000);
 },700);
-
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('installBtn').classList.remove('hidden');
-});
-
-function installApp(){
-  if(!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(result => {
-    deferredPrompt = null;
-    document.getElementById('installBtn').classList.add('hidden');
-  });
-}
-
-window.addEventListener('appinstalled', () => {
-  document.getElementById('installBtn').classList.add('hidden');
-});
-
-
-
 </script>
 </body>
 </html>
