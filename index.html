@@ -1283,14 +1283,13 @@ function toggleCustomWordPanel(){
   const cat = document.getElementById('customCat');
   const isHidden = panel.classList.contains('hidden');
   panel.classList.toggle('hidden');
-  // select تەنیا کاتێک وشە هەبێت
   if(!isHidden){
-    // داخستن — ئەگەر وشە نەبوو select لاببە
     if(customWords.length === 0) cat.classList.remove('active');
   } else {
     setTimeout(()=> document.getElementById('customWordInput').focus(), 300);
   }
 }
+
 
 
 
@@ -1346,6 +1345,7 @@ function removeCustomWord(word){
 
 function renderCustomWordTags(){
   const box = document.getElementById('customWordTags');
+  const cat = document.getElementById('customCat');
   box.innerHTML = '';
   customWords.forEach(w => {
     const tag = document.createElement('div');
@@ -1353,7 +1353,9 @@ function renderCustomWordTags(){
     tag.innerHTML = `${w} <button onclick="vib();removeCustomWord('${w}')" style="background:none;border:none;color:#ff4d4d;font-size:16px;font-weight:900;cursor:pointer;padding:0;line-height:1;">✕</button>`;
     box.appendChild(tag);
   });
+  if(cat) cat.classList.toggle('active', customWords.length > 0);
 }
+
 
 
 function onPlayerFocus(){renderSuggestions(document.getElementById("playerInput").value.trim());}
