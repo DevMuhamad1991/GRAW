@@ -791,6 +791,13 @@ select {
     <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
     کەمترین یاریزان ٣ یاریزانە — تکایە یاریزان زیاد بکە
   </div>
+  
+  <button class="start-btn hidden" id="installBtn" 
+  style="background:linear-gradient(135deg,#111,#333);color:#fff;margin-top:10px;"
+  onclick="vib();installApp()">
+  📲 زیادکردن بۆ هۆم سکرین
+</button>
+
 
   <!-- ══ AD BANNER ══ -->
   <div class="ad-banner" id="adBanner">
@@ -1764,6 +1771,30 @@ setTimeout(()=>{
   _wnewCdTick=setInterval(()=>{remaining--;cdEl.textContent=remaining>0?remaining:"";},1000);
   _wnewAutoClose=setTimeout(closeWnew,SECS*1000);
 },700);
+
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').classList.remove('hidden');
+});
+
+function installApp(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(result => {
+    deferredPrompt = null;
+    document.getElementById('installBtn').classList.add('hidden');
+  });
+}
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBtn').classList.add('hidden');
+});
+
+
+
 </script>
 </body>
 </html>
