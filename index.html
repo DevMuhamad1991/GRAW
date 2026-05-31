@@ -866,21 +866,52 @@ select {
   </div>
 </div>
 
+<div class="category" style="grid-column:span 2;background:linear-gradient(135deg,#fff7dd,#fff0a0);min-height:clamp(100px,22vw,140px);" 
+  onclick="vib();toggleCustomWordPanel()">
+  <h2>
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+    </svg>
+    وشەی تایبەت
+  </h2>
+  <p>مێوانێک وشەکە بنووسێت — سوپرایزتر دەبێت!</p>
+  <div class="cat-bg-icon">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+    </svg>
+  </div>
+</div>
+
 <!-- پانێلی وشەی تایبەت -->
 <div id="customWordPanel" class="hidden" style="grid-column:span 2;">
   <div class="glass input-card" style="margin-top:0;">
     <div style="background:#fffbe8;border-radius:14px;padding:10px 14px;margin-bottom:14px;font-size:13px;font-weight:700;color:#7a5200;display:flex;gap:8px;align-items:flex-start;">
       <span style="font-size:16px;">🎭</span>
-      <span>مۆبایلەکە بدە بە مێوانێک — وشەکە بنووسێت بەبێ ئەوەی کەسی تر بیبینێت — سوپرایزتر دەبێت!</span>
+      <span>مۆبایلەکە بدە بە مێوانێک — وشەکە بنووسێت بەبێ ئەوەی کەسی تر بیبینێت!</span>
     </div>
     <div style="display:flex;gap:10px;align-items:flex-start;">
-      <input type="password" id="customWordInput" placeholder="وشەیەک بنووسە..." autocomplete="off"
-        onkeydown="if(event.key==='Enter'){vib();addCustomWord();}">
-      <button class="add-btn" onclick="vib();addCustomWord()">زیادکردن</button>
+      <div style="position:relative;flex:1;">
+        <input type="text" id="customWordInput" placeholder="وشەیەک بنووسە..." autocomplete="off"
+          style="-webkit-text-security:disc;text-security:disc;"
+          onkeydown="if(event.key==='Enter'){vib();addCustomWord();}">
+        <button onclick="vib();toggleCustomWordVisibility()" id="toggleVisBtn"
+          style="position:absolute;left:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;">
+          <svg id="eyeIcon" viewBox="0 0 24 24" width="22" height="22" fill="#999">
+            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+          </svg>
+        </button>
+      </div>
+      <button class="add-btn" onclick="vib();addCustomWord()">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="white" style="vertical-align:middle;margin-left:4px;">
+          <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+        </svg>
+        پاشەکەوت
+      </button>
     </div>
     <div id="customWordTags" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
   </div>
 </div>
+
 
   <button class="start-btn" onclick="vib();startCards()">بەردەوامبە</button>
 </section>
@@ -1142,6 +1173,20 @@ let adAutoTimer = null;
 const AD_INTERVAL = 4000; // ms between auto-slides
 let adProgress = 0;
 let adProgressTimer = null;
+
+
+let customWordVisible = false;
+
+function toggleCustomWordVisibility(){
+  customWordVisible = !customWordVisible;
+  const input = document.getElementById('customWordInput');
+  const icon = document.getElementById('eyeIcon');
+  input.style.webkitTextSecurity = customWordVisible ? 'none' : 'disc';
+  input.style.textSecurity = customWordVisible ? 'none' : 'disc';
+  icon.style.fill = customWordVisible ? '#111' : '#999';
+}
+
+
 
 function buildAdBanner() {
   const track = document.getElementById('adTrack');
@@ -1656,6 +1701,7 @@ function resetAll(){
   document.getElementById("spyCards").innerHTML="";
   showScreen("screen1");
 }
+
 const _screens=['screen1','screen2','screen3','screen4','screen5'];
 function showScreen(id){
   _screens.forEach(s=>{
