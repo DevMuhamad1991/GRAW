@@ -128,8 +128,12 @@ select{
 
 /* ══ BOTTOM NAVBAR ══ */
 .nav-bar {
+  .nav-bar {
   position: fixed;
-  bottom: 0; left: 0; right: 0;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  border-radius: 28px;
   z-index: 500;
   display: flex;
   justify-content: space-around;
@@ -1138,33 +1142,57 @@ select {
 <!-- PORTAL for suggestion dropdown -->
 <div class="suggestion-portal" id="suggPortal"></div>
 
-  <!-- BOTTOM NAVBAR -->
+<!-- BOTTOM NAVBAR -->
 <nav class="nav-bar" id="navBar">
   <!-- Home -->
-  <div class="nav-item active" id="nav-home" onclick="vib();navTo('home')">
+  <div class="nav-item active" id="nav-home"
+    onmousedown="navHoldStart('home',this)"
+    onmouseup="navHoldEnd('home')"
+    onmouseleave="clearTimeout(_navHoldTimer)"
+    ontouchstart="navHoldStart('home',this)"
+    ontouchend="navHoldEnd('home')">
     <div class="nav-icon-wrap">
       <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
     </div>
   </div>
+
   <!-- ئامار -->
-  <div class="nav-item" id="nav-stats" onclick="vib();navTo('stats')">
+  <div class="nav-item" id="nav-stats"
+    onmousedown="navHoldStart('stats',this)"
+    onmouseup="navHoldEnd('stats')"
+    onmouseleave="clearTimeout(_navHoldTimer)"
+    ontouchstart="navHoldStart('stats',this)"
+    ontouchend="navHoldEnd('stats')">
     <div class="nav-icon-wrap">
       <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
     </div>
   </div>
+
   <!-- پێداچوونەوە -->
-  <div class="nav-item" id="nav-review" onclick="vib();navTo('review')">
+  <div class="nav-item" id="nav-review"
+    onmousedown="navHoldStart('review',this)"
+    onmouseup="navHoldEnd('review')"
+    onmouseleave="clearTimeout(_navHoldTimer)"
+    ontouchstart="navHoldStart('review',this)"
+    ontouchend="navHoldEnd('review')">
     <div class="nav-icon-wrap">
       <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
     </div>
   </div>
+
   <!-- دروستکەری وێب -->
-  <div class="nav-item" id="nav-dev" onclick="vib();navTo('dev')">
+  <div class="nav-item" id="nav-dev"
+    onmousedown="navHoldStart('dev',this)"
+    onmouseup="navHoldEnd('dev')"
+    onmouseleave="clearTimeout(_navHoldTimer)"
+    ontouchstart="navHoldStart('dev',this)"
+    ontouchend="navHoldEnd('dev')">
     <div class="nav-icon-wrap">
       <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
     </div>
   </div>
 </nav>
+
 
 
 </div><!-- end app-wrap -->
@@ -1844,14 +1872,58 @@ setTimeout(()=>{
 },700);
 
 /* ══ NAVBAR ══ */
+/* ══ NAVBAR ══ */
+let _navHoldTimer = null;
+let _navHoldFired = false;
+
 function navTo(tab) {
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
   document.getElementById('nav-' + tab).classList.add('active');
-  if (tab === 'home') {
-    showScreen('screen1');
-  }
-  // بەشەکانی تر ئێستا بەتاڵن
+  if (tab === 'home') showScreen('screen1');
 }
+
+function navHoldStart(tab, el) {
+  _navHoldFired = false;
+  _navHoldTimer = setTimeout(() => {
+    _navHoldFired = true;
+    vib('heavy');
+    navTo(tab);
+    showNavToast();
+  }, 500);
+}
+
+function navHoldEnd(tab) {
+  clearTimeout(_navHoldTimer);
+  if (_navHoldFired) return; // hold کارەکەی کرد — یەک کلیک نەکە
+  vib('light');
+  navTo(tab); // یەک کلیک ئاسایی
+}
+
+function showNavToast() {
+  let t = document.getElementById('navToast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'navToast';
+    t.style.cssText = `
+      position:fixed; bottom:110px; left:50%; transform:translateX(-50%);
+      background:rgba(0,0,0,0.75); color:#fff;
+      padding:10px 20px; border-radius:100px;
+      font-size:13px; font-weight:700;
+      backdrop-filter:blur(10px);
+      z-index:9999; white-space:nowrap;
+      opacity:0; transition:opacity .25s ease;
+      font-family:'Noto Sans Arabic',sans-serif;
+    `;
+    t.innerText = '✋ هۆلد بکە بۆ گۆرینی بەشەکان';
+    document.body.appendChild(t);
+  }
+  clearTimeout(t._hide);
+  t.style.opacity = '1';
+  t._hide = setTimeout(() => t.style.opacity = '0', 2500);
+}
+
+setTimeout(showNavToast, 1500);
+
 
 </script>
 </body>
