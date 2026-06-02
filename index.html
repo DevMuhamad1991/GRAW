@@ -109,79 +109,6 @@ body{
 .title{font-size:var(--fs-xxl);font-weight:800;margin-bottom:6px;}
 .sub{font-size:var(--fs-base);opacity:.7;margin-bottom:var(--gap-md);}
 
-/* NAV TOOLTIP */
-.nav-tooltip{
-  position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%) scale(.8);
-  background:rgba(28,28,30,.95);
-  color:#fff;font-size:12px;font-weight:800;
-  padding:6px 14px;border-radius:100px;
-  white-space:nowrap;
-  opacity:0;pointer-events:none;
-  transition:opacity .2s ease, transform .25s cubic-bezier(.34,1.56,.64,1);
-  border:1px solid rgba(255,255,255,.1);
-  box-shadow:0 4px 16px rgba(0,0,0,.3);
-}
-.nav-tooltip::after{
-  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
-  border:5px solid transparent;
-  border-top-color:rgba(28,28,30,.95);
-}
-.nav-item:hover .nav-tooltip,
-.nav-item.show-tooltip .nav-tooltip{
-  opacity:1;transform:translateX(-50%) scale(1);
-}
-
-/* NAV BADGE */
-.nav-badge{
-  position:absolute;top:6px;right:6px;
-  min-width:18px;height:18px;
-  background:#ff3b3b;
-  border-radius:100px;
-  border:2px solid rgba(28,28,30,.85);
-  font-size:10px;font-weight:800;color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  padding:0 4px;
-  opacity:0;transform:scale(0);
-  transition:opacity .25s cubic-bezier(.34,1.56,.64,1), transform .25s cubic-bezier(.34,1.56,.64,1);
-}
-.nav-badge.show{opacity:1;transform:scale(1);}
-
-/* NAV RIPPLE */
-@keyframes navRipple{
-  0%{transform:translate(-50%,-50%) scale(0);opacity:.35;}
-  100%{transform:translate(-50%,-50%) scale(2.5);opacity:0;}
-}
-.nav-ripple{
-  position:absolute;width:52px;height:52px;border-radius:50%;
-  background:#ffd400;pointer-events:none;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%) scale(0);
-  animation:navRipple .5s ease forwards;
-}
-
-/* NAV ACTIVE INDICATOR */
-.nav-indicator{
-  position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);
-  width:4px;height:4px;border-radius:50%;
-  background:#ffd400;
-  opacity:0;transition:opacity .25s ease;
-}
-.nav-item.active .nav-indicator{opacity:1;}
-
-/* HOLD PROGRESS RING */
-.nav-hold-ring{
-  position:absolute;inset:0;
-  border-radius:50%;
-  background:conic-gradient(#ffd400 0%, transparent 0%);
-  opacity:0;transition:opacity .15s ease;
-  pointer-events:none;
-}
-.nav-item.holding .nav-hold-ring{opacity:.35;}
-
-/* شوێنی سکرینەکان */
-.screen{padding-bottom:calc(var(--gap-lg) + 90px);}
-
-
 /* INPUT CARD */
 .input-card{padding:var(--pad-card);margin-bottom:var(--gap-md);}
 label{display:block;margin-bottom:10px;font-weight:800;font-size:var(--fs-base);}
@@ -809,7 +736,7 @@ select {
       چۆن یاری بکەین؟
     </button>
   </div>
-  
+
   <div class="glass input-card">
     <label>ناوی یاریزانەکان</label>
     <div style="display:flex;gap:10px;align-items:flex-start;">
@@ -855,14 +782,6 @@ select {
     <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
     کەمترین یاریزان ٣ یاریزانە — تکایە یاریزان زیاد بکە
   </div>
-  
-  
-<button class="info-btn" onclick="vib();openStats()">
-  <svg viewBox="0 0 24 24">
-    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H8v-2h4v2zm4-4H8v-2h8v2zm0-4H8V7h8v2z"/>
-  </svg>
-  ئامار
-</button>
 
   <!-- ══ AD BANNER ══ -->
   <div class="ad-banner" id="adBanner">
@@ -1162,94 +1081,9 @@ select {
 <!-- PORTAL for suggestion dropdown -->
 <div class="suggestion-portal" id="suggPortal"></div>
 
-<div class="info-overlay" id="statsOverlay" onclick="closeStatsOutside(event)">
-  <div class="info-sheet">
-    <div class="info-handle"></div>
-    <div class="info-title">ئامارەکانت</div>
-    <div id="statsContent"></div>
-    <button class="info-close" onclick="vib();closeStats()">داخستن</button>
-  </div>
-</div>
-
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-
-  <button class="nav-item active" id="navHome"
-    onclick="vib();navGo('home')"
-    ontouchstart="navHoldStart(this,'سەرەتا')" 
-    ontouchend="navHoldEnd(this)"
-    ontouchcancel="navHoldEnd(this)"
-    onmousedown="navHoldStart(this,'سەرەتا')" 
-    onmouseup="navHoldEnd(this)"
-    onmouseleave="navHoldEnd(this)">
-    <div class="nav-hold-ring"></div>
-    <div class="nav-ripple" style="display:none"></div>
-    <div class="nav-tooltip">سەرەتا</div>
-    <div class="nav-indicator"></div>
-    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-  </button>
-
-  <button class="nav-item" id="navStats"
-    onclick="vib();navGo('stats')"
-    ontouchstart="navHoldStart(this,'ئامار')" 
-    ontouchend="navHoldEnd(this)"
-    ontouchcancel="navHoldEnd(this)"
-    onmousedown="navHoldStart(this,'ئامار')" 
-    onmouseup="navHoldEnd(this)"
-    onmouseleave="navHoldEnd(this)">
-    <div class="nav-hold-ring"></div>
-    <div class="nav-ripple" style="display:none"></div>
-    <div class="nav-badge" id="navStatsBadge"></div>
-    <div class="nav-tooltip">ئامار</div>
-    <div class="nav-indicator"></div>
-    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H8v-2h4v2zm4-4H8v-2h8v2zm0-4H8V7h8v2z"/></svg>
-  </button>
-
-  <button class="nav-item" id="navMore"
-    ontouchstart="navHoldStart(this,'زیاتر')" 
-    ontouchend="navHoldEnd(this)"
-    ontouchcancel="navHoldEnd(this)"
-    onmousedown="navHoldStart(this,'زیاتر')" 
-    onmouseup="navHoldEnd(this)"
-    onmouseleave="navHoldEnd(this)">
-    <div class="nav-hold-ring"></div>
-    <div class="nav-ripple" style="display:none"></div>
-    <div class="nav-tooltip">زیاتر — بەمزوانە</div>
-    <div class="nav-indicator"></div>
-    <svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
-  </button>
-
-</nav>
-
-
-
 </div><!-- end app-wrap -->
 
 <script>
-
-
-  // ── STATS SYSTEM ──
-function loadStats(){
-  return JSON.parse(localStorage.getItem('sexurStats') || '{"games":0,"spiesCaught":0,"players":{}}');
-}
-function saveStats(s){
-  localStorage.setItem('sexurStats', JSON.stringify(s));
-}
-function recordGameStart(){
-  const s = loadStats();
-  s.games++;
-  saveStats(s);
-}
-function recordRoundEnd(){
-  const s = loadStats();
-  s.spiesCaught += spyIndexes.length;
-  spyIndexes.forEach(i => {
-    const name = players[i];
-    s.players[name] = (s.players[name] || 0) + 1;
-  });
-  saveStats(s);
-}
 
 
 /* ── VIBRATION ── */
@@ -1545,170 +1379,6 @@ function renderCustomWordTags(){
 }
 
 
-// ── STATS UI ──
-function openStats(){
-  const s = loadStats();
-  const top = Object.entries(s.players)
-    .sort((a,b) => b[1]-a[1])
-    .slice(0,3);
-
-  let topHtml = top.length === 0
-    ? `<div style="text-align:center;opacity:.5;font-size:14px;padding:16px">هێشتا یاری نەکراوە</div>`
-    : top.map((p,i) => `
-        <div class="info-step">
-          <div class="info-num">${i+1}</div>
-          <div class="info-text"><b>${p[0]}</b> — ${p[1]} جار سیخور بووە</div>
-        </div>`).join('');
-
-  document.getElementById('statsContent').innerHTML = `
-    <div class="info-step">
-      <div class="info-num" style="background:#ffd400;color:#111">${s.games}</div>
-      <div class="info-text">کۆی یاریکراو</div>
-    </div>
-    <div class="info-step">
-      <div class="info-num" style="background:#ff3b3b">${s.spiesCaught}</div>
-      <div class="info-text">سیخوری دۆزرایەوە</div>
-    </div>
-    <div style="font-size:13px;font-weight:800;opacity:.45;margin:14px 0 8px;padding:0 4px">سیخورەکان  </div>
-    ${topHtml}
-    <button onclick="vib();resetStats()" 
-      style="width:100%;height:46px;margin-top:16px;border:none;border-radius:14px;
-             background:#fff0f0;color:#d60000;font-size:14px;font-weight:800;cursor:pointer">
-      سڕینەوەی ئامارەکان
-    </button>`;
-
-  document.getElementById('statsOverlay').classList.add('active');
-}
-async function resetStats(){
-  const yes = await showModal({
-    title:"سڕینەوەی ئامار",
-    msg:"دڵنیای کە دەتەوێت هەموو ئامارەکانت بسڕیتەوە؟",
-    icon:"danger", dangerConfirm:true
-  });
-  if(yes){ localStorage.removeItem('sexurStats'); closeStats(); }
-}
-function closeStats(){
-  document.getElementById('statsOverlay').classList.remove('active');
-}
-function closeStatsOutside(e){
-  if(e.target === document.getElementById('statsOverlay')){ vib(); closeStats(); }
-}
-
-
-// ── BOTTOM NAV ──
-let _navHoldTimer = null;
-let _navHoldInterval = null;
-let _navHoldProgress = 0;
-
-function navSpawnRipple(btn){
-  const old = btn.querySelector('.nav-ripple');
-  if(old) old.remove();
-  const r = document.createElement('div');
-  r.className = 'nav-ripple';
-  btn.appendChild(r);
-  setTimeout(()=> r.remove(), 500);
-}
-
-function navHoldStart(btn, label){
-  btn.classList.add('holding');
-  _navHoldProgress = 0;
-
-  // تولتیپ نیشان بدە
-  btn.classList.add('show-tooltip');
-
-  // رینگی هۆڵد
-  const ring = btn.querySelector('.nav-hold-ring');
-  _navHoldInterval = setInterval(()=>{
-    _navHoldProgress += 4;
-    if(ring) ring.style.background = 
-      `conic-gradient(#ffd400 ${_navHoldProgress}%, rgba(255,255,255,.08) ${_navHoldProgress}%)`;
-    if(_navHoldProgress >= 100){
-      clearInterval(_navHoldInterval);
-      vib('heavy');
-      navHoldComplete(btn, label);
-    }
-  }, 20);
-}
-
-function navHoldEnd(btn){
-  btn.classList.remove('holding');
-  btn.classList.remove('show-tooltip');
-  clearTimeout(_navHoldTimer);
-  clearInterval(_navHoldInterval);
-  _navHoldProgress = 0;
-  const ring = btn.querySelector('.nav-hold-ring');
-  if(ring) ring.style.background = 
-    'conic-gradient(#ffd400 0%, transparent 0%)';
-}
-
-function navHoldComplete(btn, label){
-  // داهاتوو: هەر ئایکۆنێک ئەکشنی تایبەتی خۆی هەبێت
-  if(label === 'ئامار'){
-    showModal({title:"ئامارەکانت",msg:"سڕینەوەی ئامارەکان دەتەوێت؟",icon:"warn",confirm:true})
-      .then(yes=>{ if(yes){ localStorage.removeItem('sexurStats'); updateStatsBadge(); }});
-  } else if(label === 'زیاتر'){
-    showModal({title:"بەمزوانە",msg:"تایبەتمەندییەکانی زیاتر بەمزوانە زیاد دەکرێن!",icon:"warn"});
-  } else if(label === 'سەرەتا'){
-    showModal({title:"ڕیستارت",msg:"دەتەوێت یارییەکە ڕیستارت بکەیت؟",icon:"warn",confirm:true})
-      .then(yes=>{ if(yes) resetAll(); });
-  }
-}
-
-function updateStatsBadge(){
-  const s = loadStats();
-  const badge = document.getElementById('navStatsBadge');
-  if(!badge) return;
-  if(s.games > 0){
-    badge.textContent = s.games > 99 ? '99+' : s.games;
-    badge.classList.add('show');
-  } else {
-    badge.classList.remove('show');
-  }
-}
-
-function navGo(tab){
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  const btn = tab === 'home' 
-    ? document.getElementById('navHome') 
-    : document.getElementById('navStats');
-  if(btn){
-    btn.classList.add('active');
-    navSpawnRipple(btn);
-  }
-  if(tab === 'home') showScreen('screen1');
-  else if(tab === 'stats'){ openStats(); updateStatsBadge(); }
-}
-
-// بادجی ئامار نوێبکەوە دوای هەر یاری
-const _origRecordRoundEnd = recordRoundEnd;
-recordRoundEnd = function(){
-  _origRecordRoundEnd();
-  updateStatsBadge();
-};
-
-const _origShowScreen = showScreen;
-showScreen = function(id){
-  _origShowScreen(id);
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  if(id === 'screen1'){
-    document.getElementById('navHome').classList.add('active');
-  }
-};
-
-// دەستپێک
-updateStatsBadge();
-
-
-// ناڤباری ئەکتیڤ نوێبکەوە کاتی گۆڕینی سکرین
-const _origShowScreen = showScreen;
-showScreen = function(id){
-  _origShowScreen(id);
-  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
-  if(id==='screen1') document.getElementById('navHome').classList.add('active');
-};
-
-
-
 
 function onPlayerFocus(){renderSuggestions(document.getElementById("playerInput").value.trim());}
 function hideSuggestion(){
@@ -1903,8 +1573,6 @@ const allPools = [];
   gameWord = chosen.pool[Math.floor(Math.random() * chosen.pool.length)];
   selectedCategory = chosen.cat;
   usedWords.push(gameWord);
-  recordGameStart();
-
 
 
  spyIndexes = [];
@@ -2003,7 +1671,6 @@ function restartTimer(){clearInterval(timerInterval);timerStarted=false;startTim
 function finishRound(){
   clearInterval(timerInterval);
   isPaused=false;
-  recordRoundEnd();
   document.getElementById("pauseOverlay").classList.remove("active");
   vib('double');
   document.getElementById("timer").innerText="END";
