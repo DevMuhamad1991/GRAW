@@ -3015,8 +3015,9 @@ async function loadReviews() {
   if (!box) return;
   box.innerHTML = '<div class="review-loading">چاوەڕوانبە...</div>';
   try {
-    const res = await fetch(SHEET_URL + '?t=' + Date.now());
-    const data = await res.json();
+    const res = await fetch(SHEET_URL, { redirect: 'follow' });
+    const text = await res.text();
+    const data = JSON.parse(text);
     if (!data.length) {
       box.innerHTML = '<div class="review-empty">هێشتا پێداچوونەوە نییە — یەکەمین بە!</div>';
       return;
@@ -3052,6 +3053,7 @@ async function loadReviews() {
     box.innerHTML = '<div class="review-empty">کێشەیەک روویدا لە بارکردنی پێداچوونەوەکان.</div>';
   }
 }
+
 
 async function deleteReview(index, name) {
   const key = prompt('کۆدی تایبەتی بنووسە:');
