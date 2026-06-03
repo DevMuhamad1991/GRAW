@@ -86,12 +86,54 @@ body{
   .app-wrap{max-width:600px;}
 }
 
-#screen1 .input-card,
-#screen1 .input-wrap,
-#screen1 #addBtn,
-#screen1 #playerInput {
-  position: relative;
-  z-index: 200;
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: #6b6b6b;
+  font-weight: 400;
+  font-size: 15px;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  outline: none;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 44px;
+  flex-shrink: 0;
+}
+.nav-item.active {
+  gap: 7px;
+  padding: 9px 16px 9px 12px;
+  background: #2D7FF9;
+  color: #fff;
+  font-weight: 600;
+  max-width: 120px;
+}
+.nav-item svg {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.nav-item.active svg {
+  fill: #fff;
+  transform: scale(1.08);
+  filter: none;
+}
+.nav-label {
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  transition: max-width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s;
+  display: inline-block;
+  white-space: nowrap;
+}
+.nav-item.active .nav-label {
+  max-width: 80px;
+  opacity: 1;
 }
 
 
@@ -153,31 +195,7 @@ select{
 @media(min-width:600px){
   .bottom-nav{bottom:32px;}
 }
-.nav-item{
-  width:clamp(44px,11vw,54px);
-  height:clamp(44px,11vw,54px);
-  border-radius:50%;
-  background:transparent;
-  border:none;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  position:relative;
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
-}
-.nav-item svg{
-  width:clamp(22px,5.5vw,26px);
-  height:clamp(22px,5.5vw,26px);
-  fill:rgba(0,0,0,0.35);
-  transition:fill .25s ease, transform .35s cubic-bezier(.34,1.56,.64,1);
-}
-.nav-item.active svg{
-  fill:#ffd400;
-  transform:scale(1.3);
-  filter:drop-shadow(0 2px 6px rgba(255,212,0,0.5));
-}
-.nav-item.active{
-  transform:translateY(-4px) scale(1.1);
-}
+
 /* ناڤبار نیشان مەدە لە screen3,4,5 */
 .nav-hidden .bottom-nav{display:none;}
 
@@ -1143,28 +1161,22 @@ select {
 <!-- BOTTOM NAV — دەرەوەی app-wrap -->
 <nav class="bottom-nav" id="bottomNav">
   <button class="nav-item active" id="nav-home" onclick="navClick('home')">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-    </svg>
+    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    <span class="nav-label">سەرەتا</span>
   </button>
   <button class="nav-item" id="nav-stats" onclick="navClick('stats')">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/>
-    </svg>
+    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+    <span class="nav-label">ئامار</span>
   </button>
   <button class="nav-item" id="nav-review" onclick="navClick('review')">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
-    </svg>
+    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+    <span class="nav-label">ڕای</span>
   </button>
   <button class="nav-item" id="nav-creator" onclick="navClick('creator')">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-    </svg>
+    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+    <span class="nav-label">دروستکەر</span>
   </button>
 </nav>
-<!-- PORTAL for suggestion dropdown -->
-<div class="suggestion-portal" id="suggPortal"></div>
 
 <script>
 
@@ -1844,11 +1856,11 @@ setTimeout(()=>{
 /* ── BOTTOM NAV ── */
 function navClick(tab){
   vib('medium');
-  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
-  document.getElementById('nav-'+tab).classList.add('active');
-  if(tab==='home'){showScreen('screen1');}
-  // بەشەکانی تر پاشان زیاد دەکرێن
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('nav-' + tab).classList.add('active');
+  if(tab === 'home') showScreen('screen1');
 }
+
 
 
 </script>
