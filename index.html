@@ -126,118 +126,54 @@ select{
 }
 
 
-/* ══ BOTTOM NAVBAR ══ */
-.nav-bar {
-  position: fixed;
-  bottom: 16px;
-  left: 16px;
-  right: 16px;
-  border-radius: 28px;
-  z-index: 500;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-  background: rgba(255, 248, 200, 0.55);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border-top: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.06);
+/* BOTTOM NAV */
+.bottom-nav{
+  position:fixed;bottom:clamp(12px,4vw,24px);
+  left:50%;transform:translateX(-50%);
+  z-index:500;
+  display:flex;gap:clamp(8px,2.5vw,14px);
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1.5px solid rgba(255,255,255,0.55);
+  border-radius:999px;
+  padding:10px 18px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.12),
+             inset 0 1px 0 rgba(255,255,255,0.6);
 }
-.nav-item {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 0;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
+@media(min-width:600px){
+  .bottom-nav{bottom:32px;}
 }
-.nav-icon-wrap {
-  width: 46px; height: 46px;
-  border-radius: 16px;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .3s ease, transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
+.nav-item{
+  width:clamp(44px,11vw,54px);
+  height:clamp(44px,11vw,54px);
+  border-radius:50%;
+  background:transparent;
+  border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  position:relative;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
 }
-.nav-item.active .nav-icon-wrap {
-  background: linear-gradient(135deg, #ffd400, #ffbc00);
-  box-shadow: 0 6px 20px rgba(255,188,0,.45);
-  transform: translateY(-4px);
+.nav-item svg{
+  width:clamp(22px,5.5vw,26px);
+  height:clamp(22px,5.5vw,26px);
+  fill:rgba(0,0,0,0.35);
+  transition:fill .25s ease, transform .35s cubic-bezier(.34,1.56,.64,1);
 }
-.nav-item svg {
-  width: 24px; height: 24px;
-  fill: rgba(0,0,0,0.28);
-  transition: fill .3s ease;
+.nav-item.active svg{
+  fill:#ffd400;
+  transform:scale(1.3);
+  filter:drop-shadow(0 2px 6px rgba(255,212,0,0.5));
 }
-.nav-item.active svg { fill: #111; }
-.app-wrap { padding-bottom: 90px; }
+.nav-item.active{
+  transform:translateY(-4px) scale(1.1);
+}
+/* ناڤبار نیشان مەدە لە screen3,4,5 */
+.nav-hidden .bottom-nav{display:none;}
 
-/* ══ NAV ACTION SHEET ══ */
-.nav-sheet-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  z-index: 2000;
-  opacity: 0; pointer-events: none;
-  transition: opacity .3s ease;
-}
-.nav-sheet-overlay.active { opacity: 1; pointer-events: auto; }
-
-.nav-sheet {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  z-index: 2001;
-  padding: 0 12px calc(20px + env(safe-area-inset-bottom));
-  transform: translateY(110%);
-  transition: transform .4s cubic-bezier(.34,1.1,.64,1);
-}
-.nav-sheet.active { transform: translateY(0); }
-
-.nav-sheet-card {
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border-radius: 22px;
-  overflow: hidden;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 0;
-}
-.nav-sheet-item {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 8px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background .15s;
-}
-.nav-sheet-item:active { background: rgba(0,0,0,0.05); }
-.nav-sheet-item-icon {
-  width: 52px; height: 52px;
-  border-radius: 16px;
-  display: flex; align-items: center; justify-content: center;
-  transition: transform .2s cubic-bezier(.34,1.56,.64,1);
-}
-.nav-sheet-item:active .nav-sheet-item-icon { transform: scale(0.88); }
-.nav-sheet-item-icon svg { width: 26px; height: 26px; fill: #fff; }
-.nav-sheet-cancel {
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border-radius: 16px;
-  padding: 17px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background .15s;
-}
-.nav-sheet-cancel:active { background: rgba(0,0,0,0.05); }
+/* space لەخوار بۆ ناڤبار */
+.screen{padding-bottom:100px;}
 
 
 /* PLAYERS */
@@ -1193,71 +1129,30 @@ select {
   </div>
 </div>
 
-<!-- BOTTOM NAVBAR -->
-<nav class="nav-bar" id="navBar">
-  <div class="nav-item active" id="nav-home"
-    onmousedown="navHoldStart('home',this)" onmouseup="navHoldEnd('home')"
-    onmouseleave="clearTimeout(_navHoldTimer)"
-    ontouchstart="navHoldStart('home',this)" ontouchend="navHoldEnd('home')">
-    <div class="nav-icon-wrap">
-      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-    </div>
-  </div>
-  <div class="nav-item" id="nav-stats"
-    onmousedown="navHoldStart('stats',this)" onmouseup="navHoldEnd('stats')"
-    onmouseleave="clearTimeout(_navHoldTimer)"
-    ontouchstart="navHoldStart('stats',this)" ontouchend="navHoldEnd('stats')">
-    <div class="nav-icon-wrap">
-      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-    </div>
-  </div>
-  <div class="nav-item" id="nav-review"
-    onmousedown="navHoldStart('review',this)" onmouseup="navHoldEnd('review')"
-    onmouseleave="clearTimeout(_navHoldTimer)"
-    ontouchstart="navHoldStart('review',this)" ontouchend="navHoldEnd('review')">
-    <div class="nav-icon-wrap">
-      <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-    </div>
-  </div>
-  <div class="nav-item" id="nav-dev"
-    onmousedown="navHoldStart('dev',this)" onmouseup="navHoldEnd('dev')"
-    onmouseleave="clearTimeout(_navHoldTimer)"
-    ontouchstart="navHoldStart('dev',this)" ontouchend="navHoldEnd('dev')">
-    <div class="nav-icon-wrap">
-      <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
-    </div>
-  </div>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="nav-item active" id="nav-home" onclick="navClick('home')">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+    </svg>
+  </button>
+  <button class="nav-item" id="nav-stats" onclick="navClick('stats')">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/>
+    </svg>
+  </button>
+  <button class="nav-item" id="nav-review" onclick="navClick('review')">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+    </svg>
+  </button>
+  <button class="nav-item" id="nav-creator" onclick="navClick('creator')">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+    </svg>
+  </button>
 </nav>
 
-<!-- NAV ACTION SHEET -->
-<div class="nav-sheet-overlay" id="navSheetOverlay" onclick="closeNavSheet()"></div>
-<div class="nav-sheet" id="navSheet">
-  <div class="nav-sheet-card">
-    <div class="nav-sheet-item" onclick="vib();sheetGo('home')">
-      <div class="nav-sheet-item-icon" style="background:#ffd400;">
-        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-      </div>
-    </div>
-    <div class="nav-sheet-item" onclick="vib();sheetGo('stats')">
-      <div class="nav-sheet-item-icon" style="background:#34c759;">
-        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-      </div>
-    </div>
-    <div class="nav-sheet-item" onclick="vib();sheetGo('review')">
-      <div class="nav-sheet-item-icon" style="background:#ff9500;">
-        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-      </div>
-    </div>
-    <div class="nav-sheet-item" onclick="vib();sheetGo('dev')">
-      <div class="nav-sheet-item-icon" style="background:#007aff;">
-        <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
-      </div>
-    </div>
-  </div>
-  <div class="nav-sheet-cancel" onclick="vib();closeNavSheet()">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="#ff3b3b"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-  </div>
-</div>
 
 
 
@@ -1939,46 +1834,13 @@ setTimeout(()=>{
 },700);
 
 /* ══ NAVBAR ══ */
-/* ══ NAVBAR ══ */
-let _navHoldTimer = null;
-let _navHoldFired = false;
-
-function navTo(tab) {
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('nav-' + tab).classList.add('active');
-  if (tab === 'home') showScreen('screen1');
-}
-
-function navHoldStart(tab, el) {
-  _navHoldFired = false;
-  _navHoldTimer = setTimeout(() => {
-    _navHoldFired = true;
-    vib('heavy');
-    openNavSheet();
-  }, 500);
-}
-
-function navHoldEnd(tab) {
-  clearTimeout(_navHoldTimer);
-  if (_navHoldFired) return;
-  vib('light');
-  navTo(tab);
-}
-
-function openNavSheet() {
-  document.getElementById('navSheetOverlay').classList.add('active');
-  document.getElementById('navSheet').classList.add('active');
-}
-
-function closeNavSheet() {
-  vib('light');
-  document.getElementById('navSheetOverlay').classList.remove('active');
-  document.getElementById('navSheet').classList.remove('active');
-}
-
-function sheetGo(tab) {
-  closeNavSheet();
-  setTimeout(() => navTo(tab), 200);
+/* ── BOTTOM NAV ── */
+function navClick(tab){
+  vib('medium');
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nav-'+tab).classList.add('active');
+  if(tab==='home'){showScreen('screen1');}
+  // بەشەکانی تر پاشان زیاد دەکرێن
 }
 
 
