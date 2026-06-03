@@ -65,10 +65,17 @@ body{
     box-shadow:0 24px 80px rgba(0,0,0,.14);
     overflow:hidden;
   }
+  #loadingScreen{
+    max-width:540px;
+    margin:24px auto;
+    border-radius:36px;
+    min-height:calc(100vh - 48px);
+  }
 }
 @media(min-width:900px){
   body{align-items:center;padding:40px 20px;}
   .app-wrap{max-width:580px;min-height:auto;}
+  #loadingScreen{max-width:580px;}
 }
 @media(min-width:1200px){
   body{padding:48px 24px;}
@@ -78,6 +85,57 @@ body{
   body{padding:32px 20px;}
   .app-wrap{max-width:600px;}
 }
+
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: #6b6b6b;
+  font-weight: 400;
+  font-size: 15px;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  outline: none;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 44px;
+  flex-shrink: 0;
+}
+.nav-item.active {
+  gap: 7px;
+  padding: 9px 16px 9px 12px;
+  background: #FFD400;
+color: #111;
+  font-weight: 600;
+  max-width: 120px;
+}
+.nav-item svg {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.nav-item.active svg {
+  fill: #111;
+  transform: scale(1.08);
+  filter: none;
+}
+.nav-label {
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  transition: max-width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s;
+  display: inline-block;
+  white-space: nowrap;
+}
+.nav-item.active .nav-label {
+  max-width: 80px;
+  opacity: 1;
+}
+
 
 .screen{
   position:absolute;inset:0;
@@ -117,6 +175,33 @@ select{
   background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23333' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat left 16px center;
   cursor:pointer;
 }
+
+
+/* BOTTOM NAV */
+.bottom-nav{
+  position:fixed;bottom:clamp(12px,4vw,24px);
+  left:50%;transform:translateX(-50%);
+  z-index:100;
+  display:flex;gap:clamp(8px,2.5vw,14px);
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1.5px solid rgba(255,255,255,0.55);
+  border-radius:999px;
+  padding:10px 18px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.12),
+             inset 0 1px 0 rgba(255,255,255,0.6);
+}
+@media(min-width:600px){
+  .bottom-nav{bottom:32px;}
+}
+
+/* ناڤبار نیشان مەدە لە screen3,4,5 */
+.nav-hidden .bottom-nav{display:none;}
+
+/* space لەخوار بۆ ناڤبار */
+.screen{padding-bottom:100px;}
+
 
 /* PLAYERS */
 .players-box{display:flex;flex-direction:column;gap:var(--gap-sm);margin-top:var(--gap-md);}
@@ -178,6 +263,78 @@ select {
   font-weight: 800 !important;
 }
 
+/* ══ SKELETON LOADING ══ */
+#loadingScreen{
+  position:fixed;inset:0;z-index:99999;
+  background:linear-gradient(135deg,#fff7cf 0%,#ffd84d 100%);
+  padding:clamp(18px,4.5vw,32px);
+  overflow:hidden;
+  transition:opacity .45s ease, visibility .45s ease;
+}
+#loadingScreen.hide{opacity:0;visibility:hidden;pointer-events:none;}
+
+@keyframes skshimmer{
+  0%  {background-position:-500px 0}
+  100%{background-position: 500px 0}
+}
+.sk{
+  border-radius:14px;
+  background:linear-gradient(90deg,
+    rgba(255,255,255,.38) 20%,
+    rgba(255,255,255,.82) 50%,
+    rgba(255,255,255,.38) 80%
+  );
+  background-size:500px 100%;
+  animation:skshimmer 1.5s ease-in-out infinite;
+}
+
+.sk-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:clamp(14px,3.5vw,22px);}
+.sk-title-group{display:flex;flex-direction:column;gap:9px;}
+.sk-title{width:clamp(130px,38vw,175px);height:clamp(28px,7vw,38px);border-radius:12px;}
+.sk-sub  {width:clamp(90px,27vw,120px);height:clamp(14px,3.8vw,18px);border-radius:8px;}
+.sk-ibtn {width:clamp(120px,34vw,155px);height:46px;border-radius:23px;background:rgba(255,255,255,.55);}
+
+.sk-card{
+  background:rgba(255,255,255,.55);
+  border-radius:clamp(22px,4.5vw,32px);
+  padding:clamp(16px,4vw,26px);
+  margin-bottom:clamp(14px,3.5vw,22px);
+  backdrop-filter:blur(12px);
+}
+.sk-lbl{width:clamp(90px,26vw,130px);height:15px;margin-bottom:14px;border-radius:8px;}
+.sk-input-row{display:flex;gap:10px;align-items:center;margin-bottom:14px;}
+.sk-input {flex:1;height:clamp(52px,13vw,62px);border-radius:20px;}
+.sk-addbtn{width:clamp(88px,24vw,110px);height:clamp(52px,13vw,62px);border-radius:20px;flex-shrink:0;}
+
+.sk-player{display:flex;align-items:center;gap:14px;padding:12px 14px;background:rgba(255,255,255,.65);border-radius:22px;margin-bottom:10px;}
+.sk-av{width:clamp(44px,11vw,56px);height:clamp(44px,11vw,56px);border-radius:50%;flex-shrink:0;}
+.sk-nm{flex:1;height:18px;border-radius:8px;}
+.sk-rm{width:42px;height:42px;border-radius:14px;flex-shrink:0;}
+
+.sk-settings{
+  background:rgba(255,255,255,.55);
+  border-radius:clamp(22px,4.5vw,32px);
+  padding:clamp(16px,4vw,26px);
+  margin-bottom:clamp(14px,3.5vw,22px);
+  backdrop-filter:blur(12px);
+  display:flex;flex-direction:column;gap:18px;
+}
+.sk-sellbl{width:80px;height:14px;margin-bottom:10px;border-radius:7px;}
+.sk-sel   {width:100%;height:clamp(52px,13vw,62px);border-radius:20px;}
+.sk-startbtn{width:100%;height:clamp(56px,15vw,70px);border-radius:clamp(18px,4vw,26px);}
+
+/* stagger delays */
+.sk-title   {animation-delay:.00s}
+.sk-sub     {animation-delay:.05s}
+.sk-lbl     {animation-delay:.12s}
+.sk-input   {animation-delay:.16s}
+.sk-addbtn  {animation-delay:.20s}
+.sk-p1 .sk-av{animation-delay:.24s}.sk-p1 .sk-nm{animation-delay:.26s}.sk-p1 .sk-rm{animation-delay:.28s}
+.sk-p2 .sk-av{animation-delay:.30s}.sk-p2 .sk-nm{animation-delay:.32s}.sk-p2 .sk-rm{animation-delay:.34s}
+.sk-p3 .sk-av{animation-delay:.36s}.sk-p3 .sk-nm{animation-delay:.38s}.sk-p3 .sk-rm{animation-delay:.40s}
+.sk-sellbl  {animation-delay:.42s}
+.sk-sel     {animation-delay:.46s}
+.sk-startbtn{animation-delay:.50s}
 
 
 /* CATEGORY GRID */
@@ -222,6 +379,13 @@ select {
   text-align:center;margin-bottom:clamp(16px,4vw,26px);
 }
 .player-turn span{color:#b88600;}
+
+
+#customWordPanel {
+  transition: all .3s cubic-bezier(.34,1.1,.64,1);
+  overflow: hidden;
+}
+
 
 /* WORD CARD */
 .card-area{display:flex;justify-content:center;perspective:1200px;}
@@ -374,11 +538,10 @@ select {
 .info-spy-badge{display:inline-block;background:#ff4d4d;color:#fff;border-radius:8px;padding:2px 9px;font-size:13px;font-weight:800;}
 .info-word-badge{display:inline-block;background:#ffd400;color:#111;border-radius:8px;padding:2px 9px;font-size:13px;font-weight:800;}
 
-/* INPUT + SUGGESTION — FIXED STACKING */
+/* INPUT + SUGGESTION */
 .input-wrap{position:relative;flex:1;}
 .input-wrap input{width:100%;}
 
-/* The suggestion dropdown is portalled to body to avoid clipping */
 .suggestion-portal{
   position:fixed;
   z-index:9999;
@@ -416,45 +579,145 @@ select {
 .input-err-msg{display:none;color:#ff4d4d;font-size:13px;font-weight:700;margin-top:8px;padding:8px 14px;background:rgba(255,77,77,.08);border-radius:12px;}
 .input-err-msg.show{display:block;}
 
-/* --- SETTINGS CARD (spy count + time — moved below players, better layout) --- */
+/* SETTINGS CARD */
 .settings-card{padding:var(--pad-card);margin-bottom:var(--gap-md);}
 .settings-row{display:flex;flex-direction:column;gap:var(--gap-md);}
 
-/* WHAT'S NEW — FIXED ANIMATION */
+/* ══════════════════════════════════════
+   AD BANNER — full-card image slider
+══════════════════════════════════════ */
+.ad-banner{
+  margin:var(--gap-md) 0 8px;
+  border-radius:var(--radius-card);
+  overflow:hidden;
+  position:relative;
+  box-shadow:0 8px 28px rgba(0,0,0,.13);
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+/* slides wrapper */
+.ad-track{
+  display:flex;
+  transition:transform .55s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+}
+
+/* each slide = full-width card image */
+.ad-slide{
+  min-width:100%;
+  display:block;
+  position:relative;
+  cursor:pointer;
+  text-decoration:none;
+  color:inherit;
+  aspect-ratio:16/7;
+  background:#ffe066;
+  overflow:hidden;
+}
+.ad-slide:active{opacity:.9;}
+
+/* full-cover image */
+.ad-slide-img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+/* SVG icon placeholder (when no image) */
+.ad-slide-icon{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:10px;
+  padding:clamp(16px,4vw,28px);
+  text-align:center;
+}
+.ad-slide-icon svg{
+  width:clamp(36px,10vw,54px);
+  height:clamp(36px,10vw,54px);
+  opacity:.85;
+}
+.ad-slide-icon-title{
+  font-size:clamp(15px,4.2vw,20px);
+  font-weight:800;
+  line-height:1.35;
+}
+.ad-slide-icon-desc{
+  font-size:clamp(11px,2.8vw,13px);
+  opacity:.65;
+  font-weight:700;
+  line-height:1.5;
+}
+
+/* overlay gradient at bottom for text on images */
+.ad-slide-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.55) 0%, transparent 55%);
+  display:flex;flex-direction:column;
+  justify-content:flex-end;
+  padding:clamp(12px,3vw,18px);
+  pointer-events:none;
+}
+.ad-slide-overlay-title{
+  color:#fff;font-size:clamp(14px,3.8vw,18px);font-weight:800;
+  text-shadow:0 1px 6px rgba(0,0,0,.4);
+  margin-bottom:2px;
+}
+.ad-slide-overlay-desc{
+  color:rgba(255,255,255,.75);
+  font-size:clamp(11px,2.8vw,13px);font-weight:700;
+}
+
+/* progress bar at very top */
+.ad-progress{
+  position:absolute;top:0;left:0;right:0;
+  height:3px;background:rgba(255,255,255,.25);
+  z-index:5;
+}
+.ad-progress-fill{
+  position:absolute;top:0;right:0;bottom:0;
+  background:rgba(255,255,255,.8);
+  transition:width .1s linear;
+}
+
+/* dots — centered below the card */
+.ad-footer{
+  display:flex;align-items:center;justify-content:center;
+  padding:10px 0 4px;
+}
+.ad-dots{display:flex;gap:6px;align-items:center;}
+.ad-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(0,0,0,.2);
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  cursor:pointer;
+}
+.ad-dot.active{
+  width:20px;border-radius:4px;
+  background:linear-gradient(90deg,#ffd400,#ffbc00);
+}
+
+
+/* WHAT'S NEW */
 @keyframes wnewIn{from{opacity:0;transform:translateY(-30px) scale(.95);}to{opacity:1;transform:translateY(0) scale(1);}}
 @keyframes wnewOut{from{opacity:1;transform:translateY(0) scale(1);}to{opacity:0;transform:translateY(-20px) scale(.96);}}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @keyframes cdProgress{from{width:100%;}to{width:0%;}}
 
 .wnew-wrap{
-  position:fixed;
-  top:16px;
-  left:clamp(10px,3vw,22px);
-  right:clamp(10px,3vw,22px);
-  z-index:3000;
-  pointer-events:none;
-  opacity:0;
-  /* NO transition on opacity — we control it entirely via animation classes */
-  max-width:480px;
-  margin:0 auto;
+  position:fixed;top:16px;
+  left:clamp(10px,3vw,22px);right:clamp(10px,3vw,22px);
+  z-index:3000;pointer-events:none;opacity:0;
+  max-width:480px;margin:0 auto;
 }
-@media(min-width:600px){
-  .wnew-wrap{left:50%;right:auto;transform:translateX(-50%);width:400px;}
-}
-
-/* visible = pointer-events on, card animates in */
+@media(min-width:600px){.wnew-wrap{left:50%;right:auto;transform:translateX(-50%);width:400px;}}
 .wnew-wrap.visible{pointer-events:auto;opacity:1;}
-/* closing = card animates out, then we set opacity:0 again via JS */
 .wnew-wrap.closing .wnew-card{animation:wnewOut .35s cubic-bezier(.4,0,1,1) forwards;}
-
 .wnew-card{
-  background:rgba(255,255,255,.97);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:1.5px solid rgba(255,188,0,.45);
-  border-radius:24px;
-  box-shadow:0 12px 40px rgba(0,0,0,.14);
-  overflow:hidden;
-  /* entry animation fires when card is first rendered (wrap gets .visible) */
+  background:rgba(255,255,255,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1.5px solid rgba(255,188,0,.45);border-radius:24px;
+  box-shadow:0 12px 40px rgba(0,0,0,.14);overflow:hidden;
   animation:wnewIn .45s cubic-bezier(.34,1.2,.64,1) both;
 }
 .wnew-bar-wrap{position:relative;height:4px;background:#ffe066;overflow:hidden;}
@@ -476,7 +739,6 @@ select {
 .wnew-rtitle{font-size:13px;font-weight:800;margin-bottom:1px;}
 .wnew-rdesc{font-size:11px;color:#555;line-height:1.5;}
 
-
 /* CUSTOM MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;z-index:2000;opacity:0;pointer-events:none;transition:.25s;}
 .modal-overlay.active{opacity:1;pointer-events:auto;}
@@ -494,6 +756,50 @@ select {
 </style>
 </head>
 <body>
+  <div id="loadingScreen">
+  <div class="sk-topbar">
+    <div class="sk-title-group">
+      <div class="sk sk-title"></div>
+      <div class="sk sk-sub"></div>
+    </div>
+    <div class="sk sk-ibtn"></div>
+  </div>
+  <div class="sk-card">
+    <div class="sk sk-lbl"></div>
+    <div class="sk-input-row">
+      <div class="sk sk-input"></div>
+      <div class="sk sk-addbtn"></div>
+    </div>
+    <div class="sk-player sk-p1">
+      <div class="sk sk-av"></div>
+      <div class="sk sk-nm"></div>
+      <div class="sk sk-rm"></div>
+    </div>
+    <div class="sk-player sk-p2">
+      <div class="sk sk-av"></div>
+      <div class="sk sk-nm" style="width:58%"></div>
+      <div class="sk sk-rm"></div>
+    </div>
+    <div class="sk-player sk-p3">
+      <div class="sk sk-av"></div>
+      <div class="sk sk-nm" style="width:72%"></div>
+      <div class="sk sk-rm"></div>
+    </div>
+  </div>
+  <div class="sk-settings">
+    <div>
+      <div class="sk sk-sellbl"></div>
+      <div class="sk sk-sel"></div>
+    </div>
+    <div>
+      <div class="sk sk-sellbl" style="animation-delay:.44s"></div>
+      <div class="sk sk-sel"    style="animation-delay:.48s"></div>
+    </div>
+  </div>
+  <div class="sk sk-startbtn"></div>
+</div>
+
+  
 <div class="app-wrap">
 
 <!-- SCREEN 1 -->
@@ -510,10 +816,10 @@ select {
   </div>
 
   <div class="glass input-card">
-    <label>لیستی یاریزانەکان</label>
+    <label>ناوی یاریزانەکان</label>
     <div style="display:flex;gap:10px;align-items:flex-start;">
       <div class="input-wrap">
-        <input type="text" id="playerInput" placeholder="ناوی یاریزان" autocomplete="off"
+        <input type="text" id="playerInput" placeholder="ناو بەکوردی بنووسە" autocomplete="off"
           oninput="onPlayerInput()"
           onkeydown="if(event.key==='Enter'){vib();addPlayerFromInput();}"
           onfocus="onPlayerFocus()"
@@ -525,7 +831,6 @@ select {
     <div class="players-box" id="playersBox"></div>
   </div>
 
-  <!-- Settings card moved below players list -->
   <div class="glass settings-card">
     <div class="settings-row">
       <div>
@@ -534,6 +839,7 @@ select {
           <option value="1">1 سیخور</option>
           <option value="2">2 سیخور</option>
           <option value="3">3 سیخور</option>
+          <option value="random">🎲 هەڕەمەکی</option>
         </select>
       </div>
       <div>
@@ -549,12 +855,22 @@ select {
   </div>
 
   <button class="start-btn" onclick="vib();goCategory()">دەستپێکردنی یاری</button>
+
   <div class="minp-err" id="minpErr">
     <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
     کەمترین یاریزان ٣ یاریزانە — تکایە یاریزان زیاد بکە
   </div>
 
-  <!-- Footer: only WhatsApp contact, no dev credit -->
+  <!-- ══ AD BANNER ══ -->
+  <div class="ad-banner" id="adBanner">
+    <div class="ad-progress"><div class="ad-progress-fill" id="adProgressFill"></div></div>
+    <div class="ad-track" id="adTrack"></div>
+    <div class="ad-footer">
+      <div class="ad-dots" id="adDots"></div>
+    </div>
+  </div>
+  <!-- ══ END AD BANNER ══ -->
+
 </section>
 
 <!-- SCREEN 2 -->
@@ -603,9 +919,9 @@ select {
       <p>کار و پیشەکان</p>
       <div class="cat-bg-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-2.18c.07-.44.18-.86.18-1 0-2.21-1.79-4-4-4S10 2.79 10 5c0 .14.11.56.18 1H8c-1.11 0-1.99.89-1.99 2L6 19c0 1.11.89 2 2 2h12c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6-2c1.1 0 2 .9 2 2h-4c0-1.1.9-2 2-2zm0 12l-4-4h2.55V9h2.9v3H17l-3 3z"/></svg></div>
     </div>
-    <div class="category cat8" onclick="vib();selectCategory(this,'Hast')">
+    <div class="category cat8" onclick="vib();selectCategory(this,'هەست')">
       <h2><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>هەست</h2>
-      <p>هەست و سۆز </p>
+      <p>لەتێست کردن دایە</p>
       <div class="cat-bg-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg></div>
     </div>
     <div class="category cat9" onclick="vib();selectCategory(this,'شوێن')">
@@ -614,11 +930,59 @@ select {
       <div class="cat-bg-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg></div>
     </div>
     <div class="category cat10" onclick="vib();selectCategory(this,'هەنوری')">
-      <h2><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>موزیک</h2>
+      <h2><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>هونەر</h2>
       <p>گۆرانی و هونەر</p>
       <div class="cat-bg-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg></div>
     </div>
-  </div>
+  
+
+
+    <!-- وشەی تایبەت — ناو grid -->
+    <div class="category"  id="customCat" style="grid-column:span 2;background:linear-gradient(135deg,#fff7dd,#fff0a0);min-height:clamp(100px,22vw,140px);" 
+      onclick="vib();toggleCustomWordPanel()">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+        </svg>
+        وشەی تایبەت
+      </h2>
+      <p>وشەی دڵخوازت بنووسە — سوپرایزتر دەبێت!</p>
+      <div class="cat-bg-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- پانێل — ناو grid -->
+    <div id="customWordPanel" class="hidden" style="grid-column:span 2;">
+      <div class="glass input-card" style="margin-top:0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <label style="margin-bottom:0;">وشەی تایبەت</label>
+          <button onclick="vib();toggleCustomWordPanel()" 
+            style="width:34px;height:34px;border-radius:10px;background:#ff4d4d;border:none;color:#fff;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">✕</button>
+        </div>
+        <div style="background:#fffbe8;border-radius:14px;padding:10px 14px;margin-bottom:14px;font-size:13px;font-weight:700;color:#7a5200;display:flex;gap:8px;align-items:flex-start;">
+          <span style="width:28px;height:28px;background:#ffd400;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="#111">
+              <path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/>
+            </svg>
+          </span>
+          <span>مۆبایلەکە بدە بە مێوانێک — وشەکە بنووسێت بەبێ ئەوەی کەسی تر بیبینێت، سوپرایز دەبێت!</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="position:relative;flex:1;">
+            <input type="text" id="customWordInput" placeholder="وشەیەک بنووسە..." autocomplete="off"
+              onkeydown="if(event.key==='Enter'){vib();addCustomWord();}">
+          </div>
+          <button class="add-btn" onclick="vib();addCustomWord()">زیادکردن</button>
+        </div>
+        <div id="customWordTags" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
+      </div>
+    </div>
+
+  </div><!-- کۆتایی category-grid -->
+
   <button class="start-btn" onclick="vib();startCards()">بەردەوامبە</button>
 </section>
 
@@ -752,7 +1116,7 @@ select {
   </div>
 </div>
 
-<!-- WHAT'S NEW — portal suggestion dropdown goes here too -->
+<!-- WHAT'S NEW -->
 <div class="wnew-wrap" id="wnewWrap">
   <div class="wnew-card">
     <div class="wnew-bar-wrap">
@@ -778,13 +1142,13 @@ select {
         </div>
         <div class="wnew-row">
           <div class="wnew-ico"><svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm4 5h8v2H8zm3 5h2v2h-2z"/></svg></div>
-          <div><div class="wnew-rtitle"> سەروو 100 جۆر وشە</div><div class="wnew-rdesc">وەرزش، ئاژەڵ، پیشە، هەست و زیاتر</div></div>
+          <div><div class="wnew-rtitle">سەروو 100 جۆر وشە</div><div class="wnew-rdesc">وەرزش، ئاژەڵ، پیشە، هەست و زیاتر</div></div>
         </div>
         <div class="wnew-row">
           <div class="wnew-ico"><svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></div>
           <div>
             <div class="wnew-rtitle">پەیوەندی</div>
-            <div class="wnew-rdesc"> <strong>Muhamad Yousif</strong> — <a href="https://wa.me/9647830674844" target="_blank" style="color:#1a9e50;font-weight:800;text-decoration:none;">WhatsApp</a></div>
+            <div class="wnew-rdesc"><strong>Muhamad Yousif</strong> — <a href="https://wa.me/9647830674844" target="_blank" style="color:#1a9e50;font-weight:800;text-decoration:none;">WhatsApp</a></div>
           </div>
         </div>
       </div>
@@ -792,11 +1156,32 @@ select {
   </div>
 </div>
 
-<!-- PORTAL for suggestion dropdown (above everything) -->
-<div class="suggestion-portal" id="suggPortal"></div>
-
 </div><!-- end app-wrap -->
+
+<!-- BOTTOM NAV — دەرەوەی app-wrap -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="nav-item active" id="nav-home" onclick="navClick('home')">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    <span class="nav-label">سەرەتا</span>
+  </button>
+  <button class="nav-item" id="nav-stats" onclick="navClick('stats')">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+    <span class="nav-label">ئامار</span>
+  </button>
+  <button class="nav-item" id="nav-review" onclick="navClick('review')">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+    <span class="nav-label">ڕای</span>
+  </button>
+  <button class="nav-item" id="nav-creator" onclick="navClick('creator')">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+    <span class="nav-label">دروستکەر</span>
+  </button>
+</nav>
+<div class="suggestion-portal" id"suggportal"></div>
+
 <script>
+
+
 /* ── VIBRATION ── */
 function vib(type='light'){
   if(!('vibrate' in navigator))return;
@@ -829,16 +1214,16 @@ const nameSuggestions=[
 ];
 
 const words={
-  کەسایەتی:   ["فەرهاد پیرباڵ","شێرکۆ بێکەس","ئومێد خۆشناو ","شێخ لایلۆن","هەڵکەوت زاهیر","فاخیر هەریری","کەیفی","خدر بێگڵاسی","رەجەب","شرێک ","موراد حەلەمدار ","ترەمپ"],
+  کەسایەتی:["فەرهاد پیرباڵ","شێرکۆ بێکەس","ئومێد خۆشناو","شێخ لایلۆن","هەڵکەوت زاهیر","فاخیر هەریری","کەیفی","خدر بێگڵاسی","رەجەب","شرێک","موراد حەلەمدار","ترەمپ"],
   وڵات:["عیراق","فەرەنسا","ئەرجەنتین","دوبەی","کوردستان","تورکیا","سوریا","ئێران","ئەمریکا","صین"],
-  خواردن:     ["سەروپێ","کفتە","تەشریب","برنج","پیزا","دۆڵمە","چایە","بریانی","مەقلوبە","شفتە","مریشک"],
-  یاری:    ["رۆبلۆکس","PUBG","ئەتاری پلەی دوو","تۆپانێ","درایڤەر","کۆنکان","یاری سیخور","ماینکرافت","لاپتۆپ ","XBOX "],
-  وەرزش:   ["تۆپی پێ","تایرە","تێنس","مەلەوانی","کاراتی","شەبەکە","ڕاکردن","پاسکیل","هۆڵی لەشجوانی","بۆکسێن"],
-  گیانەوەر:  ["شێر","فیل","پەنگوین","دۆلفین","باز","پڵینگ","زەرافە","شرێک","مەیمون","سەگ"],
-  ئیش:     ["دکتۆر","مامۆستا","بێ ئیش","فرۆکەوان","شێف","پارێزەر","موهەندیس","پەرستار","سایەق بالیف","مدیر"],
-  Hast:   ["Apple","Nike","Samsung","Adidas","McDonald's","Google","Amazon","Toyota","Coca-Cola","IKEA"],
-  شوێن:   ["بازار","مارکێت","قەڵای هەولێر","مەلەوانگە","سلێمانی","هەولێر خەبات","دارەتوو","هەورامان","بارزان","خەلیفان"],
-  هونەری:    ["فەرهاد زیرەک","ئاوات بۆکانی","هەڵکەوت زاهیر","هەوراز گوڵپی","زەکاریا عەبدوڵا"," کاروان خەباتی","رۆستەم سابیر","عەتا قەرەداخی","حەمە زیرەک","کامگار"]
+  خواردن:["سەروپێ","کفتە","تەشریب","برنج","پیزا","دۆڵمە","چایە","بریانی","مەقلوبە","شفتە","مریشک"],
+  یاری:["رۆبلۆکس","PUBG","ئەتاری پلەی دوو","تۆپانێ","درایڤەر","کۆنکان","یاری سیخور","ماینکرافت","لاپتۆپ","XBOX"],
+  وەرزش:["تۆپی پێ","تایرە","تێنس","مەلەوانی","کاراتی","شەبەکە","ڕاکردن","پاسکیل","هۆڵی لەشجوانی","بۆکسێن"],
+  گیانەوەر:["شێر","فیل","پەنگوین","دۆلفین","باز","پڵینگ","زەرافە","شرێک","مەیمون","سەگ"],
+  ئیش:["دکتۆر","مامۆستا","بێ ئیش","فرۆکەوان","شێف","پارێزەر","موهەندیس","پەرستار","سایەق بالیف","مدیر"],
+  هەست:["Apple","Nike","Samsung","Adidas","McDonald's","Google","Amazon","Toyota","Coca-Cola","IKEA"],
+  شوێن:["بازار","مارکێت","قەڵای هەولێر","مەلەوانگە","سلێمانی","هەولێر خەبات","دارەتوو","هەورامان","بارزان","خەلیفان"],
+  هونەری:["فەرهاد زیرەک","ئاوات بۆکانی","هەڵکەوت زاهیر","هەوراز گوڵپی","زەکاریا عەبدوڵا","کاروان خەباتی","رۆستەم سابیر","عەتا قەرەداخی","حەمە زیرەک","کامگار"]
 };
 
 let players=[],playerAvatarIndexes=[],selectedCategories=[],selectedCategory="";
@@ -846,9 +1231,190 @@ let currentIndex=0,spyIndexes=[],gameWord="",usedWords=[];
 let holdTimer,timerInterval,currentTime=0,timerStarted=false,isPaused=false,cardWasOpened=false;
 let suggBlurTimer=null;
 
-/* ── PORTAL SUGGESTION ── */
-function getPortal(){return document.getElementById('suggPortal');}
+let customWords = [];
 
+
+/* ══════════════════════════════════════
+   AD BANNER SYSTEM
+══════════════════════════════════════ */
+
+// ← اێرەوە ریکلامەکانت دابنێ
+const adSlides = [
+  {
+    // وێنە: img: "https://..." — ئەگەر نەبوو ئایکۆن دەردەکەوێت
+
+    img: "bsexur.webp",
+    title: "  ",
+    desc: "  "
+  },
+  {
+    img: "ads.webp",
+    title: "  ",
+    desc: "  ",
+    link: "https://wa.me/9647830674844"
+  }
+];
+// ← کۆتایی ریکلامەکان
+
+let adCurrent = 0;
+let adAutoTimer = null;
+const AD_INTERVAL = 4000; // ms between auto-slides
+let adProgress = 0;
+let adProgressTimer = null;
+
+
+function buildAdBanner() {
+  const track = document.getElementById('adTrack');
+  const dots = document.getElementById('adDots');
+  track.innerHTML = '';
+  dots.innerHTML = '';
+
+  adSlides.forEach((ad, i) => {
+    const a = document.createElement('a');
+    a.className = 'ad-slide';
+    a.href = ad.link || '#';
+    a.target = '_blank';
+    a.rel = 'noopener';
+
+    if (ad.img) {
+      // real image — full cover + overlay text
+      a.style.background = '#111';
+      a.innerHTML = `
+        <img class="ad-slide-img" src="${ad.img}" alt="${ad.title}" loading="lazy">
+        <div class="ad-slide-overlay">
+          <div class="ad-slide-overlay-title">${ad.title}</div>
+          <div class="ad-slide-overlay-desc">${ad.desc}</div>
+        </div>`;
+    } else {
+      // SVG icon card
+      a.style.background = ad.bg || 'linear-gradient(135deg,#ffe066,#ffd84d)';
+      a.innerHTML = `
+        <div class="ad-slide-icon">
+          ${ad.icon || ''}
+          <div class="ad-slide-icon-title">${ad.title}</div>
+          <div class="ad-slide-icon-desc">${ad.desc}</div>
+        </div>`;
+    }
+
+    track.appendChild(a);
+
+    // dot
+    const dot = document.createElement('div');
+    dot.className = 'ad-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => { vib(); adGoTo(i); };
+    dots.appendChild(dot);
+  });
+
+  adUpdateUI();
+  adStartAuto();
+}
+
+function adUpdateUI() {
+  document.getElementById('adTrack').style.transform = `translateX(${adCurrent * 100}%)`;
+  document.querySelectorAll('.ad-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === adCurrent);
+  });
+}
+
+function adGoTo(idx) {
+  adCurrent = (idx + adSlides.length) % adSlides.length;
+  adUpdateUI();
+  adResetProgress();
+}
+function adNext() { adGoTo(adCurrent + 1); }
+function adPrev() { adGoTo(adCurrent - 1); }
+
+function adStartAuto() {
+  adStopAuto();
+  adResetProgress();
+  adAutoTimer = setInterval(() => {
+    adGoTo(adCurrent + 1);
+  }, AD_INTERVAL);
+}
+function adStopAuto() {
+  clearInterval(adAutoTimer);
+  clearInterval(adProgressTimer);
+}
+function adResetProgress() {
+  clearInterval(adProgressTimer);
+  adProgress = 100;
+  const fill = document.getElementById('adProgressFill');
+  if (!fill) return;
+  fill.style.width = '100%';
+  const step = 100 / (AD_INTERVAL / 100);
+  adProgressTimer = setInterval(() => {
+    adProgress = Math.max(0, adProgress - step);
+    fill.style.width = adProgress + '%';
+  }, 100);
+}
+
+// touch/swipe on ad banner
+(function(){
+  const banner = document.getElementById('adBanner');
+  let tx = 0, dragging = false;
+  banner.addEventListener('touchstart', e => {
+    tx = e.touches[0].clientX;
+    dragging = true;
+    adStopAuto();
+  }, {passive:true});
+  banner.addEventListener('touchend', e => {
+    if (!dragging) return;
+    dragging = false;
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 40) { dx > 0 ? adPrev() : adNext(); }
+    adStartAuto();
+  }, {passive:true});
+})();
+
+buildAdBanner();
+
+// Skeleton loader
+function hideLoader(){
+  const l=document.getElementById('loadingScreen');
+  l.classList.add('hide');
+  setTimeout(()=>l.remove(),500);
+}
+const _ldStart=Date.now();
+window.addEventListener('load',()=>{
+  const elapsed=Date.now()-_ldStart;
+  setTimeout(hideLoader,Math.max(0,900-elapsed));
+});
+setTimeout(hideLoader,6000); // fallback
+
+function toggleCustomWordPanel(){
+  const panel = document.getElementById('customWordPanel');
+  const cat = document.getElementById('customCat');
+  const isHidden = panel.classList.contains('hidden');
+  
+  if(isHidden){
+    panel.classList.remove('hidden');
+    panel.style.opacity = '0';
+    panel.style.transform = 'translateY(-10px)';
+    setTimeout(()=>{
+      panel.style.opacity = '1';
+      panel.style.transform = 'translateY(0)';
+    }, 10);
+    setTimeout(()=> document.getElementById('customWordInput').focus(), 300);
+  } else {
+    panel.style.opacity = '0';
+    panel.style.transform = 'translateY(-10px)';
+    setTimeout(()=>{
+      panel.classList.add('hidden');
+      panel.style.opacity = '';
+      panel.style.transform = '';
+      if(customWords.length === 0) cat.classList.remove('active');
+    }, 280);
+  }
+}
+
+
+
+
+
+/* ══════════════════════════════════════
+   PORTAL SUGGESTION
+══════════════════════════════════════ */
+function getPortal(){return document.getElementById('suggPortal');}
 function positionPortal(){
   const input=document.getElementById('playerInput');
   const rect=input.getBoundingClientRect();
@@ -856,24 +1422,64 @@ function positionPortal(){
   portal.style.top=(rect.bottom+window.scrollY+6)+'px';
   portal.style.left=rect.left+'px';
   portal.style.width=rect.width+'px';
-  // Prevent going off bottom of screen
   const maxH=window.innerHeight-rect.bottom-16;
   portal.style.maxHeight=Math.min(230,maxH)+'px';
 }
-
 function onPlayerInput(){
-  const val=document.getElementById("playerInput").value.trim();
-  document.getElementById("playerInput").classList.remove("input-error");
+  const input = document.getElementById("playerInput");
+  const val = input.value;
+  
+  // سڕینەوەی هەر کارەکتەرێک کە کوردی/عەرەبی نییە
+  const cleaned = val.replace(/[^\u0600-\u06FF\u200c\s]/g, '');
+  
+  if(cleaned !== val){
+    input.value = cleaned;
+    vib('error');
+  }
+  
+  // ئەوەی پێشتر هەبوو
+  input.classList.remove("input-error");
   document.getElementById("inputErrMsg").classList.remove("show");
-  renderSuggestions(val);
+  renderSuggestions(cleaned);
 }
+
+function addCustomWord(){
+  const input = document.getElementById('customWordInput');
+  const val = input.value.trim();
+  if(!val) return;
+  if(customWords.includes(val)){
+    showModal({title:"هەڵەیە", msg:"ئەم وشەیە هەیە.", icon:"err"});
+    return;
+  }
+  customWords.push(val);
+  input.value = '';
+  renderCustomWordTags();
+}
+
+function removeCustomWord(word){
+  customWords = customWords.filter(w => w !== word);
+  renderCustomWordTags();
+}
+
+function renderCustomWordTags(){
+  const box = document.getElementById('customWordTags');
+  const cat = document.getElementById('customCat');
+  box.innerHTML = '';
+  customWords.forEach(w => {
+    const tag = document.createElement('div');
+    tag.style.cssText = 'display:inline-flex;align-items:center;gap:6px;background:#fff;border:2px solid #ffd400;border-radius:100px;padding:6px 14px;font-size:14px;font-weight:700;';
+    tag.innerHTML = `${w} <button onclick="vib();removeCustomWord('${w}')" style="background:none;border:none;color:#ff4d4d;font-size:16px;font-weight:900;cursor:pointer;padding:0;line-height:1;">✕</button>`;
+    box.appendChild(tag);
+  });
+  if(cat) cat.classList.toggle('active', customWords.length > 0);
+}
+
+
+
 function onPlayerFocus(){renderSuggestions(document.getElementById("playerInput").value.trim());}
 function hideSuggestion(){
-  suggBlurTimer=setTimeout(()=>{
-    getPortal().classList.remove("open");
-  },200);
+  suggBlurTimer=setTimeout(()=>{getPortal().classList.remove("open");},200);
 }
-
 function renderSuggestions(val){
   const portal=getPortal();
   const lower=val.toLowerCase();
@@ -894,7 +1500,6 @@ function renderSuggestions(val){
   positionPortal();
   portal.classList.add("open");
 }
-
 function pickSuggestion(name){
   clearTimeout(suggBlurTimer);
   getPortal().classList.remove("open");
@@ -909,8 +1514,6 @@ function addPlayerFromInput(){
   if(players.length>0){document.getElementById("playerInput").value="";}
   document.getElementById("playerInput").focus();
 }
-
-// Reposition portal on scroll/resize
 window.addEventListener('scroll',()=>{if(getPortal().classList.contains('open'))positionPortal();},{passive:true});
 window.addEventListener('resize',()=>{if(getPortal().classList.contains('open'))positionPortal();},{passive:true});
 
@@ -1045,20 +1648,52 @@ function selectCategory(el,cat){
   else{selectedCategories.push(cat);}
 }
 function prepareGame(){
-  selectedCategory=selectedCategories[Math.floor(Math.random()*selectedCategories.length)];
-  let avail=words[selectedCategory].filter(w=>!usedWords.includes(w));
-  if(avail.length===0){usedWords=[];avail=words[selectedCategory];}
-  gameWord=avail[Math.floor(Math.random()*avail.length)];
+const allPools = [];
+  selectedCategories.forEach(c => {
+    const pool = (words[c] || []).filter(w => !usedWords.includes(w));
+    if(pool.length > 0) allPools.push({ cat: c, pool });
+  });
+  const customPool = customWords.filter(w => !usedWords.includes(w));
+  if(customPool.length > 0) allPools.push({ cat: "تایبەت", pool: customPool });
+
+  if(allPools.length === 0){
+    usedWords = [];
+    selectedCategories.forEach(c => {
+      const pool = words[c] || [];
+      if(pool.length > 0) allPools.push({ cat: c, pool });
+    });
+    if(customWords.length > 0) allPools.push({ cat: "تایبەت", pool: customWords });
+  }
+
+  const chosen = allPools[Math.floor(Math.random() * allPools.length)];
+  gameWord = chosen.pool[Math.floor(Math.random() * chosen.pool.length)];
+  selectedCategory = chosen.cat;
   usedWords.push(gameWord);
-  spyIndexes=[];
-  const spyCount=parseInt(document.getElementById("spyCount").value);
-  while(spyIndexes.length<spyCount){const rand=Math.floor(Math.random()*players.length);if(!spyIndexes.includes(rand))spyIndexes.push(rand);}
-  currentIndex=0;
+
+
+ spyIndexes = [];
+ const rawVal = document.getElementById("spyCount").value;
+ const spyCount = rawVal === "random"
+   ? Math.floor(Math.random() * 3) + 1
+   : parseInt(rawVal);
+ while(spyIndexes.length < spyCount){
+   const rand = Math.floor(Math.random() * players.length);
+   if(!spyIndexes.includes(rand)) spyIndexes.push(rand);
+ }
+ currentIndex = 0;
 }
+
 function startCards(){
-  if(selectedCategories.length===0){vib('error');showModal({title:"جۆری وسە هەڵبژێرە",msg:"تکایە لانیکەم یەک وشە هەڵبژێرە پێش دەستپێکردن.",icon:"warn"});return;}
-  prepareGame();showScreen("screen3");showPlayer();
+  if(selectedCategories.length === 0 && customWords.length === 0){
+    vib('error');
+    showModal({title:"لیستی وشە هەڵبژێرە",msg:"تکایە لانیکەم یەک وشە هەڵبژێرە پێش دەستپێکردن.",icon:"warn"});
+    return;
+  }
+  prepareGame();
+  showScreen("screen3");
+  showPlayer();
 }
+
 function showPlayer(){
   cardWasOpened=false;
   document.getElementById("wordCard").classList.remove("flip");
@@ -1168,7 +1803,14 @@ function showResults(){
   }
 }
 function playAgain(){prepareGame();showScreen("screen3");showPlayer();}
-function resetAll(){spyIndexes=[];usedWords=[];document.getElementById("spyCards").innerHTML="";showScreen("screen1");}
+function resetAll(){
+  spyIndexes=[];
+  usedWords=[];
+  document.getElementById("spyCards").innerHTML="";
+  showScreen("screen1");
+}
+
+
 const _screens=['screen1','screen2','screen3','screen4','screen5'];
 function showScreen(id){
   _screens.forEach(s=>{
@@ -1191,44 +1833,36 @@ attachAllButtons();
 const _pressObs=new MutationObserver(attachAllButtons);
 _pressObs.observe(document.body,{childList:true,subtree:true});
 
-/* ── What's New — clean animation ── */
+/* ── What's New ── */
 let _wnewAutoClose=null,_wnewCdTick=null;
-
 function closeWnew(){
-  clearTimeout(_wnewAutoClose);
-  clearInterval(_wnewCdTick);
+  clearTimeout(_wnewAutoClose);clearInterval(_wnewCdTick);
   const w=document.getElementById("wnewWrap");
-  // Add closing class to trigger exit animation on the card
   w.classList.add("closing");
-  // After animation finishes, hide everything cleanly
-  setTimeout(()=>{
-    w.classList.remove("visible","closing");
-    w.style.opacity="0";
-    w.style.pointerEvents="none";
-  }, 360);
+  setTimeout(()=>{w.classList.remove("visible","closing");w.style.opacity="0";w.style.pointerEvents="none";},360);
 }
-
 setTimeout(()=>{
   const w=document.getElementById("wnewWrap");
-  // Show: remove any leftover inline styles, add visible class
-  w.style.opacity="";
-  w.style.pointerEvents="";
-  w.classList.add("visible");
-
+  w.style.opacity="";w.style.pointerEvents="";w.classList.add("visible");
   const fill=document.getElementById("wnewCdFill");
   const SECS=6;
-  fill.style.animationDuration=SECS+"s";
-  fill.classList.add("running");
-
+  fill.style.animationDuration=SECS+"s";fill.classList.add("running");
   const cdEl=document.getElementById("wnewCd");
   let remaining=SECS;
-  _wnewCdTick=setInterval(()=>{
-    remaining--;
-    cdEl.textContent=remaining>0?remaining:"";
-  },1000);
-
+  _wnewCdTick=setInterval(()=>{remaining--;cdEl.textContent=remaining>0?remaining:"";},1000);
   _wnewAutoClose=setTimeout(closeWnew,SECS*1000);
 },700);
+
+/* ══ NAVBAR ══ */
+/* ── BOTTOM NAV ── */
+function navClick(tab){
+  vib('medium');
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('nav-' + tab).classList.add('active');
+  if(tab === 'home') showScreen('screen1');
+}
+
+
 
 </script>
 </body>
