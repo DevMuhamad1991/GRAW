@@ -946,6 +946,295 @@ select {
 .modal-danger .modal-icon{background:#ffe0e0;}
 .modal-danger .modal-icon svg{fill:#d60000;}
 .modal-danger-confirm{background:linear-gradient(135deg,#ff3b3b,#c62828) !important;color:#fff !important;}
+/* ══ REVIEW ══ */
+.review-screen { padding-bottom: 100px; }
+
+.review-hero {
+  background: linear-gradient(135deg, #111, #2a2a2a);
+  border-radius: var(--radius-card);
+  padding: clamp(24px, 5.5vw, 34px) clamp(20px, 4.5vw, 28px);
+  margin-bottom: var(--gap-md);
+  position: relative;
+  overflow: hidden;
+}
+.review-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(255,212,0,.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+.review-hero-title {
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.review-hero-sub {
+  font-size: var(--fs-sm);
+  color: rgba(255,255,255,.45);
+  font-weight: 700;
+}
+
+.review-form-card {
+  background: rgba(255,255,255,.75);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: var(--radius-card);
+  padding: var(--pad-card);
+  margin-bottom: var(--gap-md);
+  box-shadow: 0 10px 35px rgba(0,0,0,.08);
+}
+.review-form-label {
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  margin-bottom: 10px;
+  display: block;
+}
+.review-input {
+  width: 100%;
+  height: var(--btn-h);
+  border: none;
+  outline: none;
+  border-radius: clamp(16px, 3.5vw, 20px);
+  padding: 0 18px;
+  font-size: var(--fs-md);
+  background: #fff;
+  font-family: 'Noto Sans Arabic', sans-serif;
+  transition: box-shadow .2s;
+  margin-bottom: var(--gap-sm);
+}
+.review-input:focus { box-shadow: 0 0 0 3px rgba(255,188,0,.4); }
+.review-textarea {
+  width: 100%;
+  min-height: 110px;
+  border: none;
+  outline: none;
+  border-radius: clamp(16px, 3.5vw, 20px);
+  padding: 14px 18px;
+  font-size: var(--fs-base);
+  background: #fff;
+  font-family: 'Noto Sans Arabic', sans-serif;
+  resize: none;
+  transition: box-shadow .2s;
+  line-height: 1.8;
+}
+.review-textarea:focus { box-shadow: 0 0 0 3px rgba(255,188,0,.4); }
+
+.star-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: var(--gap-sm);
+  justify-content: center;
+}
+.star-btn {
+  width: clamp(40px, 10vw, 50px);
+  height: clamp(40px, 10vw, 50px);
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .15s, transform .2s cubic-bezier(.34,1.56,.64,1);
+}
+.star-btn svg {
+  width: clamp(20px, 5.5vw, 26px);
+  height: clamp(20px, 5.5vw, 26px);
+  fill: rgba(0,0,0,.2);
+  transition: fill .15s;
+}
+.star-btn.active {
+  background: rgba(255,212,0,.2);
+}
+.star-btn.active svg { fill: #ffd400; }
+
+.review-submit-btn {
+  width: 100%;
+  height: var(--btn-h-lg);
+  border-radius: var(--radius-btn);
+  background: linear-gradient(135deg, #ffd400, #ffbc00);
+  color: #111;
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  border: none;
+  box-shadow: 0 6px 20px rgba(255,188,0,.35);
+  margin-top: var(--gap-sm);
+}
+.review-submit-btn:disabled {
+  opacity: .4;
+  pointer-events: none;
+}
+
+.reviews-list { display: flex; flex-direction: column; gap: var(--gap-sm); }
+
+.review-card {
+  background: rgba(255,255,255,.75);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: var(--radius-card);
+  padding: clamp(14px, 3.5vw, 20px);
+  box-shadow: 0 6px 20px rgba(0,0,0,.06);
+  animation: slideIn .3s ease both;
+}
+.review-card-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.review-card-avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #ffe066;
+  flex-shrink: 0;
+  background: #fff;
+}
+.review-card-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.review-card-meta { flex: 1; }
+.review-card-name {
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  color: #111;
+}
+.review-card-date {
+  font-size: 11px;
+  color: #aaa;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.review-card-stars {
+  display: flex;
+  gap: 3px;
+}
+.review-card-stars svg {
+  width: 14px; height: 14px;
+}
+.review-card-text {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: #333;
+  line-height: 1.8;
+}
+.review-card-delete {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  background: rgba(255,59,59,.1);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.review-card-delete svg { width: 16px; height: 16px; fill: #c62828; }
+
+.reviews-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-base);
+  font-weight: 800;
+  margin-bottom: 14px;
+  color: #111;
+}
+.reviews-section-title svg { width: 18px; height: 18px; fill: #111; }
+
+.review-loading {
+  text-align: center;
+  padding: 30px 0;
+  color: #aaa;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+.review-empty {
+  text-align: center;
+  padding: 30px 0;
+  color: #aaa;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+
+/* پۆپ-ئەپ */
+.review-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s;
+}
+.review-popup-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.review-popup-sheet {
+  background: #fff;
+  border-radius: 30px 30px 0 0;
+  padding: 24px 22px 36px;
+  width: 100%;
+  max-width: 520px;
+  transform: translateY(100%);
+  transition: transform .32s cubic-bezier(.34,1.1,.64,1);
+}
+.review-popup-overlay.active .review-popup-sheet {
+  transform: translateY(0);
+}
+.review-popup-handle {
+  width: 38px; height: 5px;
+  background: #e0e0e0;
+  border-radius: 10px;
+  margin: 0 auto 16px;
+}
+.review-popup-title {
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.review-popup-sub {
+  font-size: var(--fs-sm);
+  text-align: center;
+  color: #888;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.review-popup-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.review-popup-yes {
+  width: 100%;
+  height: var(--btn-h);
+  border-radius: var(--radius-btn);
+  background: linear-gradient(135deg, #ffd400, #ffbc00);
+  color: #111;
+  font-size: var(--fs-md);
+  font-weight: 800;
+  border: none;
+}
+.review-popup-no {
+  width: 100%;
+  height: var(--btn-h);
+  border-radius: var(--radius-btn);
+  background: rgba(0,0,0,.06);
+  color: #555;
+  font-size: var(--fs-md);
+  font-weight: 800;
+  border: none;
+}
+
 </style>
 </head>
 <body>
@@ -1356,6 +1645,75 @@ select {
   <div id="statsContent"></div>
 </section>
 
+<!-- SCREEN REVIEW -->
+<section class="screen hidden" id="reviewScreen">
+  <div class="screen-top-bar">
+    <div class="title">پێداچوونەوە</div>
+  </div>
+
+  <div class="review-hero">
+    <div class="review-hero-title">بیرۆکە و پێشنیارەکانت</div>
+    <div class="review-hero-sub">یاریەکە باشتر بکە — بۆچوونت گرنگە</div>
+  </div>
+
+  <div class="review-form-card">
+    <span class="review-form-label">ناوت</span>
+    <input class="review-input" id="reviewName" type="text" placeholder="ناوت بنووسە..." autocomplete="off">
+
+    <span class="review-form-label">ئەستێرە</span>
+    <div class="star-row" id="starRow">
+      <button class="star-btn" data-star="1" onclick="setStar(1)">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </button>
+      <button class="star-btn" data-star="2" onclick="setStar(2)">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </button>
+      <button class="star-btn" data-star="3" onclick="setStar(3)">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </button>
+      <button class="star-btn" data-star="4" onclick="setStar(4)">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </button>
+      <button class="star-btn" data-star="5" onclick="setStar(5)">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </button>
+    </div>
+
+    <span class="review-form-label">پێداچوونەوەت</span>
+    <textarea class="review-textarea" id="reviewText" placeholder="بۆچوون، پێشنیار یان رەخنەت بنووسە..."></textarea>
+
+    <button class="review-submit-btn" id="reviewSubmitBtn" onclick="submitReview()">
+      ناردنی پێداچوونەوە
+    </button>
+  </div>
+
+  <div class="reviews-section-title">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    پێداچوونەوەکانی تر
+  </div>
+  <div id="reviewsList" class="reviews-list">
+    <div class="review-loading">چاوەڕوانبە...</div>
+  </div>
+</section>
+
+<!-- REVIEW POPUP -->
+<div class="review-popup-overlay" id="reviewPopupOverlay">
+  <div class="review-popup-sheet">
+    <div class="review-popup-handle"></div>
+    <div class="review-popup-title">پێداچوونەوەت چیە؟</div>
+    <div class="review-popup-sub">بۆچوونت یاریەکە باشتر دەکات</div>
+    <div class="review-popup-btns">
+      <button class="review-popup-yes" onclick="vib();closeReviewPopup(true)">
+        بەڵێ، دەینووسم
+      </button>
+      <button class="review-popup-no" onclick="vib();closeReviewPopup(false)">
+        نەخێر، سوپاس
+      </button>
+    </div>
+  </div>
+</div>
+
+
 </div><!-- end app-wrap -->
 
 <!-- BOTTOM NAV — دەرەوەی app-wrap -->
@@ -1366,9 +1724,9 @@ select {
  </button>
  <button class="nav-item" id="nav-stats" style="--lw:40px" onclick="navClick('stats')">
    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
-   <span class="nav-label">ئامارەکان</span>
+   <span class="nav-label">ئامار</span>
  </button>
- <button class="nav-item" id="nav-review" style="--lw:28px" onclick="navClick('review')">
+ <button class="nav-item" id="nav-review" style="--lw:68px" onclick="navClick('review')">
    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
    <span class="nav-label">پێداچوونەوە/span>
  </button>
@@ -1981,6 +2339,7 @@ function updateTimer(sec){
 }
 function showResults(){
   saveGameStats();
+  checkReviewPopup();
   showScreen("screen5");
   document.getElementById("wordRevealText").innerText=gameWord;
   document.getElementById("wordRevealCat").innerText="جۆری وشەکە: "+selectedCategory;
@@ -2010,10 +2369,13 @@ function resetAll(){
   usedWords=[];
   document.getElementById("spyCards").innerHTML="";
   showScreen("screen1");
+  gameCountForReview = parseInt(localStorage.getItem('sexur_game_count') || '0');
+
 }
 
 
-const _screens = ['screen1','screen2','screen3','screen4','screen5','statsScreen'];
+const _screens = ['screen1','screen2','screen3','screen4','screen5','statsScreen','reviewScreen'];
+
 function showScreen(id){
   _screens.forEach(s=>{
     const el=document.getElementById(s);
@@ -2064,6 +2426,8 @@ function navClick(tab) {
   document.getElementById('nav-' + tab).classList.add('active');
   if (tab === 'home') showScreen('screen1');
   if (tab === 'stats') { showScreen('statsScreen'); renderStats(); }
+  if (tab === 'review') { showScreen('reviewScreen'); loadReviews(); }
+
 }
 
 /* ══════════════════════════════════════
@@ -2221,6 +2585,134 @@ async function confirmResetStats() {
   }
 }
 
+/* ══════════════════════════════════════
+   REVIEW SYSTEM
+══════════════════════════════════════ */
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbz3faSklt0Wc9X0RZYSBIyPiqgSWPYj9r3CJyaMHILQgy1u4nB-v89EFrS5c4mrcsl-5g/exec';
+const ADMIN_KEY = 'sexur2024'; // کۆدی تایبەتی بۆ سڕینەوە — بگۆڕە
+let selectedStars = 0;
+let gameCountForReview = parseInt(localStorage.getItem('sexur_game_count') || '0');
+
+function setStar(n) {
+  selectedStars = n;
+  vib('light');
+  document.querySelectorAll('.star-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i < n);
+  });
+}
+
+async function submitReview() {
+  const name = document.getElementById('reviewName').value.trim();
+  const text = document.getElementById('reviewText').value.trim();
+  if (!name) { vib('error'); showModal({title:"ناو پێویستە", msg:"تکایە ناوت بنووسە.", icon:"warn"}); return; }
+  if (!selectedStars) { vib('error'); showModal({title:"ئەستێرە هەڵبژێرە", msg:"تکایە ئەستێرەیەک هەڵبژێرە.", icon:"warn"}); return; }
+  if (!text) { vib('error'); showModal({title:"پێداچوونەوە پێویستە", msg:"تکایە بۆچوونت بنووسە.", icon:"warn"}); return; }
+
+  const btn = document.getElementById('reviewSubmitBtn');
+  btn.disabled = true;
+  btn.innerText = 'دەنێردرێت...';
+
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, stars: selectedStars, review: text })
+    });
+    vib('success');
+    document.getElementById('reviewName').value = '';
+    document.getElementById('reviewText').value = '';
+    setStar(0);
+    selectedStars = 0;
+    showModal({title:"سوپاس!", msg:"پێداچوونەوەکەت نێردرا. زۆر سوپاس!", icon:"ok"});
+    loadReviews();
+  } catch(e) {
+    showModal({title:"هەڵە", msg:"کێشەیەک روویدا، دووبارە هەوڵبدەرەوە.", icon:"err"});
+  }
+
+  btn.disabled = false;
+  btn.innerText = 'ناردنی پێداچوونەوە';
+}
+
+async function loadReviews() {
+  const box = document.getElementById('reviewsList');
+  if (!box) return;
+  box.innerHTML = '<div class="review-loading">چاوەڕوانبە...</div>';
+  try {
+    const res = await fetch(SHEET_URL + '?t=' + Date.now());
+    const data = await res.json();
+    if (!data.length) {
+      box.innerHTML = '<div class="review-empty">هێشتا پێداچوونەوە نییە — یەکەمین بە!</div>';
+      return;
+    }
+    box.innerHTML = '';
+    data.reverse().forEach((r, i) => {
+      const div = document.createElement('div');
+      div.className = 'review-card';
+      div.style.animationDelay = (i * 0.05) + 's';
+      const stars = Array.from({length:5}, (_,j) => `
+        <svg viewBox="0 0 24 24" fill="${j < r.stars ? '#ffd400' : '#e0e0e0'}">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>`).join('');
+      const date = r.date ? new Date(r.date).toLocaleDateString('ku', {year:'numeric',month:'short',day:'numeric'}) : '';
+      div.innerHTML = `
+        <div class="review-card-top">
+          <div class="review-card-avatar">
+            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(r.name)}" loading="lazy">
+          </div>
+          <div class="review-card-meta">
+            <div class="review-card-name">${r.name}</div>
+            <div class="review-card-stars">${stars}</div>
+            <div class="review-card-date">${date}</div>
+          </div>
+          <button class="review-card-delete" onclick="deleteReview(${i}, '${r.name}')">
+            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+          </button>
+        </div>
+        <div class="review-card-text">${r.review}</div>`;
+      box.appendChild(div);
+    });
+  } catch(e) {
+    box.innerHTML = '<div class="review-empty">کێشەیەک روویدا لە بارکردنی پێداچوونەوەکان.</div>';
+  }
+}
+
+async function deleteReview(index, name) {
+  const key = prompt('کۆدی تایبەتی بنووسە:');
+  if (key !== ADMIN_KEY) { showModal({title:"هەڵە", msg:"کۆدەکە هەڵەیە.", icon:"err"}); return; }
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete', index: index + 1 })
+    });
+    vib('success');
+    loadReviews();
+  } catch(e) {
+    showModal({title:"هەڵە", msg:"نەتوانرا بسرێتەوە.", icon:"err"});
+  }
+}
+
+/* پۆپ-ئەپ دوای ٣ یاری */
+function checkReviewPopup() {
+  gameCountForReview++;
+  localStorage.setItem('sexur_game_count', gameCountForReview);
+  if (gameCountForReview % 3 === 0) {
+    setTimeout(() => {
+      document.getElementById('reviewPopupOverlay').classList.add('active');
+    }, 1500);
+  }
+}
+
+function closeReviewPopup(goToReview) {
+  document.getElementById('reviewPopupOverlay').classList.remove('active');
+  if (goToReview) {
+    setTimeout(() => {
+      navClick('review');
+    }, 300);
+  }
+}
 
 
 </script>
