@@ -1348,9 +1348,6 @@ select {
     </div>
   </div>
 </div>
-
-</div><!-- end app-wrap -->
-
 <!-- SCREEN STATS -->
 <section class="screen hidden" id="statsScreen">
   <div class="screen-top-bar">
@@ -1359,6 +1356,7 @@ select {
   <div id="statsContent"></div>
 </section>
 
+</div><!-- end app-wrap -->
 
 <!-- BOTTOM NAV — دەرەوەی app-wrap -->
 <nav class="bottom-nav" id="bottomNav">
@@ -2063,18 +2061,11 @@ function navClick(tab) {
   if (document.getElementById('nav-' + tab)?.classList.contains('active')) return;
   vib('medium');
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  const btn = document.getElementById('nav-' + tab);
-  btn.classList.add('active');
+  document.getElementById('nav-' + tab).classList.add('active');
   if (tab === 'home') showScreen('screen1');
-  if (tab === 'stats') {
-  showScreen('screen1');
-  renderStats();
-  // بەشی ئامار نیشان بدە
-  document.getElementById('statsScreen').classList.remove('hidden');
-  document.querySelectorAll('.screen').forEach(s => {
-    if (s.id !== 'statsScreen') s.classList.add('hidden');
-  });
+  if (tab === 'stats') { showScreen('statsScreen'); renderStats(); }
 }
+
 
 }
 
