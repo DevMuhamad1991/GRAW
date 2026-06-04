@@ -1607,6 +1607,164 @@ select {
   display: inline-block;
 }
 
+/* ══ VOTING SYSTEM ══ */
+.vote-section { margin-bottom: var(--gap-md); }
+.vote-section-title {
+  display: flex; align-items: center; gap: 8px;
+  font-size: var(--fs-base); font-weight: 800;
+  margin-bottom: 14px; color: #111;
+}
+.vote-section-title svg { width: 18px; height: 18px; fill: #111; }
+
+.vote-player-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; background: #fff;
+  border-radius: clamp(16px,3.5vw,20px);
+  margin-bottom: 8px;
+  transition: all .2s ease;
+  cursor: default;
+}
+.vote-player-row.is-voter {
+  background: rgba(255,212,0,.15);
+  border: 2px solid #ffd400;
+}
+.vote-player-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  overflow: hidden; border: 2px solid #ffe066;
+  flex-shrink: 0; background: #fff;
+}
+.vote-player-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.vote-player-name { flex: 1; font-size: var(--fs-sm); font-weight: 700; }
+.vote-player-label {
+  font-size: 11px; font-weight: 800; color: #aaa;
+  background: #f5f5f5; padding: 4px 10px;
+  border-radius: 999px; flex-shrink: 0;
+}
+.vote-player-label.is-voting-label {
+  background: #ffd400; color: #111;
+}
+
+.vote-candidates { display: flex; flex-direction: column; gap: 8px; }
+.vote-candidate-btn {
+  width: 100%; padding: 14px 18px;
+  border-radius: clamp(16px,3.5vw,20px);
+  background: #fff; border: 2px solid transparent;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer; transition: all .2s cubic-bezier(.34,1.2,.64,1);
+  text-align: right;
+}
+.vote-candidate-btn:active { transform: scale(.97); }
+.vote-candidate-btn.selected {
+  background: rgba(255,59,59,.08);
+  border-color: #ff3b3b;
+}
+.vote-candidate-btn.voted-locked {
+  opacity: .5; pointer-events: none;
+}
+.vote-candidate-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  overflow: hidden; border: 2px solid #eee;
+  flex-shrink: 0;
+}
+.vote-candidate-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.vote-candidate-name { flex: 1; font-size: var(--fs-sm); font-weight: 700; }
+.vote-candidate-check {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid #ddd; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s ease;
+}
+.vote-candidate-btn.selected .vote-candidate-check {
+  background: #ff3b3b; border-color: #ff3b3b;
+}
+.vote-candidate-check svg { width: 14px; height: 14px; fill: #fff; display: none; }
+.vote-candidate-btn.selected .vote-candidate-check svg { display: block; }
+
+.vote-confirm-btn {
+  width: 100%; height: var(--btn-h);
+  border-radius: var(--radius-btn);
+  background: linear-gradient(135deg, #ff3b3b, #c62828);
+  color: #fff; font-size: var(--fs-md); font-weight: 800;
+  border: none; margin-bottom: 10px;
+  box-shadow: 0 6px 20px rgba(255,59,59,.3);
+  opacity: .4; pointer-events: none;
+  transition: opacity .2s ease;
+}
+.vote-confirm-btn.ready { opacity: 1; pointer-events: auto; }
+
+.vote-progress-bar {
+  height: 6px; background: rgba(0,0,0,.07);
+  border-radius: 999px; overflow: hidden;
+  margin-bottom: 14px;
+}
+.vote-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd400, #ffbc00);
+  border-radius: 999px;
+  transition: width .4s cubic-bezier(.4,0,.2,1);
+}
+
+.vote-result-card {
+  background: linear-gradient(135deg, #111, #2a2a2a);
+  border-radius: var(--radius-card);
+  padding: clamp(22px,5vw,32px);
+  margin-bottom: var(--gap-md);
+  text-align: center; position: relative; overflow: hidden;
+}
+.vote-result-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 70% 30%, rgba(255,212,0,.15) 0%, transparent 65%);
+  pointer-events: none;
+}
+.vote-result-label {
+  font-size: var(--fs-xs); font-weight: 800;
+  letter-spacing: 1.5px; color: rgba(255,255,255,.4);
+  margin-bottom: 10px; text-transform: uppercase;
+}
+.vote-result-name {
+  font-size: clamp(28px,7.5vw,40px); font-weight: 800;
+  color: #ffd400;
+  text-shadow: 0 0 30px rgba(255,212,0,.4);
+  animation: wordPop .5s .2s cubic-bezier(.34,1.5,.64,1) both;
+}
+.vote-result-sub {
+  font-size: var(--fs-sm); color: rgba(255,255,255,.4);
+  font-weight: 700; margin-top: 8px;
+}
+.vote-tally-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; background: #fff;
+  border-radius: clamp(14px,3vw,18px);
+  margin-bottom: 8px;
+}
+.vote-tally-name { flex: 1; font-size: var(--fs-sm); font-weight: 700; }
+.vote-tally-bar-wrap {
+  width: 80px; height: 7px;
+  background: rgba(0,0,0,.07);
+  border-radius: 999px; overflow: hidden;
+}
+.vote-tally-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #ff3b3b, #c62828);
+  border-radius: 999px;
+  transition: width .6s cubic-bezier(.4,0,.2,1);
+}
+.vote-tally-count {
+  font-size: var(--fs-xs); font-weight: 800;
+  color: #888; min-width: 24px; text-align: left;
+}
+.vote-tie-options {
+  display: flex; gap: 10px; margin-top: 10px;
+}
+.vote-tie-btn {
+  flex: 1; height: var(--btn-h);
+  border-radius: var(--radius-btn);
+  font-size: var(--fs-sm); font-weight: 800;
+  border: none; cursor: pointer;
+}
+.vote-tie-revote { background: linear-gradient(135deg,#ffd400,#ffbc00); color: #111; }
+.vote-tie-extra  { background: #111; color: #fff; }
 
 </style>
 </head>
@@ -2014,6 +2172,8 @@ select {
 </section>
 
 <!-- SCREEN 5 — RESULTS -->
+<!-- VOTING AREA -->
+<div id="votingArea" style="margin-bottom:var(--gap-md);"></div>
 <section class="screen hidden" id="screen5">
   <div class="screen-top-bar">
     <button class="back-btn" onclick="vib();goBack('screen1')">
@@ -2855,7 +3015,9 @@ function showResults(){
       spyCardsEl.appendChild(div);
     });
   }
+  setTimeout(() => buildVotingUI(), 400);
 }
+
 function playAgain(){prepareGame();showScreen("screen3");showPlayer();}
 function resetAll(){
   document.getElementById('bottomNav').classList.remove('hidden');
@@ -3251,6 +3413,209 @@ function copyLink() {
   }).catch(() => {
     showModal({title:"کۆپی نەکرا", msg:"لینکەکە دەستی کۆپی بکە: devmuhamad1991.github.io/F/", icon:"warn"});
   });
+}
+
+/* ══════════════════════════════════════
+   VOTING SYSTEM
+══════════════════════════════════════ */
+let voteData = {}; // { voterIndex: candidateIndex }
+let currentVoterIdx = 0;
+let votingPhase = 'voting'; // 'voting' | 'result'
+
+function buildVotingUI() {
+  const container = document.getElementById('votingArea');
+  if (!container) return;
+
+  voteData = {};
+  currentVoterIdx = 0;
+  votingPhase = 'voting';
+  renderVotingStep(container);
+}
+
+function renderVotingStep(container) {
+  const voter = players[currentVoterIdx];
+  const voterAvatar = avatars[playerAvatarIndexes[currentVoterIdx]];
+  const progress = (currentVoterIdx / players.length) * 100;
+
+  const candidates = players
+    .map((name, idx) => ({ name, idx }))
+    .filter(p => p.idx !== currentVoterIdx);
+
+  container.innerHTML = `
+    <div class="vote-section">
+      <div class="vote-section-title">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/>
+        </svg>
+        دەنگدان — کێ سیخورە؟
+      </div>
+
+      <div class="vote-progress-bar">
+        <div class="vote-progress-fill" style="width:${progress}%"></div>
+      </div>
+
+      <div class="vote-player-row is-voter" style="margin-bottom:16px;">
+        <div class="vote-player-avatar">
+          <img src="${voterAvatar}" loading="lazy">
+        </div>
+        <div class="vote-player-name">${voter}</div>
+        <div class="vote-player-label is-voting-label">دەنگدەدات</div>
+      </div>
+
+      <div class="vote-candidates" id="voteCandidates">
+        ${candidates.map(p => `
+          <button class="vote-candidate-btn" id="voteBtn_${p.idx}"
+            onclick="vib();selectVoteCandidate(${p.idx})">
+            <div class="vote-candidate-avatar">
+              <img src="${avatars[playerAvatarIndexes[p.idx]]}" loading="lazy">
+            </div>
+            <div class="vote-candidate-name">${p.name}</div>
+            <div class="vote-candidate-check">
+              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+          </button>`).join('')}
+      </div>
+
+      <button class="vote-confirm-btn" id="voteConfirmBtn"
+        onclick="vib('medium');confirmVote()">
+        دەنگم دا ✓
+      </button>
+    </div>`;
+}
+
+let selectedVoteCandidate = -1;
+
+function selectVoteCandidate(idx) {
+  selectedVoteCandidate = idx;
+  document.querySelectorAll('.vote-candidate-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  const btn = document.getElementById('voteBtn_' + idx);
+  if (btn) btn.classList.add('selected');
+  document.getElementById('voteConfirmBtn').classList.add('ready');
+}
+
+function confirmVote() {
+  if (selectedVoteCandidate === -1) return;
+  voteData[currentVoterIdx] = selectedVoteCandidate;
+  selectedVoteCandidate = -1;
+  currentVoterIdx++;
+
+  if (currentVoterIdx >= players.length) {
+    showVoteResults();
+    return;
+  }
+
+  const container = document.getElementById('votingArea');
+  container.style.opacity = '0';
+  container.style.transform = 'translateX(-20px)';
+  setTimeout(() => {
+    renderVotingStep(container);
+    container.style.transition = 'opacity .3s ease, transform .3s ease';
+    container.style.opacity = '1';
+    container.style.transform = 'translateX(0)';
+    setTimeout(() => {
+      container.style.transition = '';
+      container.style.opacity = '';
+      container.style.transform = '';
+    }, 300);
+  }, 200);
+}
+
+function showVoteResults() {
+  // ژماردنی دەنگەکان
+  const tally = {};
+  players.forEach((_, idx) => { tally[idx] = 0; });
+  Object.values(voteData).forEach(idx => {
+    tally[idx] = (tally[idx] || 0) + 1;
+  });
+
+  const maxVotes = Math.max(...Object.values(tally));
+  const topIdxs = Object.entries(tally)
+    .filter(([_, v]) => v === maxVotes)
+    .map(([k]) => parseInt(k));
+
+  const isTie = topIdxs.length > 1;
+  const container = document.getElementById('votingArea');
+
+  // ڕیزبەندی بۆ نیشاندان
+  const sorted = Object.entries(tally)
+    .sort((a, b) => b[1] - a[1]);
+
+  let resultHTML = `
+    <div class="vote-section">
+      <div class="vote-section-title">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/>
+        </svg>
+        ئەنجامی دەنگدان
+      </div>`;
+
+  if (isTie) {
+    resultHTML += `
+      <div class="word-reveal-card" style="background:linear-gradient(135deg,#b45309,#92400e);">
+        <div class="word-reveal-label">یەکسانی دەنگ!</div>
+        <div class="word-reveal-text" style="font-size:clamp(18px,5vw,26px);">
+          ${topIdxs.map(i => players[i]).join(' — ')}
+        </div>
+        <div class="word-reveal-cat">هەر کاممان سیخورە؟</div>
+      </div>`;
+  } else {
+    resultHTML += `
+      <div class="vote-result-card">
+        <div class="vote-result-label">زۆرترین دەنگی گرت</div>
+        <div class="vote-result-name">${players[topIdxs[0]]}</div>
+        <div class="vote-result-sub">${maxVotes} دەنگ لە ${players.length} دەنگدان</div>
+      </div>`;
+  }
+
+  // تاڵی دەنگەکان
+  resultHTML += `<div style="margin-bottom:var(--gap-md);">`;
+  sorted.forEach(([idx, count]) => {
+    const pct = maxVotes > 0 ? (count / maxVotes) * 100 : 0;
+    resultHTML += `
+      <div class="vote-tally-row">
+        <div class="vote-candidate-avatar" style="width:36px;height:36px;flex-shrink:0;">
+          <img src="${avatars[playerAvatarIndexes[parseInt(idx)]]}" loading="lazy">
+        </div>
+        <div class="vote-tally-name">${players[parseInt(idx)]}</div>
+        <div class="vote-tally-bar-wrap">
+          <div class="vote-tally-bar" style="width:${pct}%"></div>
+        </div>
+        <div class="vote-tally-count">${count}</div>
+      </div>`;
+  });
+  resultHTML += `</div>`;
+
+  // دوگمەکان
+  if (isTie) {
+    resultHTML += `
+      <div class="vote-tie-options">
+        <button class="vote-tie-btn vote-tie-revote" onclick="vib('medium');buildVotingUI()">
+          🔄 دووبارە دەنگدان
+        </button>
+        <button class="vote-tie-btn vote-tie-extra" onclick="vib();startExtraTime()">
+          ⏱ ١ خولەک زیادە
+        </button>
+      </div>`;
+  }
+
+  resultHTML += `</div>`;
+  container.innerHTML = resultHTML;
+}
+
+function startExtraTime() {
+  // گەڕانەوە بۆ screen4 بۆ 1 خولەکی زیادە
+  showScreen('screen4');
+  document.getElementById('starterName').innerText = '⏱ خولەکی زیادە';
+  document.getElementById('starterAvatar').src = avatars[0];
+  // کاتی یاری 60 چرکە
+  document.getElementById('gameTime').value = '60';
+  resetTimerUI();
+  // خۆکار دەستپێ بکات
+  setTimeout(() => {
+    startTimer();
+  }, 300);
 }
 
 </script>
