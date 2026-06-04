@@ -2667,7 +2667,6 @@ function renderPlayers(){
 }
 
 function goCategory(){
-  document.getElementById('bottomNav').classList.add('hidden');
   if(players.length<3){
     vib('error');
     const err=document.getElementById("minpErr");
@@ -2676,9 +2675,11 @@ function goCategory(){
     card.style.animation="none";void card.offsetWidth;card.style.animation="shake .35s ease";
     setTimeout(()=>err.classList.remove("show"),3000);return;
   }
+  document.getElementById('bottomNav').classList.add('hidden');
   document.getElementById("minpErr").classList.remove("show");
   showScreen("screen2");
 }
+
 function selectCategory(el,cat){
   el.classList.toggle("active");
   vib(el.classList.contains("active")?'medium':'light');
