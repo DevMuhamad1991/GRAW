@@ -2665,6 +2665,7 @@ function renderPlayers(){
 }
 
 function goCategory(){
+  document.getElementById('bottomNav').classList.add('hidden');
   if(players.length<3){
     vib('error');
     const err=document.getElementById("minpErr");
@@ -2841,6 +2842,9 @@ function showResults(){
 }
 function playAgain(){prepareGame();showScreen("screen3");showPlayer();}
 function resetAll(){
+  document.getElementById('bottomNav').classList.remove('hidden');
+navClick('home'); // active state بگەڕێنەوە
+
   spyIndexes=[];
   usedWords=[];
   document.getElementById("spyCards").innerHTML="";
@@ -2858,7 +2862,11 @@ function showScreen(id){
     const el=document.getElementById(s);
     if(el) el.classList.toggle('hidden',s!==id);
   });
+  const gameScreens = ['screen3','screen4','screen5'];
+  document.getElementById('bottomNav')
+    .classList.toggle('hidden', gameScreens.includes(id));
 }
+
 
 /* ── Spring press ── */
 function attachPress(btn){
