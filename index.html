@@ -1775,7 +1775,7 @@ select {
         </div>
         <div class="creator-donate-body">
           <div class="creator-donate-title">پشتگیری یاریەکە</div>
-          <div class="creator-donate-sub">ئەگەر یاریەکەت بەدڵ بوو<br>پشتگیریم بکە بە FIB</div>
+          <div class="creator-donate-sub">ئەگەر یاریەکەت بەدڵ بوو، بۆ زیاتر پەرەپێدانی<br>پشتگیریم بکە بە FIB</div>
         </div>
         <div class="creator-donate-arrow">
           <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
@@ -3151,7 +3151,7 @@ async function loadReviews() {
       box.appendChild(div);
     });
   } catch(e) {
-    box.innerHTML = '<div class="review-empty">کێشەیەک روویدا لە بارکردنی پێداچوونەوەکان.</div>';
+    box.innerHTML = '<div class="review-empty">پێداچوونەوەکان بەمزووانە بەردەست دەبن.</div>';
   }
 }
 
@@ -3210,7 +3210,7 @@ function copyFIB() {
       btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>کۆپی بکە`;
     }, 2500);
   }).catch(() => {
-    showModal({title:"کۆپی نەکرا", msg:"ژمارەکە دەستی کۆپی بکە: 0750 962 8683", icon:"warn"});
+    showModal({title:"کۆپی نەکرا", msg:"ژمارەکە کۆپی بکە: 0750 962 8683", icon:"warn"});
   });
 }
 
@@ -3225,7 +3225,7 @@ function copyLink() {
       btn.innerHTML = `<img src="sexur.webp" style="width:22px;height:22px;border-radius:6px;object-fit:cover;flex-shrink:0;"> لینکەکە کۆپی بکە`;
     }, 2500);
   }).catch(() => {
-    showModal({title:"کۆپی نەکرا", msg:"لینکەکە دەستی کۆپی بکە: devmuhamad1991.github.io/F/", icon:"warn"});
+    showModal({title:"کۆپی نەکرا", msg:"لینکەکە کۆپی بکە: devmuhamad1991.github.io/F/", icon:"warn"});
   });
 }
 
