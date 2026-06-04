@@ -138,7 +138,7 @@ body{
 
 .screen{
   position:absolute;inset:0;
-  padding:var(--gap-lg);
+  padding:0 var(--gap-lg) var(--gap-lg);
   overflow-y:auto;
   overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
@@ -709,6 +709,11 @@ select {
 .resume-btn{margin-top:18px;width:100%;height:56px;border:none;border-radius:18px;background:#111;color:#fff;font-size:var(--fs-lg);font-weight:800;}
 .remove-player{margin-right:auto;width:42px;height:42px;border:none;border-radius:14px;background:#ff4d4d;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:900;color:#fff;line-height:1;flex-shrink:0;}
 
+#screen1{
+  padding-top:0;
+}
+
+
 /* SCREEN 1 TOP */
 .screen1-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap;}
 .info-btn{display:inline-flex;align-items:center;gap:7px;height:46px;padding:0 15px;border-radius:23px;background:rgba(255,255,255,.88);border:2px solid rgba(0,0,0,.08);font-size:var(--fs-xs);font-weight:800;color:#111;box-shadow:0 3px 10px rgba(0,0,0,.07);white-space:nowrap;}
@@ -780,8 +785,8 @@ select {
    AD BANNER — full-card image slider
 ══════════════════════════════════════ */
 .ad-banner{
-  margin:var(--gap-md) 0 8px;
-  border-radius:var(--radius-card);
+  margin:0 0 var(--gap-md) 0;
+  border-radius:0 0 var(--radius-card) var(--radius-card);
   overflow:hidden;
   position:relative;
   box-shadow:0 8px 28px rgba(0,0,0,.13);
@@ -804,7 +809,7 @@ select {
   cursor:pointer;
   text-decoration:none;
   color:inherit;
-  aspect-ratio:16/7;
+  aspect-ratio:21/7;
   background:#ffe066;
   overflow:hidden;
 }
