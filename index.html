@@ -1759,7 +1759,7 @@ select {
         </div>
         <div class="creator-chip">
           <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
-          کوردستان
+          کوردی
         </div>
       </div>
     </div>
@@ -1775,7 +1775,7 @@ select {
         </div>
         <div class="creator-donate-body">
           <div class="creator-donate-title">پشتگیری یاریەکە</div>
-          <div class="creator-donate-sub">ئەگەر یاریەکەت بەدڵ بوو، بۆ زیاتر پەرەپێدانی<br>پشتگیریم بکە بە FIB</div>
+          <div class="creator-donate-sub">ئەگەر یاریەکەت بەدڵ بوو، بۆ پەپێدانی زیاتر<br>پشتگیریم بکە بـــە FIB</div>
         </div>
         <div class="creator-donate-arrow">
           <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
@@ -2193,21 +2193,21 @@ select {
 
 <!-- BOTTOM NAV — دەرەوەی app-wrap -->
 <nav class="bottom-nav" id="bottomNav">
- <button class="nav-item active" id="nav-home" style="--lw:48px" onclick="navClick('home')">
+ <button class="nav-item active" id="nav-home" style="--lw:54px" onclick="navClick('home')">
    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-   <span class="nav-label">سەرەتا</span>
+   <span class="nav-label">سەرەکی</span>
  </button>
  <button class="nav-item" id="nav-stats" style="--lw:40px" onclick="navClick('stats')">
    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
    <span class="nav-label">ئامار</span>
  </button>
- <button class="nav-item" id="nav-review" style="--lw:68px" onclick="navClick('review')">
+ <button class="nav-item" id="nav-review" style="--lw:76px" onclick="navClick('review')">
    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
    <span class="nav-label">پێداچوونەوە/span>
  </button>
 <button class="nav-item" id="nav-creator" style="--lw:62px" onclick="navClick('creator')">
   <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-  <span class="nav-label">دروستکەر</span>
+  <span class="nav-label">پەیوەندی</span>
 </button>
 
 </nav>
@@ -3210,7 +3210,7 @@ function copyFIB() {
       btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>کۆپی بکە`;
     }, 2500);
   }).catch(() => {
-    showModal({title:"کۆپی نەکرا", msg:"ژمارەکە کۆپی بکە: 0750 962 8683", icon:"warn"});
+    showModal({title:"کۆپی نەکرا", msg:"ژمارەکە دەستی کۆپی بکە: 0750 962 8683", icon:"warn"});
   });
 }
 
@@ -3225,7 +3225,7 @@ function copyLink() {
       btn.innerHTML = `<img src="sexur.webp" style="width:22px;height:22px;border-radius:6px;object-fit:cover;flex-shrink:0;"> لینکەکە کۆپی بکە`;
     }, 2500);
   }).catch(() => {
-    showModal({title:"کۆپی نەکرا", msg:"لینکەکە کۆپی بکە: devmuhamad1991.github.io/F/", icon:"warn"});
+    showModal({title:"کۆپی نەکرا", msg:"لینکەکە دەستی کۆپی بکە: devmuhamad1991.github.io/F/", icon:"warn"});
   });
 }
 
