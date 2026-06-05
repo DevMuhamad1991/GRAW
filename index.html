@@ -3496,6 +3496,7 @@ function updateTimer(sec){
   document.getElementById("timer").innerText=`${m}:${s}`;
 }
 function showResults(){
+  updateRoundBtn();
   saveGameStats();
   checkReviewPopup();
   showScreen("screen5");
@@ -3521,7 +3522,17 @@ function showResults(){
     });
   }
 }
-function playAgain(){prepareGame();showScreen("screen3");showPlayer();}
+function playAgain(){
+  prepareGame();
+  showScreen("screen3");
+  showPlayer();
+}
+function updateRoundBtn(){
+  const rounds = getTotalRounds();
+  const btn = document.querySelector('#screen5 .restart-btn:first-of-type');
+  if(btn) btn.innerText = 'راوندی ' + (rounds + 1);
+}
+
 function resetAll(){
   document.getElementById('bottomNav').classList.remove('hidden');
 navClick('home'); // active state بگەڕێنەوە
@@ -3987,6 +3998,7 @@ function closeDadgaToResults() {
   
   showScreen('screen5');
   // کەمێک چاوەڕوانی بکە پاشان خالەکان بکەوە
+  updateRoundBtn();
   setTimeout(() => openScores(), 400);
 }
 
