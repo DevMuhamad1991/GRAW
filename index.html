@@ -3549,6 +3549,7 @@ function updateTimer(sec){
   const s=(sec%60).toString().padStart(2,"0");
   document.getElementById("timer").innerText=`${m}:${s}`;
 }
+
 function showResults() {
   initScores();
   checkReviewPopup();
@@ -3575,6 +3576,16 @@ function showResults() {
       spyCardsEl.appendChild(div);
     });
   }
+
+  // خاڵەکان نیشان بدە — کۆنەکەی سڕینەوە پێش
+  const oldScore = document.querySelector('.score-card');
+  if (oldScore) oldScore.remove();
+
+  const scoreHTML = renderScoreBoard();
+  document.querySelector('.end-buttons').insertAdjacentHTML('beforebegin', scoreHTML);
+  animateScoreBars();
+}
+
 
   // خاڵەکان نیشان بدە
   const scoreHTML = renderScoreBoard();
@@ -4274,15 +4285,26 @@ function showDadgaNextStep() {
 
 function nextPhase3Spy() {
   if (dadgaPhase3Queue.length === 0) {
-    // هەموو سیخورەکان تێپەڕان — یاریزانی ئاسایی براوە
     showDadgaFinal(false);
     return;
   }
+
+  const spyName = dadgaPhase3Queue.shift();
+  const spyIdx = players.indexOf(spyName);
+
+  updateDadgaStep(3);
+  document.getElementById('dadgaPhase2').classList.add('hidden');
+  document.getElementById('dadgaPhase3').classList.remove('hidden');
+
+  document.getElementById('dadgaSpyAvatar').src = avatars[playerAvatarIndexes[spyIdx]];
+  document.getElementById('dadgaSpyRevealName').innerText = spyName;
+  document.getElementById('dadgaGuessInput').value = '';
+}
+
   
   function showDadgaFinal(spyWins) {
-  // ئەم هێڵەی زیاد بکە لە دەستپێکی فەنکشنەکە
   addScores(spyWins, false);
-  
+
   const winner = getWinner();
   if (winner) {
     const [winnerName, winnerScore] = winner;
@@ -4310,7 +4332,6 @@ function nextPhase3Spy() {
     return;
   }
 
-  // یاری بەردەوامە
   updateDadgaStep(4);
   document.getElementById('dadgaPhase3').classList.add('hidden');
   document.getElementById('dadgaPhase4').classList.remove('hidden');
@@ -4327,6 +4348,7 @@ function nextPhase3Spy() {
     document.getElementById('dadgaFinalSub').innerText = 'سیخور دەستگیرکرا';
   }
 }
+
 
 
   const spyName = dadgaPhase3Queue.shift();
