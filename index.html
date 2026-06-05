@@ -2453,7 +2453,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
           <div class="dadga-tally-title">ئەنجامی دەنگەکان</div>
           <div id="dadgaTallyList"></div>
         </div>
-        <button class="dadga-final-again" onclick="vib();goToPhase3()">بریاری دادگا</button>
+        <button class="dadga-final-again" onclick="vib();showDadgaNextStep()">بریاری دادگا</button>
       </div>
     </div>
 
@@ -3917,6 +3917,17 @@ function showDadgaFinal(spyWins) {
     document.getElementById('dadgaFinalSub').innerText = 'سیخور دەستگیرکرا — گەروو دووبارەیە!';
   }
 }
+
+function showDadgaNextStep() {
+  const accusedIdx = players.indexOf(dadgaAccused);
+  const isSpy = spyIndexes.includes(accusedIdx);
+  if (isSpy) {
+    goToPhase3();
+  } else {
+    showDadgaFinal(false);
+  }
+}
+
 
 
 </script>
