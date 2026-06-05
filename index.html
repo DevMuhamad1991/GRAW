@@ -2392,8 +2392,9 @@ select {
 </section>
 
 <!-- DADGA SYSTEM -->
-<div class="dadga-overlay" id="dadgaOverlay">
-  <div class="dadga-sheet">
+<section class="screen hidden" id="dadgaScreen">
+  <div class="dadga-sheet" style="border-radius:0;max-height:none;transform:none;">
+
     <div class="dadga-handle"></div>
 
     <!-- هێڵی پێشکەوتن -->
@@ -2511,14 +2512,15 @@ select {
           <div class="dadga-final-sub" id="dadgaFinalSub"></div>
         </div>
         <div class="dadga-final-btns">
-          <button class="dadga-final-again" onclick="vib();closeDadga();playAgain()">خولی دواتر</button>
-          <button class="dadga-final-home" onclick="vib();closeDadga();resetAll()">گەرانەوە بۆ سەرەتا</button>
+          <button class="dadga-final-again" onclick="vib();showScreen('screen5')">بەردەوامبە</button>
+<button class="dadga-final-home" onclick="vib();resetAll()">گەرانەوە بۆ سەرەتا</button>
         </div>
       </div>
     </div>
 
   </div>
-</div>
+</section>
+
 
 
 <!-- PAUSE -->
@@ -3351,7 +3353,8 @@ navClick('home'); // active state بگەڕێنەوە
 }
 
 
-const _screens = ['screen1','screen2','screen3','screen4','screen5','statsScreen','reviewScreen','creatorScreen'
+const _screens = ['screen1','screen2','screen3','screen4','screen5','statsScreen','reviewScreen','creatorScreen','dadgaScreen'
+
 ];
 
 function showScreen(id){
@@ -3746,7 +3749,6 @@ function openDadga() {
   dadgaCurrentVoterIdx = 0;
   dadgaAccused = '';
 
-  // نیشاندانی فەیز ١
   document.getElementById('dadgaPhase1').classList.remove('hidden');
   document.getElementById('dadgaPhase2').classList.add('hidden');
   document.getElementById('dadgaPhase3').classList.add('hidden');
@@ -3754,8 +3756,9 @@ function openDadga() {
 
   updateDadgaStep(1);
   renderDadgaVoter();
-  document.getElementById('dadgaOverlay').classList.add('active');
+  showScreen('dadgaScreen');
 }
+
 
 function closeDadga() {
   document.getElementById('dadgaOverlay').classList.remove('active');
