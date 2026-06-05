@@ -4341,14 +4341,17 @@ function showScoreFab() {
   fab._pressAttached = false;
 }
 
-function attachPress(btn) {
-  // FAB نەگرە
-  if (btn.id === 'scoreFab') return;
-  
-  if(btn._pressAttached) return;
-  btn._pressAttached = true;
-  // ...ماوەی کۆدەکە وەک خۆیەتی
+function attachPress(btn){
+  if(btn.id === 'scoreFab') return;
+  if(btn._pressAttached)return;
+  btn._pressAttached=true;
+  const down=()=>{btn.style.transition="transform .09s ease";btn.style.transform="scale(0.85)";};
+  const up=()=>{setTimeout(()=>{btn.style.transition="transform .45s cubic-bezier(.34,1.7,.64,1)";btn.style.transform="scale(1)";},90);};
+  btn.addEventListener("touchstart",down,{passive:true});btn.addEventListener("touchend",up,{passive:true});
+  btn.addEventListener("touchcancel",up,{passive:true});btn.addEventListener("mousedown",down);
+  btn.addEventListener("mouseup",up);btn.addEventListener("mouseleave",up);
 }
+
 
 
 function hideScoreFab() {
