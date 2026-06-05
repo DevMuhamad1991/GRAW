@@ -2169,7 +2169,7 @@ select {
       </button>
     </div>
   </div>
-</
+</section>
 
 <!-- SCREEN VOTE -->
 <section class="screen hidden" id="voteScreen">
@@ -3031,66 +3031,88 @@ function updateTimer(sec){
   const s=(sec%60).toString().padStart(2,"0");
   document.getElementById("timer").innerText=`${m}:${s}`;
 }
-function showResults(){
-  saveGameStats();
-  checkReviewPopup();
-  // دەنگدان پێش screen5
-  showScreen("voteScreen");
-  setTimeout(() => buildVotingUI(), 300);
-}
+function showVoteResults() {
+  const tally = {};
+  players.forEach((_, idx) => { tally[idx] = 0; });
+  Object.values(voteData).forEach(idx => {
+    tally[idx] = (tally[idx] || 0) + 1;
+  });
 
-function showFinalResults(voteWinnerId){
-  showScreen("screen5");
-  document.getElementById("wordRevealText").innerText = gameWord;
-  document.getElementById("wordRevealCat").innerText = "جۆری وشەکە: " + selectedCategory;
+  const maxVotes = Math.max(...Object.values(tally));
+  const topIdxs = Object.entries(tally)
+    .filter(([_, v]) => v === maxVotes)
+    .map(([k]) => parseInt(k));
 
-  const spyCardsEl = document.getElementById("spyCards");
-  spyCardsEl.innerHTML = "";
+  const isTie = topIdxs.length > 1;
+  const container = document.getElementById('votingArea');
+  const sorted = Object.entries(tally).sort((a, b) => b[1] - a[1]);
 
-  // ئایا دەنگی زۆرینە بۆ سیخور بوو؟
-  const voteCorrect = voteWinnerId !== null && spyIndexes.includes(voteWinnerId);
+  let resultHTML = `
+    <div class="vote-section">
+      <div class="vote-section-title">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/>
+        </svg>
+        ئەنجامی دەنگدان
+      </div>`;
 
-  // بانەری ئەنجامی دەنگدان
-  const resultBanner = document.createElement("div");
-  resultBanner.style.cssText = `
-    border-radius: clamp(18px,4vw,24px);
-    padding: clamp(16px,4vw,22px);
-    margin-bottom: var(--gap-md);
-    text-align: center;
-    font-size: var(--fs-md);
-    font-weight: 800;
-    animation: revealCard .5s cubic-bezier(.34,1.3,.64,1) both;
-    ${voteCorrect
-      ? 'background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;'
-      : 'background:linear-gradient(135deg,#ff3b3b,#c62828);color:#fff;'}
-  `;
-  resultBanner.innerHTML = voteCorrect
-    ? `✅ سیخور دۆزرایەوە! — یاریزانی ئاسایی براوەیە`
-    : `❌ سیخور نەدۆزرایەوە! — سیخور براوەیە`;
-  spyCardsEl.appendChild(resultBanner);
-
-  // سیخورەکان نیشان بدە
-  if(spyIndexes.length === 0){
-    const badge = document.createElement("div");
-    badge.className = "no-spies-badge";
-    badge.innerText = "سیخور نەبوو";
-    spyCardsEl.appendChild(badge);
+  if (!isTie) {
+    resultHTML += `
+      <div class="vote-result-card">
+        <div class="vote-result-label">زۆرترین دەنگی گرت</div>
+        <div class="vote-result-name">${players[topIdxs[0]]}</div>
+        <div class="vote-result-sub">${maxVotes} دەنگ لە ${players.length} دەنگدان</div>
+      </div>`;
   } else {
-    spyIndexes.forEach((idx, i) => {
-      const div = document.createElement("div");
-      div.className = "spy-card";
-      div.style.animationDelay = (i * 0.12) + "s";
-      div.innerHTML = `
-        <div class="spy-avatar-wrap"><img src="${avatars[playerAvatarIndexes[idx]]}" width="60" height="60"></div>
-        <div class="spy-card-info">
-          <div class="spy-card-name">${players[idx]}</div>
-          <div class="spy-card-tag"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>سیخور</div>
+    resultHTML += `
+      <div class="word-reveal-card" style="background:linear-gradient(135deg,#b45309,#92400e);">
+        <div class="word-reveal-label">یەکسانی دەنگ!</div>
+        <div class="word-reveal-text" style="font-size:clamp(18px,5vw,26px);">
+          ${topIdxs.map(i => players[i]).join(' — ')}
         </div>
-        <div class="spy-shield"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg></div>`;
-      spyCardsEl.appendChild(div);
-    });
+        <div class="word-reveal-cat">هەر کاممان سیخورە؟</div>
+      </div>`;
   }
+
+  resultHTML += `<div style="margin-bottom:var(--gap-md);">`;
+  sorted.forEach(([idx, count]) => {
+    const pct = maxVotes > 0 ? (count / maxVotes) * 100 : 0;
+    resultHTML += `
+      <div class="vote-tally-row">
+        <div class="vote-candidate-avatar" style="width:36px;height:36px;flex-shrink:0;">
+          <img src="${avatars[playerAvatarIndexes[parseInt(idx)]]}" loading="lazy">
+        </div>
+        <div class="vote-tally-name">${players[parseInt(idx)]}</div>
+        <div class="vote-tally-bar-wrap">
+          <div class="vote-tally-bar" style="width:${pct}%"></div>
+        </div>
+        <div class="vote-tally-count">${count}</div>
+      </div>`;
+  });
+  resultHTML += `</div>`;
+
+  if (isTie) {
+    resultHTML += `
+      <div class="vote-tie-options">
+        <button class="vote-tie-btn vote-tie-revote" onclick="vib('medium');buildVotingUI()">
+          🔄 دووبارە دەنگدان
+        </button>
+        <button class="vote-tie-btn vote-tie-extra" onclick="vib();startExtraTime()">
+          ⏱ ١ خولەک زیادە
+        </button>
+      </div>`;
+  } else {
+    resultHTML += `
+      <button class="vote-confirm-btn ready" style="margin-top:14px;"
+        onclick="vib('success');showFinalResults(${topIdxs[0]})">
+        بینینی کۆتایی یاری ←
+      </button>`;
+  }
+
+  resultHTML += `</div>`;
+  container.innerHTML = resultHTML;
 }
+
 
 
 function playAgain(){prepareGame();showScreen("screen3");showPlayer();}
@@ -3597,7 +3619,6 @@ function confirmVote() {
 }
 
 function showVoteResults() {
-  // ژماردنی دەنگەکان
   const tally = {};
   players.forEach((_, idx) => { tally[idx] = 0; });
   Object.values(voteData).forEach(idx => {
@@ -3611,10 +3632,7 @@ function showVoteResults() {
 
   const isTie = topIdxs.length > 1;
   const container = document.getElementById('votingArea');
-
-  // ڕیزبەندی بۆ نیشاندان
-  const sorted = Object.entries(tally)
-    .sort((a, b) => b[1] - a[1]);
+  const sorted = Object.entries(tally).sort((a, b) => b[1] - a[1]);
 
   let resultHTML = `
     <div class="vote-section">
@@ -3624,6 +3642,41 @@ function showVoteResults() {
         </svg>
         ئەنجامی دەنگدان
       </div>`;
+
+  if (!isTie) {
+    resultHTML += `
+      <div class="vote-result-card">
+        <div class="vote-result-label">زۆرترین دەنگی گرت</div>
+        <div class="vote-result-name">${players[topIdxs[0]]}</div>
+        <div class="vote-result-sub">${maxVotes} دەنگ لە ${players.length} دەنگدان</div>
+      </div>`;
+  } else {
+    resultHTML += `
+      <div class="word-reveal-card" style="background:linear-gradient(135deg,#b45309,#92400e);">
+        <div class="word-reveal-label">یەکسانی دەنگ!</div>
+        <div class="word-reveal-text" style="font-size:clamp(18px,5vw,26px);">
+          ${topIdxs.map(i => players[i]).join(' — ')}
+        </div>
+        <div class="word-reveal-cat">هەر کاممان سیخورە؟</div>
+      </div>`;
+  }
+
+  resultHTML += `<div style="margin-bottom:var(--gap-md);">`;
+  sorted.forEach(([idx, count]) => {
+    const pct = maxVotes > 0 ? (count / maxVotes) * 100 : 0;
+    resultHTML += `
+      <div class="vote-tally-row">
+        <div class="vote-candidate-avatar" style="width:36px;height:36px;flex-shrink:0;">
+          <img src="${avatars[playerAvatarIndexes[parseInt(idx)]]}" loading="lazy">
+        </div>
+        <div class="vote-tally-name">${players[parseInt(idx)]}</div>
+        <div class="vote-tally-bar-wrap">
+          <div class="vote-tally-bar" style="width:${pct}%"></div>
+        </div>
+        <div class="vote-tally-count">${count}</div>
+      </div>`;
+  });
+  resultHTML += `</div>`;
 
   if (isTie) {
     resultHTML += `
@@ -3647,41 +3700,6 @@ function showVoteResults() {
   container.innerHTML = resultHTML;
 }
 
-
-  // تاڵی دەنگەکان
-  resultHTML += `<div style="margin-bottom:var(--gap-md);">`;
-  sorted.forEach(([idx, count]) => {
-    const pct = maxVotes > 0 ? (count / maxVotes) * 100 : 0;
-    resultHTML += `
-      <div class="vote-tally-row">
-        <div class="vote-candidate-avatar" style="width:36px;height:36px;flex-shrink:0;">
-          <img src="${avatars[playerAvatarIndexes[parseInt(idx)]]}" loading="lazy">
-        </div>
-        <div class="vote-tally-name">${players[parseInt(idx)]}</div>
-        <div class="vote-tally-bar-wrap">
-          <div class="vote-tally-bar" style="width:${pct}%"></div>
-        </div>
-        <div class="vote-tally-count">${count}</div>
-      </div>`;
-  });
-  resultHTML += `</div>`;
-
-  // دوگمەکان
-  if (isTie) {
-    resultHTML += `
-      <div class="vote-tie-options">
-        <button class="vote-tie-btn vote-tie-revote" onclick="vib('medium');buildVotingUI()">
-          🔄 دووبارە دەنگدان
-        </button>
-        <button class="vote-tie-btn vote-tie-extra" onclick="vib();startExtraTime()">
-          ⏱ ١ خولەک زیادە
-        </button>
-      </div>`;
-  }
-
-  resultHTML += `</div>`;
-  container.innerHTML = resultHTML;
-}
 
 function startExtraTime() {
   // گەڕانەوە بۆ screen4 بۆ 1 خولەکی زیادە
