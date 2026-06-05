@@ -3729,6 +3729,30 @@ function openDadga() {
   dadgaCurrentVoterIdx = 0;
   dadgaAccused = '';
 
+  // داتای screen5 پڕ بکەوە بەبێ نیشاندان
+  document.getElementById('wordRevealText').innerText = gameWord;
+  document.getElementById('wordRevealCat').innerText = 'جۆری وشەکە: ' + selectedCategory;
+
+  const spyCardsEl = document.getElementById('spyCards');
+  spyCardsEl.innerHTML = '';
+  if (spyIndexes.length === 0) {
+    spyCardsEl.innerHTML = `<div class="no-spies-badge">سیخور نەدۆزرایەوە</div>`;
+  } else {
+    spyIndexes.forEach((idx, i) => {
+      const div = document.createElement('div');
+      div.className = 'spy-card';
+      div.style.animationDelay = (i * 0.12) + 's';
+      div.innerHTML = `
+        <div class="spy-avatar-wrap"><img src="${avatars[playerAvatarIndexes[idx]]}" width="60" height="60"></div>
+        <div class="spy-card-info">
+          <div class="spy-card-name">${players[idx]}</div>
+          <div class="spy-card-tag"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>سیخور</div>
+        </div>
+        <div class="spy-shield"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg></div>`;
+      spyCardsEl.appendChild(div);
+    });
+  }
+
   document.getElementById('dadgaPhase1').classList.remove('hidden');
   document.getElementById('dadgaPhase2').classList.add('hidden');
   document.getElementById('dadgaPhase3').classList.add('hidden');
@@ -3738,6 +3762,7 @@ function openDadga() {
   renderDadgaVoter();
   showScreen('dadgaScreen');
 }
+
 
 
 function closeDadga() {
