@@ -2875,10 +2875,10 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
     <div class="scores-inner">
       <div class="scores-divider"></div>
       <div id="scoresList"></div>
-      <button class="scores-reset-btn" onclick="vib('heavy');confirmResetScores()">
-        <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-        ڕەشکردنەوەی هەموو خالەکان
-      </button>
+     <button class="scores-reset-btn" id="scoresResetBtn">
+  <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+  ڕەشکردنەوەی هەموو خالەکان
+</button>
     </div>
   </div>
 </div>
@@ -3524,9 +3524,11 @@ function showResults(){
 }
 function playAgain(){
   prepareGame();
+  updateRoundBtn(); // ← زیاد بکە
   showScreen("screen3");
   showPlayer();
 }
+
 function updateRoundBtn(){
   const rounds = getTotalRounds();
   const btn = document.getElementById('playAgainBtn');
@@ -4454,6 +4456,11 @@ async function confirmResetScores() {
   }
 }
 
+document.getElementById('scoresResetBtn')
+  .addEventListener('click', async () => {
+    vib('heavy');
+    await confirmResetScores();
+  });
 
 
 </script>
