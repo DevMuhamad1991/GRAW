@@ -1972,13 +1972,13 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: grab;
   z-index: 800;
   border: none;
   touch-action: none;
   transition: box-shadow .2s, transform .2s;
   user-select: none;
-  -webkit-user-select: none;
+ -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
 }
 .score-fab:active { cursor: grabbing; box-shadow: 0 8px 24px rgba(255,188,0,.5); }
 .score-fab svg { width: 24px; height: 24px; fill: #111; pointer-events: none; }
@@ -4474,14 +4474,18 @@ function renderScorePaper() {
     if (dragging) setPos(origX + dx, origY + dy);
   }, { passive: false });
 
-  fab.addEventListener('touchend', e => {
-    e.preventDefault();
-    if (!dragging) {
+fab.addEventListener('touchend', e => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (!dragging) {
+    setTimeout(() => {
       vib();
       openScoreSheet();
-    }
-    dragging = false;
-  }, { passive: false });
+    }, 10);
+  }
+  dragging = false;
+}, { passive: false });
+
 
   // ── Mouse ──
   fab.addEventListener('mousedown', e => {
