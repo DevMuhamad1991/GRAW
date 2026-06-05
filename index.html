@@ -4477,8 +4477,11 @@ async function confirmResetScores() {
 document.getElementById('scoresResetBtn')
   .addEventListener('click', async () => {
     vib('heavy');
+    closeScores();
+    await new Promise(r => setTimeout(r, 300));
     await confirmResetScores();
   });
+
 
 
 </script>
