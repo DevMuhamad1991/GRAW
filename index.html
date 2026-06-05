@@ -3961,6 +3961,9 @@ function openDadga() {
   dadgaVotes = {};
   dadgaCurrentVoterIdx = 0;
   dadgaAccused = '';
+  dadgaTieNames = [];        // ← ئەمە زیاد بکە
+  dadgaAccusedList = [];     // ← ئەمەش
+  dadgaPhase3Queue = [];     // ← ئەمەش
 
   // داتای screen5 پڕ بکەوە بەبێ نیشاندان
   document.getElementById('wordRevealText').innerText = gameWord;
