@@ -1607,166 +1607,6 @@ select {
   display: inline-block;
 }
 
-/* ══ SCORE BOARD ══ */
-.score-card {
-  padding: var(--pad-card);
-  margin-bottom: var(--gap-md);
-}
-.score-card-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--fs-base);
-  font-weight: 800;
-  margin-bottom: 14px;
-  color: #111;
-}
-.score-card-title svg { fill: #b88600; }
-
-.score-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  background: #fff;
-  border-radius: clamp(16px, 3.5vw, 20px);
-  margin-bottom: 8px;
-  transition: transform .2s cubic-bezier(.34,1.56,.64,1);
-  animation: slideIn .3s ease both;
-}
-.score-leader {
-  background: linear-gradient(135deg, #fffbe8, #fff7cc);
-  border: 2px solid #ffd400;
-}
-
-.score-rank {
-  width: 30px; height: 30px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 800;
-  flex-shrink: 0;
-  background: #f0f0f0;
-  color: #aaa;
-}
-.rank-gold   { background: linear-gradient(135deg,#ffd400,#ffbc00); color: #7a5200; }
-.rank-silver { background: linear-gradient(135deg,#e0e0e0,#bdbdbd); color: #555; }
-.rank-bronze { background: linear-gradient(135deg,#ffb347,#e65c00); color: #fff; }
-
-.score-avatar {
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid #ffe066;
-  flex-shrink: 0;
-  background: #fff;
-}
-.score-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
-.score-info {
-  flex: 1;
-  min-width: 0;
-}
-.score-name {
-  font-size: var(--fs-xs);
-  font-weight: 800;
-  margin-bottom: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.score-bar-wrap {
-  height: 7px;
-  background: rgba(0,0,0,.07);
-  border-radius: 999px;
-  overflow: hidden;
-}
-.score-bar-fill {
-  height: 100%;
-  border-radius: 999px;
-  width: 0%;
-}
-.rank-gold.score-bar-fill    { background: linear-gradient(90deg,#ffd400,#ffbc00); }
-.rank-silver.score-bar-fill  { background: linear-gradient(90deg,#bdbdbd,#9e9e9e); }
-.rank-bronze.score-bar-fill  { background: linear-gradient(90deg,#ffb347,#e65c00); }
-.rank-default.score-bar-fill { background: linear-gradient(90deg,#90caf9,#42a5f5); }
-
-.score-num {
-  font-size: var(--fs-md);
-  font-weight: 800;
-  color: #111;
-  flex-shrink: 0;
-  min-width: 44px;
-  text-align: left;
-}
-.score-num span {
-  font-size: 11px;
-  color: #bbb;
-  font-weight: 700;
-}
-
-/* براوە */
-.score-winner-overlay {
-  background: linear-gradient(135deg,#111,#2a2a2a);
-  border-radius: var(--radius-card);
-  padding: clamp(28px,6vw,40px) 20px;
-  text-align: center;
-  margin-bottom: var(--gap-md);
-  position: relative;
-  overflow: hidden;
-  animation: revealCard .6s cubic-bezier(.34,1.3,.64,1) both;
-}
-.score-winner-overlay::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(circle at 60% 30%, rgba(255,212,0,.18), transparent 65%);
-  pointer-events: none;
-}
-.score-winner-avatar {
-  width: clamp(72px,18vw,90px);
-  height: clamp(72px,18vw,90px);
-  border-radius: 50%;
-  overflow: hidden;
-  border: 4px solid #ffd400;
-  margin: 0 auto 14px;
-  box-shadow: 0 0 0 8px rgba(255,212,0,.15);
-  animation: trophyBounce 2s ease infinite;
-}
-.score-winner-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.score-winner-label {
-  font-size: var(--fs-xs);
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  color: rgba(255,255,255,.4);
-  margin-bottom: 6px;
-}
-.score-winner-name {
-  font-size: clamp(28px,7.5vw,38px);
-  font-weight: 800;
-  color: #ffd400;
-  text-shadow: 0 0 30px rgba(255,212,0,.4);
-}
-.score-winner-sub {
-  font-size: var(--fs-sm);
-  color: rgba(255,255,255,.5);
-  margin-top: 6px;
-  font-weight: 700;
-}
-.score-winner-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255,212,0,.15);
-  border: 1px solid rgba(255,212,0,.3);
-  color: #ffd400;
-  font-size: var(--fs-xs);
-  font-weight: 800;
-  padding: 6px 14px;
-  border-radius: 999px;
-  margin-top: 14px;
-}
-.score-winner-badge svg { fill: #ffd400; }
-
-
 /* ══ DADGA SYSTEM ══ */
 #dadgaScreen {
   background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
@@ -2897,102 +2737,6 @@ let holdTimer,timerInterval,currentTime=0,timerStarted=false,isPaused=false,card
 let suggBlurTimer=null;
 
 let customWords = [];
-let playerScores = {};
-
-function initScores() {
-  players.forEach(p => {
-    if (playerScores[p] === undefined) playerScores[p] = 0;
-  });
-}
-
-function addScores(spyWon, spyGuessedWord) {
-  const spyNames = spyIndexes.map(i => players[i]);
-  const civilNames = players.filter(p => !spyNames.includes(p));
-
-  if (spyWon) {
-    // سیخور براوە
-    spyNames.forEach(name => {
-      playerScores[name] = (playerScores[name] || 0) + 3;
-      if (spyGuessedWord) playerScores[name] += 2;
-    });
-  } else {
-    // یاریزانی ئاسایی براوەن
-    civilNames.forEach(name => {
-      playerScores[name] = (playerScores[name] || 0) + 2;
-    });
-    // بێتاوانە دەستگیرکرا؟
-    players.forEach(p => {
-      const votedFor = dadgaVotes[p];
-      if (votedFor && !spyNames.includes(votedFor)) {
-        playerScores[p] = (playerScores[p] || 0) - 1;
-      }
-    });
-  }
-}
-
-function getWinner() {
-  return Object.entries(playerScores)
-    .sort((a, b) => b[1] - a[1])
-    .find(([_, score]) => score >= 20);
-}
-
-function renderScoreBoard() {
-  const sorted = Object.entries(playerScores)
-    .sort((a, b) => b[1] - a[1]);
-  const maxScore = sorted[0]?.[1] || 1;
-  const medals = ['rank-gold', 'rank-silver', 'rank-bronze'];
-
-  return `
-    <div class="score-card glass">
-      <div class="score-card-title">
-        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-          <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
-        </svg>
-        خاڵەکان
-      </div>
-      ${sorted.map(([name, score], i) => {
-        const idx = players.indexOf(name);
-        const avUrl = idx >= 0 ? avatars[playerAvatarIndexes[idx]] : avatars[0];
-        const pct = Math.max(4, Math.round((score / 20) * 100));
-        const isLeader = i === 0;
-        return `
-          <div class="score-row ${isLeader ? 'score-leader' : ''}">
-            <div class="score-rank ${medals[i] || ''}">
-              ${i === 0
-                ? `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>`
-                : i === 1
-                ? `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"/></svg>`
-                : i === 2
-                ? `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>`
-                : `${i + 1}`
-              }
-            </div>
-            <div class="score-avatar">
-              <img src="${avUrl}" width="38" height="38" loading="lazy">
-            </div>
-            <div class="score-info">
-              <div class="score-name">${name}</div>
-              <div class="score-bar-wrap">
-                <div class="score-bar-fill ${medals[i] || 'rank-default'}" 
-                     style="width:0%" 
-                     data-pct="${pct}">
-                </div>
-              </div>
-            </div>
-            <div class="score-num">${score}<span>/20</span></div>
-          </div>`;
-      }).join('')}
-    </div>`;
-}
-
-function animateScoreBars() {
-  setTimeout(() => {
-    document.querySelectorAll('.score-bar-fill').forEach(bar => {
-      bar.style.transition = 'width .8s cubic-bezier(.4,0,.2,1)';
-      bar.style.width = bar.dataset.pct + '%';
-    });
-  }, 120);
-}
 
 
 /* ══════════════════════════════════════
@@ -3549,49 +3293,32 @@ function updateTimer(sec){
   const s=(sec%60).toString().padStart(2,"0");
   document.getElementById("timer").innerText=`${m}:${s}`;
 }
-
-function showResults() {
-  initScores();
+function showResults(){
+  saveGameStats();
   checkReviewPopup();
-  showScreen('screen5');
-  document.getElementById('wordRevealText').innerText = gameWord;
-  document.getElementById('wordRevealCat').innerText = 'جۆری وشەکە: ' + selectedCategory;
-  const spyCardsEl = document.getElementById('spyCards');
-  spyCardsEl.innerHTML = '';
-  if (spyIndexes.length === 0) {
-    spyCardsEl.innerHTML = `<div class="no-spies-badge">سیخور نەدۆزرایەوە</div>`;
+  showScreen("screen5");
+  document.getElementById("wordRevealText").innerText=gameWord;
+  document.getElementById("wordRevealCat").innerText="جۆری وشەکە: "+selectedCategory;
+  const spyCardsEl=document.getElementById("spyCards");
+  spyCardsEl.innerHTML="";
+  if(spyIndexes.length===0){
+    spyCardsEl.innerHTML=`<div class="no-spies-badge">سیخور نەدۆزرایەوە</div>`;
   } else {
-    spyIndexes.forEach((idx, i) => {
-      const div = document.createElement('div');
-      div.className = 'spy-card';
-      div.style.animationDelay = (i * 0.12) + 's';
-      div.innerHTML = `<div class="spy-avatar-wrap"><img src="${avatars[playerAvatarIndexes[idx]]}" width="60" height="60"></div><div class="spy-card-info"><div class="spy-card-name">${players[idx]}</div><div class="spy-card-tag"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>سیخور</div></div><div class="spy-shield"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg></div>`;
+    spyIndexes.forEach((idx,i)=>{
+      const div=document.createElement("div");
+      div.className="spy-card";
+      div.style.animationDelay=(i*0.12)+"s";
+      div.innerHTML=`
+        <div class="spy-avatar-wrap"><img src="${avatars[playerAvatarIndexes[idx]]}" width="60" height="60"></div>
+        <div class="spy-card-info">
+          <div class="spy-card-name">${players[idx]}</div>
+          <div class="spy-card-tag"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>سیخور</div>
+        </div>
+        <div class="spy-shield"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg></div>`;
       spyCardsEl.appendChild(div);
     });
   }
-  const oldScore = document.querySelector('.score-card');
-  if (oldScore) oldScore.remove();
-  const scoreHTML = renderScoreBoard();
-  document.querySelector('.end-buttons').insertAdjacentHTML('beforebegin', scoreHTML);
-  animateScoreBars();
 }
-
-  // خاڵەکان نیشان بدە — کۆنەکەی سڕینەوە پێش
-  const oldScore = document.querySelector('.score-card');
-  if (oldScore) oldScore.remove();
-
-  const scoreHTML = renderScoreBoard();
-  document.querySelector('.end-buttons').insertAdjacentHTML('beforebegin', scoreHTML);
-  animateScoreBars();
-}
-
-
-  // خاڵەکان نیشان بدە
-  const scoreHTML = renderScoreBoard();
-  document.querySelector('.end-buttons').insertAdjacentHTML('beforebegin', scoreHTML);
-  animateScoreBars();
-}
-
 function playAgain(){prepareGame();showScreen("screen3");showPlayer();}
 function resetAll(){
   document.getElementById('bottomNav').classList.remove('hidden');
@@ -3599,7 +3326,6 @@ navClick('home'); // active state بگەڕێنەوە
 
   spyIndexes=[];
   usedWords=[];
-  playerScores = {};
   document.getElementById("spyCards").innerHTML="";
   showScreen("screen1");
   gameCountForReview = parseInt(localStorage.getItem('sexur_game_count') || '0');
@@ -4284,56 +4010,10 @@ function showDadgaNextStep() {
 
 function nextPhase3Spy() {
   if (dadgaPhase3Queue.length === 0) {
+    // هەموو سیخورەکان تێپەڕان — یاریزانی ئاسایی براوە
     showDadgaFinal(false);
     return;
   }
-  const spyName = dadgaPhase3Queue.shift();
-  const spyIdx = players.indexOf(spyName);
-  updateDadgaStep(3);
-  document.getElementById('dadgaPhase2').classList.add('hidden');
-  document.getElementById('dadgaPhase3').classList.remove('hidden');
-  document.getElementById('dadgaSpyAvatar').src = avatars[playerAvatarIndexes[spyIdx]];
-  document.getElementById('dadgaSpyRevealName').innerText = spyName;
-  document.getElementById('dadgaGuessInput').value = '';
-}
-
-
-  
-  function showDadgaFinal(spyWins) {
-  addScores(spyWins, false);
-  const winner = getWinner();
-  if (winner) {
-    const [winnerName, winnerScore] = winner;
-    const winnerIdx = players.indexOf(winnerName);
-    updateDadgaStep(4);
-    document.getElementById('dadgaPhase3').classList.add('hidden');
-    document.getElementById('dadgaPhase4').classList.remove('hidden');
-    const hero = document.getElementById('dadgaFinalHero');
-    hero.className = 'dadga-final-hero citizens-win';
-    hero.innerHTML = `<div class="score-winner-overlay" style="margin:0;border-radius:20px;"><div class="score-winner-avatar"><img src="${avatars[playerAvatarIndexes[winnerIdx] || 0]}" loading="lazy"></div><div class="score-winner-label">براوەی کۆتایی</div><div class="score-winner-name">${winnerName}</div><div class="score-winner-sub">${winnerScore} خاڵی گەیشت</div><div class="score-winner-badge"><svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>٢٠ خاڵ گەیشت</div></div>`;
-    document.getElementById('dadgaFinalTitle').innerText = '';
-    document.getElementById('dadgaFinalSub').innerText = '';
-    return;
-  }
-  updateDadgaStep(4);
-  document.getElementById('dadgaPhase3').classList.add('hidden');
-  document.getElementById('dadgaPhase4').classList.remove('hidden');
-  const hero = document.getElementById('dadgaFinalHero');
-  hero.className = 'dadga-final-hero ' + (spyWins ? 'spy-wins' : 'citizens-win');
-  const ico = document.getElementById('dadgaFinalTrophyIcon');
-  if (spyWins) {
-    ico.innerHTML = `<path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/>`;
-    document.getElementById('dadgaFinalTitle').innerText = 'سیخور براوەیە';
-    document.getElementById('dadgaFinalSub').innerText = 'سیخور لەلێکۆڵینەوە دەرچوو';
-  } else {
-    ico.innerHTML = `<path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>`;
-    document.getElementById('dadgaFinalTitle').innerText = 'یاریزانی ئاسایی براوەیە';
-    document.getElementById('dadgaFinalSub').innerText = 'سیخور دەستگیرکرا';
-  }
-}
-
-
-
 
   const spyName = dadgaPhase3Queue.shift();
   const spyIdx = players.indexOf(spyName);
