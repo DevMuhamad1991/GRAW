@@ -4218,6 +4218,10 @@ function showDadgaFinal(spyWins) {
     document.getElementById('dadgaFinalTitle').innerText = 'یاریزانی ئاسایی براوەیە';
     document.getElementById('dadgaFinalSub').innerText = 'سیخور دەستگیرکرا !';
   }
+setTimeout(() => {
+    showScreen('screen5');
+    setTimeout(() => openScores(), 600);
+  }, 1000);
 }
 
 function showDadgaNextStep() {
