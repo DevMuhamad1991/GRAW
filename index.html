@@ -2671,7 +2671,8 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
  </button>
  <button class="nav-item" id="nav-review" style="--lw:76px" onclick="navClick('review')">
    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
-   <span class="nav-label">پێداچوونەوە/span>
+   <span class="nav-label">پێداچوونەوە</span>
+
  </button>
 <button class="nav-item" id="nav-creator" style="--lw:62px" onclick="navClick('creator')">
   <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
@@ -3728,6 +3729,8 @@ let dadgaCurrentVoterIdx = 0;
 let dadgaAccused = '';     // کەی زیاتر دەنگی وەرگرت
 
 function openDadga() {
+  saveGameStats();
+checkReviewPopup();
   dadgaVotes = {};
   dadgaCurrentVoterIdx = 0;
   dadgaAccused = '';
@@ -3764,6 +3767,16 @@ function openDadga() {
   updateDadgaStep(1);
   renderDadgaVoter();
   showScreen('dadgaScreen');
+  
+  document.getElementById('dadgaVoteBtn').onclick = function() {
+  vib();
+  if (dadgaTieNames.length > 0) {
+    submitTieVote();
+  } else {
+    submitVote();
+  }
+};
+
 }
 
 
@@ -3950,15 +3963,6 @@ function goToPhase3() {
   document.getElementById('dadgaGuessInput').value = '';
 }
 
-function checkSpyGuess(adminSaysCorrect) {
-  // بتمنی ئیداری — ئایا وشەکەی باش حەز کرد؟
-  if (adminSaysCorrect) {
-    showDadgaFinal(true);  // سیخور براوە
-  } else {
-    showDadgaFinal(false); // یاریزانی ئاسایی براوە
-  }
-}
-
 function showDadgaFinal(spyWins) {
   updateDadgaStep(4);
   document.getElementById('dadgaPhase3').classList.add('hidden');
@@ -4047,23 +4051,21 @@ function startTieVote() {
   updateDadgaStep(1);
   document.getElementById('dadgaPhase2').classList.add('hidden');
   document.getElementById('dadgaPhase1').classList.remove('hidden');
-
-  // تەنها دەنگ بۆ ئەو کەسانە کە یەکسان بوون
-  const list = document.getElementById('dadgaSuspectList');
-  const voter = players[dadgaCurrentVoterIdx];
-  document.getElementById('dadgaVoterAvatar').src = avatars[playerAvatarIndexes[0]];
-  document.getElementById('dadgaVoterName').innerText = players[0];
-
   renderTieVoter();
 }
+
 
 function renderTieVoter() {
   const voter = players[dadgaCurrentVoterIdx];
   document.getElementById('dadgaVoterAvatar').src = avatars[playerAvatarIndexes[dadgaCurrentVoterIdx]];
   document.getElementById('dadgaVoterName').innerText = voter;
+  dadgaSelectedIdx = -1;
+  document.getElementById('dadgaVoteBtn').classList.remove('ready');
 
   const list = document.getElementById('dadgaSuspectList');
   list.innerHTML = '';
+
+  // تەنها ئەو دوو کەسە نیشان بدە کە دەنگیان یەکسان بوو
   dadgaTieNames.forEach(name => {
     if (name === voter) return;
     const idx = players.indexOf(name);
@@ -4079,20 +4081,16 @@ function renderTieVoter() {
       </div>`;
     list.appendChild(div);
   });
-
-  document.getElementById('dadgaVoteBtn').classList.remove('ready');
-  dadgaSelectedIdx = -1;
-
-  // ئەگەر تەنها یەک کەس لە لیستەکەدا بوو و ئەو کەسە خۆیە → ئاشکرا بکە
-  const validSuspects = dadgaTieNames.filter(n => n !== voter);
-  if (validSuspects.length === 0) {
-    dadgaVotes[voter] = dadgaTieNames.find(n => n !== voter) || dadgaTieNames[0];
-    submitTieVote();
-  }
 }
 
+
 function submitTieVote() {
+  if (dadgaSelectedIdx < 0) return;
+  const voter = players[dadgaCurrentVoterIdx];
+  const suspect = players[dadgaSelectedIdx];
+  dadgaVotes[voter] = suspect;
   dadgaSelectedIdx = -1;
+
   dadgaCurrentVoterIdx++;
   if (dadgaCurrentVoterIdx < players.length) {
     renderTieVoter();
@@ -4100,6 +4098,7 @@ function submitTieVote() {
     showDadgaResult();
   }
 }
+
 
 
 
