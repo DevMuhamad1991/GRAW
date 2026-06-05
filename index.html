@@ -2426,16 +2426,12 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
     <div id="dadgaPhase1">
       <div class="dadga-header">
         <div class="dadga-phase-badge">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-          مەرحەلەی دەنگدان
-        </div>
-        <div class="dadga-phase-title">دادگای سیخور</div>
-        <div class="dadga-phase-sub">هەر یاریزانێک دەنگ دەدات بۆ سیخور</div>
+          
       </div>
       <div class="dadga-vote-wrap">
         <div class="dadga-vote-question">
           <svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>
-          <div class="dadga-vote-question-text">بە بیرت کێ سیخورە؟</div>
+          <div class="dadga-vote-question-text"> کێ سیخورە؟</div>
         </div>
         <div class="dadga-current-voter">
           <div class="dadga-voter-avatar"><img id="dadgaVoterAvatar" src=""></div>
@@ -2451,8 +2447,6 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
     <div id="dadgaPhase2" class="hidden">
       <div class="dadga-header">
         <div class="dadga-phase-badge">
-          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
-          ئەنجامی دەنگدان
         </div>
         <div class="dadga-phase-title" id="dadgaVerdictTitle"></div>
         <div class="dadga-phase-sub" id="dadgaVerdictSub"></div>
@@ -2469,7 +2463,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
           <div class="dadga-tally-title">ژمارەی دەنگەکان</div>
           <div id="dadgaTallyList"></div>
         </div>
-<button class="dadga-final-again" onclick="vib();showScreen('screen5')">بەردەوامبە</button>
+<button class="dadga-final-again" onclick="vib();showScreen('screen5')">بریاری دادگا</button>
 
       </div>
     </div>
@@ -2479,10 +2473,10 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
       <div class="dadga-header">
         <div class="dadga-phase-badge">
           <svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>
-          شانسی ئاخری
+          شانسی کۆتایی
         </div>
         <div class="dadga-phase-title">سیخور دەستگیرکرا</div>
-        <div class="dadga-phase-sub">دەتوانێت وشەکە حەز بکات — سەرکەوتن دەبێت!</div>
+        <div class="dadga-phase-sub">  سیخور ئەگەر بتوانێ وشەکە ئاشکرا ئاشکرا بکات ئازاد دەکرێت!</div>
       </div>
       <div class="dadga-lastchance-wrap">
         <div class="dadga-spy-reveal">
@@ -2493,7 +2487,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
             سیخور
           </div>
         </div>
-        <div class="dadga-guess-label">وشەکە چییە بە بیرت؟</div>
+        <div class="dadga-guess-label">وشەکە چییە؟</div>
         <input class="dadga-guess-input" id="dadgaGuessInput" type="text" placeholder="وشەکە بنووسە...">
         <div class="dadga-guess-btns">
           <button class="dadga-guess-correct" onclick="vib('medium');checkSpyGuess(true)">
