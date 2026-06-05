@@ -4333,11 +4333,23 @@ let fabVisible = false;
 function showScoreFab() {
   const fab = document.getElementById('scoreFab');
   fab.classList.remove('hidden');
-  // دانانی شوێنی دەستپێک
   fab.style.bottom = '100px';
   fab.style.right = '20px';
   fabVisible = true;
+  
+  // attachPress لەسەر FAB بکوژێنەوە
+  fab._pressAttached = false;
 }
+
+function attachPress(btn) {
+  // FAB نەگرە
+  if (btn.id === 'scoreFab') return;
+  
+  if(btn._pressAttached) return;
+  btn._pressAttached = true;
+  // ...ماوەی کۆدەکە وەک خۆیەتی
+}
+
 
 function hideScoreFab() {
   document.getElementById('scoreFab').classList.add('hidden');
