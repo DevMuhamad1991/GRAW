@@ -4441,7 +4441,7 @@ function renderScorePaper() {
     fab.style.bottom = 'auto';
   }
 
-  // Touch
+  // ── Touch ──
   fab.addEventListener('touchstart', e => {
     const t = e.touches[0];
     startX = t.clientX; startY = t.clientY;
@@ -4455,17 +4455,23 @@ function renderScorePaper() {
     const t = e.touches[0];
     const dx = t.clientX - startX;
     const dy = t.clientY - startY;
-    if (!dragging && Math.hypot(dx, dy) > 6) dragging = true;
+    if (Math.hypot(dx, dy) > 8) dragging = true;
     if (dragging) setPos(origX + dx, origY + dy);
   }, { passive: false });
 
-  fab.addEventListener('touchend', e => {
-    if (!dragging) { vib(); openScoreSheet(); }
-    dragging = false;
+  fab.addEventListener('touchend', () => {
+    if (!dragging) {
+      vib();
+      openScoreSheet();
+    }
+    setTimeout(() => { dragging = false; }, 50);
   });
 
-  // Mouse
+  // ── Mouse ──
   fab.addEventListener('mousedown', e => {
+    // کلیکی چەپ تەنها
+    if (e.button !== 0) return;
+    e.preventDefault();
     startX = e.clientX; startY = e.clientY;
     const p = getPos();
     origX = p.x; origY = p.y;
@@ -4474,19 +4480,25 @@ function renderScorePaper() {
     const move = ev => {
       const dx = ev.clientX - startX;
       const dy = ev.clientY - startY;
-      if (!dragging && Math.hypot(dx, dy) > 6) dragging = true;
+      if (Math.hypot(dx, dy) > 8) dragging = true;
       if (dragging) setPos(origX + dx, origY + dy);
     };
+
     const up = () => {
       window.removeEventListener('mousemove', move);
       window.removeEventListener('mouseup', up);
-      if (!dragging) { vib(); openScoreSheet(); }
-      dragging = false;
+      if (!dragging) {
+        vib();
+        openScoreSheet();
+      }
+      setTimeout(() => { dragging = false; }, 50);
     };
+
     window.addEventListener('mousemove', move);
     window.addEventListener('mouseup', up);
   });
 })();
+
 
 
 </script>
