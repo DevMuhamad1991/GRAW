@@ -2171,10 +2171,6 @@ select {
   </div>
 </section>
 
-<section class="screen hidden" id="screen5">
-  <div class="screen-top-bar">
-    <button class="back-btn" onclick="vib();goBack('screen1')">
-      <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
       <!-- SCREEN VOTE -->
 <section class="screen hidden" id="voteScreen">
   <div class="screen-top-bar">
@@ -2206,6 +2202,11 @@ select {
     </div>
   </div>
 </section>
+
+<section class="screen hidden" id="screen5">
+  <div class="screen-top-bar">
+    <button class="back-btn" onclick="vib();goBack('screen1')">
+      <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
 
 <!-- SCREEN 5 — RESULTS -->
 <section class="screen hidden" id="screen5">
@@ -3620,21 +3621,26 @@ function showVoteResults() {
 
   if (isTie) {
     resultHTML += `
-      <div class="word-reveal-card" style="background:linear-gradient(135deg,#b45309,#92400e);">
-        <div class="word-reveal-label">یەکسانی دەنگ!</div>
-        <div class="word-reveal-text" style="font-size:clamp(18px,5vw,26px);">
-          ${topIdxs.map(i => players[i]).join(' — ')}
-        </div>
-        <div class="word-reveal-cat">هەر کاممان سیخورە؟</div>
+      <div class="vote-tie-options">
+        <button class="vote-tie-btn vote-tie-revote" onclick="vib('medium');buildVotingUI()">
+          🔄 دووبارە دەنگدان
+        </button>
+        <button class="vote-tie-btn vote-tie-extra" onclick="vib();startExtraTime()">
+          ⏱ ١ خولەک زیادە
+        </button>
       </div>`;
   } else {
     resultHTML += `
-      <div class="vote-result-card">
-        <div class="vote-result-label">زۆرترین دەنگی گرت</div>
-        <div class="vote-result-name">${players[topIdxs[0]]}</div>
-        <div class="vote-result-sub">${maxVotes} دەنگ لە ${players.length} دەنگدان</div>
-      </div>`;
+      <button class="vote-confirm-btn ready" style="margin-top:14px;"
+        onclick="vib('success');showFinalResults(${topIdxs[0]})">
+        بینینی کۆتایی یاری ←
+      </button>`;
   }
+
+  resultHTML += `</div>`;
+  container.innerHTML = resultHTML;
+}
+
 
   // تاڵی دەنگەکان
   resultHTML += `<div style="margin-bottom:var(--gap-md);">`;
