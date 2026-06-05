@@ -3556,7 +3556,6 @@ function showResults() {
   showScreen('screen5');
   document.getElementById('wordRevealText').innerText = gameWord;
   document.getElementById('wordRevealCat').innerText = 'جۆری وشەکە: ' + selectedCategory;
-
   const spyCardsEl = document.getElementById('spyCards');
   spyCardsEl.innerHTML = '';
   if (spyIndexes.length === 0) {
@@ -3566,16 +3565,16 @@ function showResults() {
       const div = document.createElement('div');
       div.className = 'spy-card';
       div.style.animationDelay = (i * 0.12) + 's';
-      div.innerHTML = `
-        <div class="spy-avatar-wrap"><img src="${avatars[playerAvatarIndexes[idx]]}" width="60" height="60"></div>
-        <div class="spy-card-info">
-          <div class="spy-card-name">${players[idx]}</div>
-          <div class="spy-card-tag"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>سیخور</div>
-        </div>
-        <div class="spy-shield"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg></div>`;
+      div.innerHTML = `<div class="spy-avatar-wrap"><img src="${avatars[playerAvatarIndexes[idx]]}" width="60" height="60"></div><div class="spy-card-info"><div class="spy-card-name">${players[idx]}</div><div class="spy-card-tag"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>سیخور</div></div><div class="spy-shield"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg></div>`;
       spyCardsEl.appendChild(div);
     });
   }
+  const oldScore = document.querySelector('.score-card');
+  if (oldScore) oldScore.remove();
+  const scoreHTML = renderScoreBoard();
+  document.querySelector('.end-buttons').insertAdjacentHTML('beforebegin', scoreHTML);
+  animateScoreBars();
+}
 
   // خاڵەکان نیشان بدە — کۆنەکەی سڕینەوە پێش
   const oldScore = document.querySelector('.score-card');
@@ -4288,23 +4287,20 @@ function nextPhase3Spy() {
     showDadgaFinal(false);
     return;
   }
-
   const spyName = dadgaPhase3Queue.shift();
   const spyIdx = players.indexOf(spyName);
-
   updateDadgaStep(3);
   document.getElementById('dadgaPhase2').classList.add('hidden');
   document.getElementById('dadgaPhase3').classList.remove('hidden');
-
   document.getElementById('dadgaSpyAvatar').src = avatars[playerAvatarIndexes[spyIdx]];
   document.getElementById('dadgaSpyRevealName').innerText = spyName;
   document.getElementById('dadgaGuessInput').value = '';
 }
 
+
   
   function showDadgaFinal(spyWins) {
   addScores(spyWins, false);
-
   const winner = getWinner();
   if (winner) {
     const [winnerName, winnerScore] = winner;
@@ -4314,24 +4310,11 @@ function nextPhase3Spy() {
     document.getElementById('dadgaPhase4').classList.remove('hidden');
     const hero = document.getElementById('dadgaFinalHero');
     hero.className = 'dadga-final-hero citizens-win';
-    hero.innerHTML = `
-      <div class="score-winner-overlay" style="margin:0;border-radius:20px;">
-        <div class="score-winner-avatar">
-          <img src="${avatars[playerAvatarIndexes[winnerIdx] || 0]}" loading="lazy">
-        </div>
-        <div class="score-winner-label">براوەی کۆتایی</div>
-        <div class="score-winner-name">${winnerName}</div>
-        <div class="score-winner-sub">${winnerScore} خاڵی گەیشت</div>
-        <div class="score-winner-badge">
-          <svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-          ٢٠ خاڵ گەیشت
-        </div>
-      </div>`;
+    hero.innerHTML = `<div class="score-winner-overlay" style="margin:0;border-radius:20px;"><div class="score-winner-avatar"><img src="${avatars[playerAvatarIndexes[winnerIdx] || 0]}" loading="lazy"></div><div class="score-winner-label">براوەی کۆتایی</div><div class="score-winner-name">${winnerName}</div><div class="score-winner-sub">${winnerScore} خاڵی گەیشت</div><div class="score-winner-badge"><svg viewBox="0 0 24 24" width="13" height="13"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>٢٠ خاڵ گەیشت</div></div>`;
     document.getElementById('dadgaFinalTitle').innerText = '';
     document.getElementById('dadgaFinalSub').innerText = '';
     return;
   }
-
   updateDadgaStep(4);
   document.getElementById('dadgaPhase3').classList.add('hidden');
   document.getElementById('dadgaPhase4').classList.remove('hidden');
@@ -4348,6 +4331,7 @@ function nextPhase3Spy() {
     document.getElementById('dadgaFinalSub').innerText = 'سیخور دەستگیرکرا';
   }
 }
+
 
 
 
