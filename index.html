@@ -4469,7 +4469,7 @@ function renderScores() {
     div.className = 'scores-row' + rankClass;
     div.style.animationDelay = (i * 0.06) + 's';
     div.innerHTML = `
-${newPts !== undefined && newPts !== 0 ? `<div class="scores-new-pts" style="${newPts < 0 ? 'background:linear-gradient(135deg,#ff3b3b,#c62828);box-shadow:0 3px 10px rgba(255,59,59,.35);' : ''}">${newPts > 0 ? '+' : ''}${newPts}${newPts < 0 ? ' ✗' : ' ✓'}</div>` : ''}
+  ${newPts !== undefined && newPts !== 0 ? `<div class="scores-new-pts" style="${newPts < 0 ? 'background:linear-gradient(135deg,#ff3b3b,#c62828);box-shadow:0 3px 10px rgba(255,59,59,.35);' : newPts >= 2 ? 'background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 3px 10px rgba(34,197,94,.35);' : 'background:linear-gradient(135deg,#ffd400,#ffbc00);color:#111;box-shadow:0 3px 10px rgba(255,188,0,.35);'}">${newPts > 0 ? '+' : ''}${newPts}${newPts < 0 ? ' ✗' : ' ✓'}</div>` : ''}
       <div class="scores-rank">${rankSymbol}</div>
       <div class="scores-avatar">
         <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${avatarSeed}" loading="lazy">
