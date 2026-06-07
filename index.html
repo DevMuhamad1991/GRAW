@@ -4384,14 +4384,12 @@ function awardPoints(spyWon) {
   lastRoundPoints = {};
 
   if (spyWon) {
-    // سیخور وشەکەی دۆزیەوە — +3 بۆ هەموو سیخورەکان
     spyIndexes.forEach(idx => {
       const name = players[idx];
       scores[name] = (scores[name] || 0) + 3;
       lastRoundPoints[name] = 3;
     });
   } else {
-    // سیخور دەستگیرکرا — +2 بۆ هەموو هاوڵاتییە ئاسایییەکان
     players.forEach((name, idx) => {
       if (!spyIndexes.includes(idx)) {
         scores[name] = (scores[name] || 0) + 2;
@@ -4400,12 +4398,25 @@ function awardPoints(spyWon) {
     });
   }
 
-  // خولەکان زیاد بکە
+  // خالی -1 بۆ دەنگی هەڵە
+  Object.entries(dadgaVotes).forEach(([voter, suspect]) => {
+    const suspectIdx = players.indexOf(suspect);
+    const isSuspectSpy = spyIndexes.includes(suspectIdx);
+    const voterIdx = players.indexOf(voter);
+    const isVoterSpy = spyIndexes.includes(voterIdx);
+
+    if (!isSuspectSpy && !isVoterSpy) {
+      // هاوڵاتی ئاسایی دەنگی هەڵەی داوە
+      scores[voter] = (scores[voter] || 0) - 1;
+      lastRoundPoints[voter] = (lastRoundPoints[voter] || 0) - 1;
+    }
+  });
+
   const rounds = getTotalRounds() + 1;
   localStorage.setItem('sexur_rounds', rounds);
-
   saveScores(scores);
 }
+
 
 function openScores() {
   renderScores();
