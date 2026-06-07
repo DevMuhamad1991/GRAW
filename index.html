@@ -4408,11 +4408,19 @@ function awardPoints(spyWon) {
     const isVoterSpy = spyIndexes.includes(voterIdx);
 
     if (!isSuspectSpy && !isVoterSpy) {
-      // هاوڵاتی ئاسایی دەنگی هەڵەی داوە
+      // -1 بۆ دەنگەری هەڵە
       scores[voter] = (scores[voter] || 0) - 1;
       lastRoundPoints[voter] = (lastRoundPoints[voter] || 0) - 1;
+
+      // +1 بۆ هەر سیخورێک
+      spyIndexes.forEach(spyIdx => {
+        const spyName = players[spyIdx];
+        scores[spyName] = (scores[spyName] || 0) + 1;
+        lastRoundPoints[spyName] = (lastRoundPoints[spyName] || 0) + 1;
+      });
     }
   });
+
 
   const rounds = getTotalRounds() + 1;
   localStorage.setItem('sexur_rounds', rounds);
