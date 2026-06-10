@@ -4678,7 +4678,11 @@ const hintMessages = [
 
 function getHintMessages() {
   const personal = [];
+  const usedNames = new Set();
+  
   players.forEach(name => {
+    if (usedNames.has(name)) return;
+    usedNames.add(name);
     personal.push(`ئایا ${name} راستی دەڵێت؟ 🤔`);
     personal.push(`${name} زۆر بێدەنگە... گومانبارە 🫣`);
     personal.push(`چاوت لە ${name} بێت، شتێکی عێجێبە 👁️`);
@@ -4686,8 +4690,10 @@ function getHintMessages() {
     personal.push(`${name} زۆر ئارامە، زۆر... 😶`);
     personal.push(`ئایا ${name} وشەکەی زانی؟ 🎭`);
   });
+  
   return [...hintMessages, ...personal];
 }
+
 
 let hintInterval = null;
 let hintShowing = false;
