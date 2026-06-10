@@ -2239,12 +2239,19 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   display: flex;
   align-items: center;
 }
-.hint-bubble-text {
+..hint-bubble-text {
   font-size: var(--fs-sm);
   font-weight: 700;
   color: #111;
   line-height: 1.7;
+  direction: rtl;
+  unicode-bidi: plaintext;
+  text-align: right;
+  word-spacing: normal;
+  letter-spacing: normal;
+  white-space: pre-wrap;
 }
+
 .hint-typing-dots {
   display: flex;
   gap: 5px;
@@ -4739,6 +4746,11 @@ function showNextHint() {
 
 function typeText(el, msg) {
   el.innerText = '';
+  el.style.direction = 'rtl';
+  el.style.unicodeBidi = 'plaintext';
+  el.style.textAlign = 'right';
+  el.style.wordSpacing = 'normal';
+  el.style.letterSpacing = 'normal';
   let i = 0;
   const interval = setInterval(() => {
     el.innerText += msg[i];
@@ -4746,6 +4758,7 @@ function typeText(el, msg) {
     if (i >= msg.length) clearInterval(interval);
   }, 35);
 }
+
 
 function stopHintSystem() {
   clearInterval(hintInterval);
