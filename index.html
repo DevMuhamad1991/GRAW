@@ -3515,13 +3515,6 @@ const starterMsgs = [
 let _introTimer = null;
 let _introMsgTimer = null;
 
-// ← تەنها ئەم فەنکشنە یەک جار بنووسە
-function showStarter() {
-  showScreen("screen4");
-  const starter = Math.floor(Math.random() * players.length);
-  document.getElementById("starterName").innerText = players[starter];
-  document.getElementById("starterAvatar").src = avatars[playerAvatarIndexes[starter]];
-  resetTimerUI();
 
   clearTimeout(_introTimer);
   clearInterval(_introMsgTimer);
