@@ -2572,7 +2572,16 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   <div class="glass start-player-box">
     <div class="start-avatar"><img id="starterAvatar" src=""></div>
     <div class="start-name" id="starterName"></div>
-    <div class="start-text">دەست پێ بکە</div>
+<div class="start-text">دەست پێ بکە</div>
+
+<!-- ← ئەمە زیاد بکە -->
+<div id="starterIntro" class="hidden" style="margin-top:20px;text-align:center;transition:opacity 0.5s ease, transform 0.5s ease;">
+  <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;border:3px solid #ffd400;margin:0 auto 10px;background:#fff;">
+    <img id="starterIntroAvatarImg" src="" style="width:100%;height:100%;object-fit:cover;transition:opacity 0.3s ease;">
+  </div>
+  <div id="starterIntroMsg" style="font-size:var(--fs-md);font-weight:800;color:#111;line-height:1.7;padding:12px 18px;background:rgba(255,255,255,0.85);border-radius:18px;display:inline-block;max-width:260px;box-shadow:0 4px 14px rgba(0,0,0,0.07);transition:opacity 0.3s ease;"></div>
+</div>
+
     <button class="play-btn" id="startRoundBtn" onclick="vib();startTimer()">دەستپێکردنی خول</button>
     <div class="timer" id="timer">00:00</div>
     <div class="timer-controls hidden" id="timerControls">
@@ -3492,22 +3501,109 @@ card.addEventListener("mouseup",()=>{clearTimeout(holdTimer);if(cardWasOpened)cl
 card.addEventListener("mouseleave",()=>{clearTimeout(holdTimer);if(cardWasOpened)closeCard();});
 
 function nextPlayer(){currentIndex++;if(currentIndex>=players.length){vib('success');showStarter();return;}vib();showPlayer();}
-function showStarter(){
+// ← ئەمانە دەرەوەی هەر فەنکشنێک بنووسە
+const starterMsgs = [
+  "سەیری چاوی یاریزانەکان بکەن — سیخور دەدۆزنەوە! 👀",
+  "سیخور فێڵتان لێ دەکات... پێدەکەنێت 😈",
+  "ئاگاداربن! سیخور لەنێوتانە — بەچاو بیدۆزنەوە 🕵️",
+  "قسەی زۆر مەکەن — سیخور گوێ دەگرێت! 🤫",
+  "دەتوانن سیخور بدۆزنەوە؟ ئەوەتا کاتەکەتان دەستپێکرد ⏱️",
+  "هەر کەسێک دروست ناقسێت... بەلکوو سیخورە 🤔",
+  "سیخور ئێستا کێدەبێت... ئایا تۆیت؟ 😏",
+  "چاوی یەکتر بنووسن — وەڵام لەو چاوانەدایە 👁️"
+];
+let _introTimer = null;
+let _introMsgTimer = null;
+
+// ← تەنها ئەم فەنکشنە یەک جار بنووسە
+function showStarter() {
   showScreen("screen4");
-  const starter=Math.floor(Math.random()*players.length);
-  document.getElementById("starterName").innerText=players[starter];
-  document.getElementById("starterAvatar").src=avatars[playerAvatarIndexes[starter]];
+  const starter = Math.floor(Math.random() * players.length);
+  document.getElementById("starterName").innerText = players[starter];
+  document.getElementById("starterAvatar").src = avatars[playerAvatarIndexes[starter]];
   resetTimerUI();
+
+  clearTimeout(_introTimer);
+  clearInterval(_introMsgTimer);
+  document.getElementById("starterIntro").classList.add("hidden");
+
+  _introTimer = setTimeout(() => {
+    const nameEl = document.getElementById("starterName");
+    const textEl = document.querySelector("#screen4 .start-text");
+    
+    nameEl.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+    textEl.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+    nameEl.style.opacity = "0";
+    nameEl.style.transform = "translateY(-10px)";
+    textEl.style.opacity = "0";
+    textEl.style.transform = "translateY(-10px)";
+
+    setTimeout(() => {
+      nameEl.style.display = "none";
+      textEl.style.display = "none";
+
+      const introEl = document.getElementById("starterIntro");
+      const introAvImg = document.getElementById("starterIntroAvatarImg");
+      const introMsg = document.getElementById("starterIntroMsg");
+
+      introAvImg.src = avatars[Math.floor(Math.random() * avatars.length)];
+      introMsg.innerText = starterMsgs[Math.floor(Math.random() * starterMsgs.length)];
+
+      introEl.classList.remove("hidden");
+      introEl.style.opacity = "0";
+      introEl.style.transform = "translateY(20px)";
+      introEl.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+      setTimeout(() => {
+        introEl.style.opacity = "1";
+        introEl.style.transform = "translateY(0)";
+      }, 30);
+
+      _introMsgTimer = setInterval(() => {
+        introMsg.style.opacity = "0";
+        introAvImg.style.opacity = "0";
+        setTimeout(() => {
+          introMsg.innerText = starterMsgs[Math.floor(Math.random() * starterMsgs.length)];
+          introAvImg.src = avatars[Math.floor(Math.random() * avatars.length)];
+          introMsg.style.opacity = "1";
+          introAvImg.style.opacity = "1";
+        }, 300);
+      }, 10000);
+
+    }, 500);
+  }, 3000);
 }
+
 function resetTimerUI(){
   clearInterval(timerInterval);timerStarted=false;isPaused=false;
+  // ← ئەمانە زیاد بکە
+  clearTimeout(_introTimer);
+  clearInterval(_introMsgTimer);
+  const introEl = document.getElementById("starterIntro");
+  if(introEl) introEl.classList.add("hidden");
+  const nameEl = document.getElementById("starterName");
+  const textEl = document.querySelector("#screen4 .start-text");
+  if(nameEl){ nameEl.style.display=""; nameEl.style.opacity="1"; nameEl.style.transform=""; }
+  if(textEl){ textEl.style.display=""; textEl.style.opacity="1"; textEl.style.transform=""; }
+  // ← کۆتایی زیادکردن
   document.getElementById("pauseOverlay").classList.remove("active");
   document.getElementById("timer").innerText="00:00";
   document.getElementById("timer").style.color="#111";
   document.getElementById("startRoundBtn").classList.remove("hidden");
   document.getElementById("timerControls").classList.add("hidden");
 }
+
 function startTimer(){
+  // ← ئەمانە زیاد بکە
+  clearTimeout(_introTimer);
+  clearInterval(_introMsgTimer);
+  const introEl = document.getElementById("starterIntro");
+  if(introEl) introEl.classList.add("hidden");
+  const nameEl = document.getElementById("starterName");
+  const textEl = document.querySelector("#screen4 .start-text");
+  if(nameEl){ nameEl.style.display=""; nameEl.style.opacity="1"; nameEl.style.transform=""; }
+  if(textEl){ textEl.style.display=""; textEl.style.opacity="1"; textEl.style.transform=""; }
+  // ← کۆتایی زیادکردن
+
   if(timerStarted)return;timerStarted=true;
   vib('medium');
   document.getElementById("startRoundBtn").classList.add("hidden");
@@ -3523,6 +3619,7 @@ function startTimer(){
     if(currentTime<=0)finishRound();
   },1000);
 }
+
 function togglePause(){
   isPaused=!isPaused;
   vib(isPaused?'medium':'light');
