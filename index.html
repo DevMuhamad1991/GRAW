@@ -4768,7 +4768,7 @@ function startHintSystem(playerName) {
 
   setTimeout(() => {
     showNextHint();
-    hintInterval = setInterval(showNextHint, 10000);
+    hintInterval = setInterval(showNextHint, 30000);
   }, 3000);
 }
 
@@ -4793,7 +4793,7 @@ function showNextHint() {
     dots.classList.add('hidden');
     text.classList.remove('hidden');
     typeText(text, msg);
-  }, 1500);
+  }, 5000);
 }
 
 function typeText(el, msg) {
