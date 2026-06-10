@@ -2239,18 +2239,21 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   display: flex;
   align-items: center;
 }
-..hint-bubble-text {
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  color: #111;
-  line-height: 1.7;
+.hint-bubble {
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255,188,0,.35);
+  border-radius: 20px 20px 20px 4px;
+  padding: 13px 18px;
+  max-width: clamp(240px, 70vw, 320px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.09);
+  min-height: 52px;
+  display: flex;
+  align-items: center;
   direction: rtl;
-  unicode-bidi: plaintext;
   text-align: right;
-  word-spacing: normal;
-  letter-spacing: normal;
-  white-space: pre-wrap;
 }
+
 
 .hint-typing-dots {
   display: flex;
@@ -4745,19 +4748,23 @@ function showNextHint() {
 }
 
 function typeText(el, msg) {
-  el.innerText = '';
+  el.innerHTML = '';
   el.style.direction = 'rtl';
-  el.style.unicodeBidi = 'plaintext';
   el.style.textAlign = 'right';
-  el.style.wordSpacing = 'normal';
-  el.style.letterSpacing = 'normal';
   let i = 0;
+  const chars = [...msg];
   const interval = setInterval(() => {
-    el.innerText += msg[i];
-    i++;
-    if (i >= msg.length) clearInterval(interval);
+    if (i < chars.length) {
+      el.innerHTML = '<span style="direction:rtl;unicode-bidi:embed;display:inline;">' 
+        + chars.slice(0, i + 1).join('') 
+        + '</span>';
+      i++;
+    } else {
+      clearInterval(interval);
+    }
   }, 35);
 }
+
 
 
 function stopHintSystem() {
