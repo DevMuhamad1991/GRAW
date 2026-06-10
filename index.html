@@ -4683,12 +4683,13 @@ function getHintMessages() {
   players.forEach(name => {
     if (usedNames.has(name)) return;
     usedNames.add(name);
-    personal.push(`ئایا ${name} راستی دەڵێت؟ 🤔`);
-    personal.push(`${name} زۆر بێدەنگە... گومانبارە 🫣`);
-    personal.push(`چاوت لە ${name} بێت، شتێکی عێجێبە 👁️`);
-    personal.push(`${name} پێکەنینێکی عێجێبی هەیە ئێستا 😄`);
-    personal.push(`${name} زۆر ئارامە، زۆر... 😶`);
-    personal.push(`ئایا ${name} وشەکەی زانی؟ 🎭`);
+    personal.push(`ئایا « ${name} » راستی دەڵێت؟ 🤔`);
+personal.push(`« ${name} » زۆر بێدەنگە... گومانبارە 🫣`);
+personal.push(`چاوت لە « ${name} » بێت، شتێکی عێجێبە 👁️`);
+personal.push(`« ${name} » پێکەنینێکی عێجێبی هەیە ئێستا 😄`);
+personal.push(`« ${name} » زۆر ئارامە، زۆر... 😶`);
+personal.push(`ئایا « ${name} » وشەکەی زانی؟ 🎭`);
+
   });
   
   return [...hintMessages, ...personal];
