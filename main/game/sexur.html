@@ -2421,7 +2421,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
             <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             دروستکەر
           </div>
-          <div class="creator-profile-name">Muhamad Yousif</div>
+          <div class="creator-profile-name">Dev.Muhamad</div>
           <div class="creator-profile-role">Kurdish Developer & Designer</div>
           <a class="creator-profile-wa" href="https://wa.me/9647509628683" target="_blank" onclick="vib()">
             <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.528 5.858L.057 23.5l5.797-1.517A11.93 11.93 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.006-1.367l-.36-.214-3.713.973.99-3.618-.234-.372A9.818 9.818 0 1 1 12 21.818z"/></svg>
@@ -2501,12 +2501,59 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
       </button>
     </div>
 
+<!-- VISITOR COUNTER CARD -->
+<div style="
+  background:linear-gradient(135deg,#111,#2a2a2a);
+  border-radius:var(--radius-card);
+  padding:clamp(20px,5vw,28px);
+  margin-bottom:var(--gap-sm);
+  position:relative;overflow:hidden;">
+
+  <!-- گلۆ لە پشتەوە -->
+  <div style="
+    position:absolute;top:-40px;left:-40px;
+    width:180px;height:180px;
+    background:radial-gradient(circle,rgba(255,212,0,.12) 0%,transparent 70%);
+    pointer-events:none;"></div>
+
+  <!-- سەرپێچ -->
+  <div style="
+    display:flex;align-items:center;gap:8px;
+    margin-bottom:16px;">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255,212,0,.7)">
+      <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+    </svg>
+    <span style="font-size:12px;font-weight:800;color:rgba(255,255,255,.4);letter-spacing:1px;">ژمارەی بەکارهێنەرانی سیخور</span>
+  </div>
+
+  <!-- ژمارە -->
+  <div style="
+    font-size:clamp(48px,13vw,64px);
+    font-weight:800;
+    color:#ffd400;
+    line-height:1;
+    text-shadow:0 0 40px rgba(255,212,0,.35);"
+    id="visitorCount">000</div>
+
+  <!-- خێری -->
+  <div style="
+    margin-top:14px;height:3px;
+    background:rgba(255,255,255,.06);
+    border-radius:100px;overflow:hidden;">
+    <div id="visitorBar" style="
+      height:100%;width:0%;
+      background:linear-gradient(90deg,#ffd400,#ffbc00);
+      border-radius:100px;
+      transition:width 1.5s cubic-bezier(.4,0,.2,1);"></div>
+  </div>
+</div>
+
+
     <div class="creator-version-bar">
       <span></span>
       یاری سیخور — v2.0
       <span></span>
     </div>
-
   </div>
 </section>
 
@@ -2933,6 +2980,8 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   <div class="screen-top-bar">
     <div class="title">پێداچوونەوە</div>
   </div>
+  
+  
 
   <div class="review-hero">
     <div class="review-hero-title">بیرۆکە و پێشنیارەکانت</div>
@@ -3053,6 +3102,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 
 <div class="suggestion-portal" id="suggPortal"></div>
 
+
 <script>
 
 
@@ -3083,8 +3133,8 @@ const avatars=[
 
 const nameSuggestions=[
   "ئەحمەد","موحەمەد","عەلی","سارا","ئایا","ئەمین","ڕێناس","شیلان","ئەرمان","ڕووناک",
-  "باخان","ژیار","هەژار","دیلان","جیهاد","نازدار","بینا","زیکە","لانە","کاروان",
-  "هاوژین","ئارام","سروە","ڕاپەرین","گوڵالە","ئاکۆ","ئاسۆ","نالین","رویا","پیشتیوان"
+  "باخان","ژیار","هەژار","دیلان","جیهاد","نازدار","سەعید","بینا","زیکە","لانە","کاروان",
+  "هاوژین","ئارام","سروە","ڕاپەرین","گوڵالە","ئاکۆ","ئاسۆ","زەنون","عەبۆ","نالین","رویا","پشتیوان"
 ];
 
 const words={
@@ -4825,5 +4875,8 @@ function stopHintSystem() {
 
 
 </script>
+
+<script src="visitor-counter.js"></script>
+
 </body>
 </html>
