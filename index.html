@@ -1010,29 +1010,35 @@ select {
 .wnew-wrap.visible{pointer-events:auto;opacity:1;}
 .wnew-wrap.closing .wnew-card{animation:wnewOut .35s cubic-bezier(.4,0,1,1) forwards;}
 .wnew-card{
-  background:rgba(255,255,255,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:1.5px solid rgba(255,188,0,.45);border-radius:24px;
-  box-shadow:0 12px 40px rgba(0,0,0,.14);overflow:hidden;
+  background:#fffbe8;
+  border:2.5px solid #ffd400;
+  border-radius:20px;
+  box-shadow:0 8px 24px rgba(255,188,0,.2);
+  overflow:hidden;
   animation:wnewIn .45s cubic-bezier(.34,1.2,.64,1) both;
 }
-.wnew-bar-wrap{position:relative;height:4px;background:#ffe066;overflow:hidden;}
-.wnew-bar-shimmer{position:absolute;inset:0;background:linear-gradient(90deg,#ffd400,#ffbc00,#fff7a0,#ffbc00,#ffd400);background-size:200% 100%;animation:shimmer 2s linear infinite;}
-.wnew-cd-track{position:absolute;inset:0;background:rgba(0,0,0,.13);}
-.wnew-cd-fill{position:absolute;top:0;bottom:0;right:0;left:0;background:rgba(0,0,0,0);transform-origin:right;}
-.wnew-cd-fill.running{background:rgba(0,0,0,.18);animation:cdProgress linear forwards;}
+
+.wnew-bar-wrap{display:none;}
 .wnew-body{padding:14px 16px 16px;}
 .wnew-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.wnew-label{display:inline-flex;align-items:center;gap:5px;background:#111;color:#ffd400;font-size:11px;font-weight:800;letter-spacing:.6px;padding:4px 10px;border-radius:100px;}
-.wnew-label svg{width:11px;height:11px;fill:#ffd400;}
+.wnew-label{
+  display:inline-flex;align-items:center;gap:5px;
+  background:#ffd400;color:#111;
+  font-size:11px;font-weight:800;letter-spacing:.6px;
+  padding:4px 12px;border-radius:6px;
+  font-family:'Caveat',cursive;font-size:14px;
+}
+.wnew-label svg{width:11px;height:11px;fill:#111;}
+
 .wnew-dismiss-wrap{display:flex;align-items:center;gap:7px;}
 .wnew-countdown{font-size:12px;font-weight:800;color:#999;min-width:22px;text-align:center;}
 .wnew-dismiss{width:30px;height:30px;border:none;border-radius:10px;background:rgba(0,0,0,.07);color:#111;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;line-height:1;}
 .wnew-rows{display:flex;flex-direction:column;gap:8px;}
-.wnew-row{display:flex;align-items:center;gap:11px;padding:10px 12px;background:#fffbe8;border-radius:14px;}
-.wnew-ico{width:34px;height:34px;border-radius:10px;background:#ffd400;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.wnew-ico svg{width:17px;height:17px;fill:#111;}
-.wnew-rtitle{font-size:13px;font-weight:800;margin-bottom:1px;}
-.wnew-rdesc{font-size:11px;color:#555;line-height:1.5;}
+.wnew-row{display:flex;align-items:center;gap:11px;padding:10px 12px;background:rgba(255,255,255,.6);border-radius:12px;border:1.5px solid rgba(255,212,0,.25);}
+.wnew-ico{width:32px;height:32px;border-radius:8px;background:#fff;border:2px solid #ffd400;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.wnew-ico svg{width:16px;height:16px;fill:#b88600;}
+.wnew-rtitle{font-size:13px;font-weight:800;margin-bottom:1px;color:#111;}
+.wnew-rdesc{font-size:11px;color:#888;line-height:1.5;}
 
 /* CUSTOM MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;z-index:2000;opacity:0;pointer-events:none;transition:.25s;}
@@ -2958,42 +2964,42 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 <!-- WHAT'S NEW -->
 <div class="wnew-wrap" id="wnewWrap">
   <div class="wnew-card">
-    <div class="wnew-bar-wrap">
-      <div class="wnew-bar-shimmer"></div>
-      <div class="wnew-cd-track"></div>
-      <div class="wnew-cd-fill" id="wnewCdFill"></div>
-    </div>
+    <div class="wnew-bar-wrap"></div>
     <div class="wnew-body">
       <div class="wnew-head">
         <div class="wnew-label">
           <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-          گۆرانکارییەکان
+          نوێ
         </div>
         <div class="wnew-dismiss-wrap">
-          <span class="wnew-countdown" id="wnewCd">5</span>
+          <span class="wnew-countdown" id="wnewCd">10</span>
           <button class="wnew-dismiss" onclick="vib();closeWnew()">&#x2715;</button>
         </div>
       </div>
       <div class="wnew-rows">
         <div class="wnew-row">
-          <div class="wnew-ico"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
-          <div><div class="wnew-rtitle">پێشنیارکردنی ناو</div><div class="wnew-rdesc">کاتی نووسینی ناوەکان پێشنیار دەکرێن</div></div>
-        </div>
-        <div class="wnew-row">
-          <div class="wnew-ico"><svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm4 5h8v2H8zm3 5h2v2h-2z"/></svg></div>
-          <div><div class="wnew-rtitle">سەروو 100 جۆر وشە</div><div class="wnew-rdesc">وەرزش، ئاژەڵ، پیشە، هەست و زیاتر</div></div>
-        </div>
-        <div class="wnew-row">
-          <div class="wnew-ico"><svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></div>
+          <div class="wnew-ico">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          </div>
           <div>
-            <div class="wnew-rtitle">پەیوەندی</div>
-            <div class="wnew-rdesc"><strong>Muhamad Yousif</strong> — <a href="https://wa.me/9647509628683" target="_blank" style="color:#1a9e50;font-weight:800;text-decoration:none;">WhatsApp</a></div>
+            <div class="wnew-rtitle">پێشنیارکردنی ناو</div>
+            <div class="wnew-rdesc">کاتی نووسینی ناوەکان پێشنیار دەکرێن</div>
+          </div>
+        </div>
+        <div class="wnew-row">
+          <div class="wnew-ico">
+            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          </div>
+          <div>
+            <div class="wnew-rtitle">وشەی تایبەت</div>
+            <div class="wnew-rdesc">وشەی دڵخوازت خۆت دابنێ</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <!-- SCREEN STATS -->
 <section class="screen hidden" id="statsScreen">
   <div class="screen-top-bar">
@@ -3843,7 +3849,7 @@ setTimeout(()=>{
   const w=document.getElementById("wnewWrap");
   w.style.opacity="";w.style.pointerEvents="";w.classList.add("visible");
   const fill=document.getElementById("wnewCdFill");
-  const SECS=6;
+  const SECS=10;
   fill.style.animationDuration=SECS+"s";fill.classList.add("running");
   const cdEl=document.getElementById("wnewCd");
   let remaining=SECS;
