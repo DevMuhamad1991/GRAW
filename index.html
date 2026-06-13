@@ -994,51 +994,97 @@ select {
 }
 
 
-/* WHAT'S NEW */
-@keyframes wnewIn{from{opacity:0;transform:translateY(-30px) scale(.95);}to{opacity:1;transform:translateY(0) scale(1);}}
-@keyframes wnewOut{from{opacity:1;transform:translateY(0) scale(1);}to{opacity:0;transform:translateY(-20px) scale(.96);}}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-@keyframes cdProgress{from{width:100%;}to{width:0%;}}
+/* ══ WHAT'S NEW ══ */
+@keyframes wnewIn{from{opacity:0;transform:translateY(-24px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes wnewOut{from{opacity:1;transform:translateY(0) scale(1);}to{opacity:0;transform:translateY(-16px) scale(.97);}}
+@keyframes wnewProgress{from{transform:scaleX(1);}to{transform:scaleX(0);}}
 
 .wnew-wrap{
   position:fixed;top:16px;
   left:clamp(10px,3vw,22px);right:clamp(10px,3vw,22px);
   z-index:3000;pointer-events:none;opacity:0;
-  max-width:480px;margin:0 auto;
+  max-width:380px;margin:0 auto;
 }
-@media(min-width:600px){.wnew-wrap{left:50%;right:auto;transform:translateX(-50%);width:400px;}}
+@media(min-width:600px){.wnew-wrap{left:50%;right:auto;transform:translateX(-50%);width:360px;}}
 .wnew-wrap.visible{pointer-events:auto;opacity:1;}
-.wnew-wrap.closing .wnew-card{animation:wnewOut .35s cubic-bezier(.4,0,1,1) forwards;}
+.wnew-wrap.closing .wnew-card{animation:wnewOut .3s cubic-bezier(.4,0,1,1) forwards;}
+
 .wnew-card{
-  background:#fffbe8;
-  border:2.5px solid #ffd400;
-  border-radius:20px;
-  box-shadow:0 8px 24px rgba(255,188,0,.2);
+  background:#fff8e1;
+  border:2px solid #ffd400;
+  border-radius:18px;
+  box-shadow:0 6px 24px rgba(255,188,0,.22);
   overflow:hidden;
-  animation:wnewIn .45s cubic-bezier(.34,1.2,.64,1) both;
+  animation:wnewIn .4s cubic-bezier(.34,1.2,.64,1) both;
 }
 
-.wnew-bar-wrap{display:none;}
+/* لاینی پێشکەوتن */
+.wnew-bar-wrap{
+  height:4px;
+  background:rgba(0,0,0,.08);
+  position:relative;
+  overflow:hidden;
+}
+.wnew-bar-fill{
+  position:absolute;
+  top:0;right:0;bottom:0;left:0;
+  background:#ffd400;
+  transform-origin:right center;
+  transform:scaleX(1);
+}
+.wnew-bar-fill.running{
+  animation:wnewProgress linear forwards;
+}
+
 .wnew-body{padding:14px 16px 16px;}
-.wnew-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.wnew-label{
-  display:inline-flex;align-items:center;gap:5px;
-  background:#ffd400;color:#111;
-  font-size:11px;font-weight:800;letter-spacing:.6px;
-  padding:4px 12px;border-radius:6px;
-  font-family:'Caveat',cursive;font-size:14px;
+.wnew-head{
+  display:flex;align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
 }
-.wnew-label svg{width:11px;height:11px;fill:#111;}
+.wnew-label{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#ffd400;color:#111;
+  font-size:12px;font-weight:800;
+  padding:4px 12px;border-radius:8px;
+  font-family:'Noto Sans Arabic',sans-serif;
+}
+.wnew-label svg{width:12px;height:12px;fill:#111;}
 
-.wnew-dismiss-wrap{display:flex;align-items:center;gap:7px;}
-.wnew-countdown{font-size:12px;font-weight:800;color:#999;min-width:22px;text-align:center;}
-.wnew-dismiss{width:30px;height:30px;border:none;border-radius:10px;background:rgba(0,0,0,.07);color:#111;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;line-height:1;}
+.wnew-dismiss-wrap{display:flex;align-items:center;gap:8px;}
+.wnew-countdown{
+  font-size:12px;font-weight:800;
+  color:#b88600;min-width:20px;
+  text-align:center;
+  font-variant-numeric:tabular-nums;
+}
+.wnew-dismiss{
+  width:28px;height:28px;border:none;
+  border-radius:8px;
+  background:rgba(0,0,0,.07);
+  color:#555;font-size:15px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;line-height:1;
+}
+
 .wnew-rows{display:flex;flex-direction:column;gap:8px;}
-.wnew-row{display:flex;align-items:center;gap:11px;padding:10px 12px;background:rgba(255,255,255,.6);border-radius:12px;border:1.5px solid rgba(255,212,0,.25);}
-.wnew-ico{width:32px;height:32px;border-radius:8px;background:#fff;border:2px solid #ffd400;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.wnew-ico svg{width:16px;height:16px;fill:#b88600;}
-.wnew-rtitle{font-size:13px;font-weight:800;margin-bottom:1px;color:#111;}
-.wnew-rdesc{font-size:11px;color:#888;line-height:1.5;}
+.wnew-row{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 12px;
+  background:rgba(255,255,255,.7);
+  border-radius:12px;
+  border:1.5px solid rgba(255,212,0,.3);
+}
+.wnew-ico{
+  width:32px;height:32px;border-radius:8px;
+  background:#ffd400;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.wnew-ico svg{width:16px;height:16px;fill:#111;}
+.wnew-rtitle{font-size:13px;font-weight:800;margin-bottom:2px;color:#111;}
+.wnew-rdesc{font-size:11px;color:#888;line-height:1.5;font-weight:700;}
+
 
 /* CUSTOM MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;z-index:2000;opacity:0;pointer-events:none;transition:.25s;}
@@ -2964,7 +3010,9 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 <!-- WHAT'S NEW -->
 <div class="wnew-wrap" id="wnewWrap">
   <div class="wnew-card">
-    <div class="wnew-bar-wrap"></div>
+    <div class="wnew-bar-wrap">
+      <div class="wnew-bar-fill" id="wnewBarFill"></div>
+    </div>
     <div class="wnew-body">
       <div class="wnew-head">
         <div class="wnew-label">
@@ -2999,6 +3047,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
     </div>
   </div>
 </div>
+
 
 <!-- SCREEN STATS -->
 <section class="screen hidden" id="statsScreen">
@@ -3837,25 +3886,44 @@ attachAllButtons();
 const _pressObs=new MutationObserver(attachAllButtons);
 _pressObs.observe(document.body,{childList:true,subtree:true});
 
-/* ── What's New ── */
 let _wnewAutoClose=null,_wnewCdTick=null;
+const WNEW_SECS=10;
+
 function closeWnew(){
-  clearTimeout(_wnewAutoClose);clearInterval(_wnewCdTick);
-  const w=document.getElementById("wnewWrap");
-  w.classList.add("closing");
-  setTimeout(()=>{w.classList.remove("visible","closing");w.style.opacity="0";w.style.pointerEvents="none";},360);
+  clearTimeout(_wnewAutoClose);
+  clearInterval(_wnewCdTick);
+  const w=document.getElementById('wnewWrap');
+  w.classList.add('closing');
+  setTimeout(()=>{
+    w.classList.remove('visible','closing');
+    w.style.opacity='0';
+    w.style.pointerEvents='none';
+  },320);
 }
+
 setTimeout(()=>{
-  const w=document.getElementById("wnewWrap");
-  w.style.opacity="";w.style.pointerEvents="";w.classList.add("visible");
-  const fill=document.getElementById("wnewCdFill");
-  const SECS=10;
-  fill.style.animationDuration=SECS+"s";fill.classList.add("running");
-  const cdEl=document.getElementById("wnewCd");
-  let remaining=SECS;
-  _wnewCdTick=setInterval(()=>{remaining--;cdEl.textContent=remaining>0?remaining:"";},1000);
-  _wnewAutoClose=setTimeout(closeWnew,SECS*1000);
-},700);
+  const w=document.getElementById('wnewWrap');
+  w.style.opacity='';
+  w.style.pointerEvents='';
+  w.classList.add('visible');
+
+  // لاینی پێشکەوتن
+  const bar=document.getElementById('wnewBarFill');
+  bar.style.animationDuration=WNEW_SECS+'s';
+  bar.classList.add('running');
+
+  // ژمارەی داماوەی
+  const cdEl=document.getElementById('wnewCd');
+  let remaining=WNEW_SECS;
+  cdEl.textContent=remaining;
+  _wnewCdTick=setInterval(()=>{
+    remaining--;
+    cdEl.textContent=remaining>0?remaining:'';
+  },1000);
+
+  _wnewAutoClose=setTimeout(closeWnew,WNEW_SECS*1000);
+},800);
+
 
 /* ══ NAVBAR ══ */
 /* ── BOTTOM NAV ── */
