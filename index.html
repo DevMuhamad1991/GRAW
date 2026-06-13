@@ -1010,15 +1010,14 @@ select {
 .wnew-wrap.closing .wnew-card{animation:wnewOut .3s cubic-bezier(.4,0,1,1) forwards;}
 
 .wnew-card{
-  background:#fff8e1;
-  border:2px solid #ffd400;
+  background:#fff0f0;
+  border:2px solid #ffb3b3;
   border-radius:18px;
-  box-shadow:0 6px 24px rgba(255,188,0,.22);
+  box-shadow:0 6px 24px rgba(255,100,100,.18);
   overflow:hidden;
   animation:wnewIn .4s cubic-bezier(.34,1.2,.64,1) both;
 }
 
-/* لاینی پێشکەوتن */
 .wnew-bar-wrap{
   height:4px;
   background:rgba(0,0,0,.08);
@@ -1028,7 +1027,7 @@ select {
 .wnew-bar-fill{
   position:absolute;
   top:0;right:0;bottom:0;left:0;
-  background:#ffd400;
+  background:#ff6b6b;
   transform-origin:right center;
   transform:scaleX(1);
 }
@@ -1044,20 +1043,14 @@ select {
 }
 .wnew-label{
   display:inline-flex;align-items:center;gap:6px;
-  background:#ffd400;color:#111;
+  background:#ff6b6b;color:#fff;
   font-size:12px;font-weight:800;
   padding:4px 12px;border-radius:8px;
   font-family:'Noto Sans Arabic',sans-serif;
 }
-.wnew-label svg{width:12px;height:12px;fill:#111;}
+.wnew-label svg{width:12px;height:12px;fill:#fff;}
 
 .wnew-dismiss-wrap{display:flex;align-items:center;gap:8px;}
-.wnew-countdown{
-  font-size:12px;font-weight:800;
-  color:#b88600;min-width:20px;
-  text-align:center;
-  font-variant-numeric:tabular-nums;
-}
 .wnew-dismiss{
   width:28px;height:28px;border:none;
   border-radius:8px;
@@ -1071,17 +1064,17 @@ select {
 .wnew-row{
   display:flex;align-items:center;gap:11px;
   padding:10px 12px;
-  background:rgba(255,255,255,.7);
+  background:rgba(255,255,255,.8);
   border-radius:12px;
-  border:1.5px solid rgba(255,212,0,.3);
+  border:1.5px solid rgba(255,100,100,.2);
 }
 .wnew-ico{
   width:32px;height:32px;border-radius:8px;
-  background:#ffd400;
+  background:#ffecec;
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;
 }
-.wnew-ico svg{width:16px;height:16px;fill:#111;}
+.wnew-ico svg{width:16px;height:16px;fill:#e53935;}
 .wnew-rtitle{font-size:13px;font-weight:800;margin-bottom:2px;color:#111;}
 .wnew-rdesc{font-size:11px;color:#888;line-height:1.5;font-weight:700;}
 
@@ -3020,7 +3013,6 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
           نوێ
         </div>
         <div class="wnew-dismiss-wrap">
-          <span class="wnew-countdown" id="wnewCd">10</span>
           <button class="wnew-dismiss" onclick="vib();closeWnew()">&#x2715;</button>
         </div>
       </div>
@@ -3886,6 +3878,7 @@ attachAllButtons();
 const _pressObs=new MutationObserver(attachAllButtons);
 _pressObs.observe(document.body,{childList:true,subtree:true});
 
+// WHAT'S NEW
 let _wnewAutoClose=null,_wnewCdTick=null;
 const WNEW_SECS=10;
 
@@ -3911,16 +3904,7 @@ setTimeout(()=>{
   const bar=document.getElementById('wnewBarFill');
   bar.style.animationDuration=WNEW_SECS+'s';
   bar.classList.add('running');
-
-  // ژمارەی داماوەی
-  const cdEl=document.getElementById('wnewCd');
-  let remaining=WNEW_SECS;
-  cdEl.textContent=remaining;
-  _wnewCdTick=setInterval(()=>{
-    remaining--;
-    cdEl.textContent=remaining>0?remaining:'';
-  },1000);
-
+  
   _wnewAutoClose=setTimeout(closeWnew,WNEW_SECS*1000);
 },800);
 
