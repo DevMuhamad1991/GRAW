@@ -34,12 +34,12 @@ async function initVisitorCounter() {
   await recordVisit();
   const count = await getVisitorCount();
   const el = document.getElementById('visitorCount');
-  if (el) animateCount(el, count + 200);
+  if (el) animateCount(el, count + 500);
 }
 
 function animateCount(el, target) {
   let current = 0;
-  const duration = 2000;
+  const duration = 3000;
   const steps = 60;
   const increment = target / steps;
   let i = 0;
