@@ -38,30 +38,25 @@ async function initVisitorCounter() {
 }
 
 function animateCount(el, target) {
-  let current = 100;
-  const duration = 1200;
-  const steps = 40;
-  const step = (target - current) / steps;
+  let current = 0;
+  const duration = 1800;
+  const steps = 60;
+  const increment = target / steps;
   let i = 0;
   const interval = setInterval(() => {
-    current += step;
-    el.innerText = Math.floor(current).toLocaleString();
+    current = Math.min(current + increment, target);
+    const display = i < steps * 0.3
+      ? String(Math.floor(current)).padStart(3, '0')
+      : Math.floor(current).toLocaleString();
+    el.innerText = display;
+    const bar = document.getElementById('visitorBar');
+    if (bar) bar.style.width = ((i / steps) * 100) + '%';
     if (++i >= steps) {
       el.innerText = target.toLocaleString();
+      if (bar) bar.style.width = '100%';
       clearInterval(interval);
     }
   }, duration / steps);
-}
-
-
-function animateCount(el, target) {
-  let current = Math.max(0, target - 20);
-  const step = Math.ceil((target - current) / 20);
-  const interval = setInterval(() => {
-    current = Math.min(current + step, target);
-    el.innerText = current.toLocaleString();
-    if (current >= target) clearInterval(interval);
-  }, 50);
 }
 
 // دەستپێکردن
