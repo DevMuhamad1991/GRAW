@@ -30,34 +30,53 @@ async function getVisitorCount() {
   } catch(e) { return 0; }
 }
 
-async function initVisitorCounter() {
-  await recordVisit();
-  const count = await getVisitorCount();
-  const el = document.getElementById('visitorCount');
-  if (el) animateCount(el, count + 500);
-}
-
 function animateCount(el, target) {
+  // هەر ئەنیمەیشنێکی پێشتر بوەستێنە
+  if (el._countTimer) clearInterval(el._countTimer);
+  
   let current = 0;
-  const duration = 4000;
+  const duration = 2000;
   const steps = 60;
   const increment = target / steps;
   let i = 0;
-  const interval = setInterval(() => {
+
+  const bar = document.getElementById('visitorBar');
+  if (bar) bar.style.width = '0%';
+  el.innerText = '000';
+
+  el._countTimer = setInterval(() => {
     current = Math.min(current + increment, target);
     const display = i < steps * 0.3
       ? String(Math.floor(current)).padStart(3, '0')
       : Math.floor(current).toLocaleString();
     el.innerText = display;
-    const bar = document.getElementById('visitorBar');
     if (bar) bar.style.width = ((i / steps) * 100) + '%';
     if (++i >= steps) {
       el.innerText = target.toLocaleString();
       if (bar) bar.style.width = '100%';
-      clearInterval(interval);
+      clearInterval(el._countTimer);
     }
   }, duration / steps);
 }
+
+async function initVisitorCounter() {
+  await recordVisit();
+  const count = await getVisitorCount();
+  const el = document.getElementById('visitorCount');
+  if (el) {
+    el.dataset.finalCount = count + 500;
+    animateCount(el, count + 500);
+  }
+}
+
+// فەنکشنی گشتی بۆ دووبارە جوڵاندن
+window.replayVisitorCount = function() {
+  const el = document.getElementById('visitorCount');
+  if (!el) return;
+  const target = parseInt(el.dataset.finalCount || '0');
+  if (target === 0) return;
+  animateCount(el, target);
+};
 
 // دەستپێکردن
 if (document.readyState === 'loading') {
