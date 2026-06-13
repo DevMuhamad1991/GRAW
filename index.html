@@ -2933,8 +2933,23 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   <div class="screen-top-bar">
     <div class="title">پێداچوونەوە</div>
   </div>
+  
+  
 
   <div class="review-hero">
+    
+    <div style="
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,212,0,.15);border:1px solid rgba(255,212,0,.3);
+  color:#ffd400;font-size:13px;font-weight:800;
+  padding:6px 16px;border-radius:100px;margin-top:10px;">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="#ffd400">
+    <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+  </svg>
+  <span id="visitorCount">...</span> سەردان
+</div>
+
+    
     <div class="review-hero-title">بیرۆکە و پێشنیارەکانت</div>
     <div class="review-hero-sub">یاریەکە باشتر بکە — بۆچوونت گرنگە</div>
   </div>
@@ -3052,6 +3067,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 
 
 <div class="suggestion-portal" id="suggPortal"></div>
+
 
 <script>
 
@@ -4825,5 +4841,8 @@ function stopHintSystem() {
 
 
 </script>
+
+<script src="visitor-counter.js"></script>
+
 </body>
 </html>
