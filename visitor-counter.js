@@ -34,11 +34,25 @@ async function initVisitorCounter() {
   await recordVisit();
   const count = await getVisitorCount();
   const el = document.getElementById('visitorCount');
-  if (el) {
-    el.innerText = count.toLocaleString();
-    animateCount(el, count);
-  }
+  if (el) animateCount(el, count + 100);
 }
+
+function animateCount(el, target) {
+  let current = 100;
+  const duration = 1200;
+  const steps = 40;
+  const step = (target - current) / steps;
+  let i = 0;
+  const interval = setInterval(() => {
+    current += step;
+    el.innerText = Math.floor(current).toLocaleString();
+    if (++i >= steps) {
+      el.innerText = target.toLocaleString();
+      clearInterval(interval);
+    }
+  }, duration / steps);
+}
+
 
 function animateCount(el, target) {
   let current = Math.max(0, target - 20);
