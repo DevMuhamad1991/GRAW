@@ -2381,6 +2381,29 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   padding-right: 4px;
 }
 
+/* ══ CUSTOM SELECT ══ */
+.custom-select-group{display:flex;flex-direction:column;gap:8px;}
+.custom-select-label{font-weight:800;font-size:var(--fs-base);margin-bottom:4px;}
+.custom-select-options{display:flex;flex-wrap:wrap;gap:8px;}
+.custom-select-opt{
+  flex:1;min-width:calc(50% - 4px);
+  height:var(--btn-h);
+  border-radius:clamp(16px,3.5vw,20px);
+  border:2.5px solid transparent;
+  background:#fff;
+  font-size:var(--fs-sm);font-weight:700;
+  color:#555;cursor:pointer;
+  transition:all .2s cubic-bezier(.34,1.3,.64,1);
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.custom-select-opt:active{transform:scale(.95);}
+.custom-select-opt.selected{
+  background:#111;color:#ffd400;
+  border-color:#111;
+  font-weight:800;
+}
+
 
 </style>
 </head>
@@ -2432,28 +2455,31 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
     <div class="players-box" id="playersBox"></div>
   </div>
 
-  <div class="glass settings-card">
-    <div class="settings-row">
-      <div>
-        <label>ژمارەی سیخور</label>
-        <select id="spyCount" onchange="vib()">
-          <option value="1">1 سیخور</option>
-          <option value="2">2 سیخور</option>
-          <option value="3">3 سیخور</option>
-          <option value="random">🎲 هەڕەمەکی</option>
-        </select>
+<div class="glass settings-card">
+  <div class="settings-row">
+    <div class="custom-select-group">
+      <div class="custom-select-label">ژمارەی سیخور</div>
+      <div class="custom-select-options" id="spyOpts">
+        <button class="custom-select-opt selected" onclick="vib();selectOpt('spyOpts','spyCount',this,'1')">١ سیخور</button>
+        <button class="custom-select-opt" onclick="vib();selectOpt('spyOpts','spyCount',this,'2')">٢ سیخور</button>
+        <button class="custom-select-opt" onclick="vib();selectOpt('spyOpts','spyCount',this,'3')">٣ سیخور</button>
+        <button class="custom-select-opt" onclick="vib();selectOpt('spyOpts','spyCount',this,'random')">هەڕەمەکی</button>
       </div>
-      <div>
-        <label>کاتی یاری</label>
-        <select id="gameTime" onchange="vib()">
-          <option value="60">1 خولەک</option>
-          <option value="120">2 خولەک</option>
-          <option value="180">3 خولەک</option>
-          <option value="300">5 خولەک</option>
-        </select>
+      <input type="hidden" id="spyCount" value="1">
+    </div>
+    <div class="custom-select-group">
+      <div class="custom-select-label">کاتی یاری</div>
+      <div class="custom-select-options" id="timeOpts">
+        <button class="custom-select-opt selected" onclick="vib();selectOpt('timeOpts','gameTime',this,'60')">١ خولەک</button>
+        <button class="custom-select-opt" onclick="vib();selectOpt('timeOpts','gameTime',this,'120')">٢ خولەک</button>
+        <button class="custom-select-opt" onclick="vib();selectOpt('timeOpts','gameTime',this,'180')">٣ خولەک</button>
+        <button class="custom-select-opt" onclick="vib();selectOpt('timeOpts','gameTime',this,'300')">٥ خولەک</button>
       </div>
+      <input type="hidden" id="gameTime" value="60">
     </div>
   </div>
+</div>
+
 
   <button class="start-btn" onclick="vib();goCategory()">دەستپێکردنی یاری</button>
 
@@ -4956,6 +4982,13 @@ function stopHintSystem() {
   hintInterval = null;
   const wrap = document.getElementById('hintAvatarWrap');
   if (wrap) wrap.classList.add('hidden');
+}
+
+function selectOpt(groupId, inputId, el, val){
+  document.querySelectorAll('#'+groupId+' .custom-select-opt')
+    .forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById(inputId).value = val;
 }
 
 
