@@ -39,7 +39,7 @@ async function initVisitorCounter() {
 
 function animateCount(el, target) {
   let current = 0;
-  const duration = 3000;
+  const duration = 4000;
   const steps = 60;
   const increment = target / steps;
   let i = 0;
