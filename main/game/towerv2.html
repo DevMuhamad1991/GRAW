@@ -4937,8 +4937,8 @@ function awardPoints(spyWon) {
       // +1 بۆ هەر سیخورێک
       spyIndexes.forEach(spyIdx => {
         const spyName = players[spyIdx];
-        scores[spyName] = (scores[spyName] || 0) + 1;
-        lastRoundPoints[spyName] = (lastRoundPoints[spyName] || 0) + 1;
+        scores[spyName] = (scores[spyName] || 0) + 0;
+        lastRoundPoints[spyName] = (lastRoundPoints[spyName] || 0) + 0;
       });
     }
   });
