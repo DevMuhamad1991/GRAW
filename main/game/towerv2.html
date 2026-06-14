@@ -1004,13 +1004,13 @@ select {
 .ad-dots{display:flex;gap:6px;align-items:center;}
 .ad-dot{
  width:7px;height:7px;border-radius:50%;
- background:rgba(255,255,255,.5);
+background: rgba(0,0,0,.2);
  transition:all .3s cubic-bezier(.34,1.56,.64,1);
  cursor:pointer;
 }
 .ad-dot.active{
  width:20px;border-radius:4px;
- background:#fff;
+ background:#111;
 }
 
 
@@ -2408,6 +2408,131 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   padding-right: 4px;
 }
 
+/* ══ CONFETTI ══ */
+.confetti-piece {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  top: -20px;
+  z-index: 99999;
+  pointer-events: none;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall {
+  0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg) scale(.5); opacity: 0; }
+}
+
+/* ══ GAME OVER CARD ══ */
+.gameover-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9000;
+  opacity: 0; pointer-events: none;
+  transition: opacity .4s ease;
+}
+.gameover-overlay.active { opacity: 1; pointer-events: auto; }
+
+.gameover-card {
+  background: linear-gradient(145deg, #fff, #fffbe8);
+  border-radius: 36px;
+  padding: clamp(28px,6vw,44px) clamp(22px,5vw,36px);
+  text-align: center;
+  width: clamp(280px, 85vw, 380px);
+  box-shadow: 0 24px 60px rgba(0,0,0,.2);
+  animation: gameoverPop .6s cubic-bezier(.34,1.3,.64,1) both;
+  position: relative;
+  overflow: hidden;
+}
+@keyframes gameoverPop {
+  from { transform: scale(.6) translateY(40px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+.gameover-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255,212,0,.2), transparent 65%);
+  pointer-events: none;
+}
+
+.gameover-trophy {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffd400, #ffbc00);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+  box-shadow: 0 8px 28px rgba(255,188,0,.4);
+  animation: trophySpin 1s cubic-bezier(.34,1.56,.64,1) .3s both;
+}
+@keyframes trophySpin {
+  from { transform: rotate(-180deg) scale(0); }
+  to   { transform: rotate(0deg) scale(1); }
+}
+.gameover-trophy svg { width: 40px; height: 40px; fill: #111; }
+
+.gameover-title {
+  font-size: clamp(26px,7vw,34px);
+  font-weight: 800; color: #111;
+  margin-bottom: 6px;
+}
+.gameover-sub {
+  font-size: var(--fs-sm);
+  color: #888; font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+.gameover-winner {
+  background: linear-gradient(135deg, #111, #2a2a2a);
+  border-radius: 20px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 14px;
+  text-align: right;
+}
+.gameover-winner-avatar {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #ffd400;
+  flex-shrink: 0;
+}
+.gameover-winner-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.gameover-winner-info { flex: 1; }
+.gameover-winner-label {
+  font-size: 11px; font-weight: 800;
+  color: rgba(255,212,0,.7);
+  letter-spacing: 1px; margin-bottom: 4px;
+}
+.gameover-winner-name {
+  font-size: clamp(18px,5vw,24px);
+  font-weight: 800; color: #fff;
+}
+.gameover-winner-pts {
+  font-size: clamp(28px,7vw,36px);
+  font-weight: 800; color: #ffd400;
+  text-shadow: 0 0 20px rgba(255,212,0,.4);
+}
+
+.gameover-btns { display: flex; flex-direction: column; gap: 10px; }
+.gameover-newgame {
+  width: 100%; height: var(--btn-h-lg);
+  border-radius: var(--radius-btn); border: none;
+  background: linear-gradient(135deg, #ffd400, #ffbc00);
+  color: #111; font-size: var(--fs-lg); font-weight: 800;
+  box-shadow: 0 6px 20px rgba(255,188,0,.3);
+}
+.gameover-scores {
+  width: 100%; height: var(--btn-h);
+  border-radius: var(--radius-btn); border: none;
+  background: rgba(0,0,0,.07);
+  color: #555; font-size: var(--fs-base); font-weight: 800;
+}
 
 </style>
 </head>
@@ -2480,6 +2605,17 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
           <option value="300">5 خولەک</option>
         </select>
       </div>
+      
+      <div>
+  <label>ژمارەی خول</label>
+  <select id="roundCount" onchange="vib()">
+    <option value="10">10 خول</option>
+    <option value="16">16 خول</option>
+    <option value="25">25 خول</option>
+  </select>
+</div>
+
+      
     </div>
   </div>
 
@@ -2637,7 +2773,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
    </div>
    <div>
      <div style="font-size:var(--fs-md);font-weight:800;color:#111;margin-bottom:3px;">ژمارەی بەکارهێنەران</div>
-     <div style="font-size:var(--fs-xs);color:#888;font-weight:700;">کۆی ئەوانەی سیخوریان یاری کردووە</div>
+     <div style="font-size:var(--fs-xs);color:#888;font-weight:700;">کۆی ئەوانەی یاری سیخوریان کردووە</div>
    </div>
  </div>
 
@@ -3215,6 +3351,22 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
   سرینەوە هەموو خالەکان
 </button>
+    </div>
+  </div>
+</div>
+
+<!-- GAME OVER -->
+<div class="gameover-overlay" id="gameoverOverlay">
+  <div class="gameover-card">
+    <div class="gameover-trophy">
+      <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+    </div>
+    <div class="gameover-title">یاری تەواو بوو! 🎉</div>
+    <div class="gameover-sub" id="gameoverSub"></div>
+    <div class="gameover-winner" id="gameoverWinner"></div>
+    <div class="gameover-btns">
+      <button class="gameover-newgame" onclick="vib('success');closeGameover();resetAll()">یاری نوێ</button>
+      <button class="gameover-scores" onclick="vib();closeGameover();openScores()">خشتەی خالەکان</button>
     </div>
   </div>
 </div>
@@ -5184,6 +5336,121 @@ function stopHintSystem() {
   if (wrap) wrap.classList.add('hidden');
 }
 
+/* ══ CONFETTI ══ */
+const CONFETTI_COLORS = ['#ffd400','#ff3b3b','#22c55e','#6366f1','#f97316','#ec4899','#111'];
+
+function launchConfetti(count = 120) {
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `
+        left: ${Math.random() * 100}vw;
+        background: ${CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]};
+        width: ${6 + Math.random() * 10}px;
+        height: ${6 + Math.random() * 10}px;
+        border-radius: ${Math.random() > .5 ? '50%' : '2px'};
+        animation-duration: ${1.5 + Math.random() * 2.5}s;
+        animation-delay: ${Math.random() * .5}s;
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 4000);
+    }, i * 18);
+  }
+}
+
+/* ══ GAME OVER ══ */
+function showGameover() {
+  const scores = loadScores();
+
+  // بەرزترین خاڵ
+  const topEntry = Object.entries(scores)
+    .filter(([name]) => players.includes(name))
+    .sort((a, b) => b[1] - a[1])[0];
+
+  // sub text
+  document.getElementById('gameoverSub').innerText =
+    `${totalRounds} خول تەواو بوو — جەنگاوەر و پاڵەوانی خولەکە دیاری کرا!`;
+
+  // بەرزترین یاریزان
+  const winnerEl = document.getElementById('gameoverWinner');
+  if (topEntry) {
+    const [name, pts] = topEntry;
+    const seed = encodeURIComponent(name);
+    winnerEl.innerHTML = `
+      <div class="gameover-winner-avatar">
+        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}">
+      </div>
+      <div class="gameover-winner-info">
+        <div class="gameover-winner-label">🏆 براوەی یاری</div>
+        <div class="gameover-winner-name">${name}</div>
+      </div>
+      <div class="gameover-winner-pts">${pts}</div>`;
+  } else {
+    winnerEl.innerHTML = '';
+  }
+
+  document.getElementById('gameoverOverlay').classList.add('active');
+  launchConfetti(150);
+  vib('success');
+}
+
+function closeGameover() {
+  document.getElementById('gameoverOverlay').classList.remove('active');
+}
+
+/* ══ ROUND SYSTEM ══ */
+let currentRound = 1;
+let totalRounds = 1;
+
+function startCards() {
+  if (selectedCategories.length === 0 && customWords.length === 0) {
+    vib('error');
+    showModal({title:"لیستی وشە هەڵبژێرە", msg:"تکایە لانیکەم یەک وشە هەڵبژێرە.", icon:"warn"});
+    return;
+  }
+  totalRounds = parseInt(document.getElementById('roundCount').value);
+  currentRound = 1;
+  prepareGame();
+  showScreen("screen3");
+  showPlayer();
+}
+
+function playAgain() {
+  currentRound++;
+  if (currentRound > totalRounds) {
+    setTimeout(() => showGameover(), 400);
+    return;
+  }
+  prepareGame();
+  updateRoundBtn();
+  showScreen("screen3");
+  showPlayer();
+}
+
+function updateRoundBtn() {
+  const btn = document.getElementById('playAgainBtn');
+  if (!btn) return;
+  if (currentRound >= totalRounds) {
+    btn.innerText = `کۆتایی یاری — خولی ${totalRounds}`;
+    btn.style.background = '#111';
+    btn.style.color = '#ffd400';
+  } else {
+    btn.innerText = `خولی ${currentRound + 1} / ${totalRounds}`;
+    btn.style.background = '';
+    btn.style.color = '';
+  }
+}
+
+function showStarter() {
+  showScreen("screen4");
+  const starter = Math.floor(Math.random() * players.length);
+  document.getElementById("starterName").innerText = players[starter];
+  document.getElementById("starterAvatar").src = avatars[playerAvatarIndexes[starter]];
+  const titleEl = document.getElementById("screen4").querySelector(".title");
+  if (titleEl) titleEl.innerText = `خولی ${currentRound} / ${totalRounds}`;
+  resetTimerUI();
+}
 
 </script>
 
