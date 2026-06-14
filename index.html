@@ -2589,50 +2589,48 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 
 <!-- VISITOR COUNTER CARD -->
 <div style="
-  background:linear-gradient(135deg,#111,#2a2a2a);
-  border-radius:var(--radius-card);
-  padding:clamp(20px,5vw,28px);
-  margin-bottom:var(--gap-sm);
-  position:relative;overflow:hidden;">
+ background:rgba(255,255,255,.75);
+ backdrop-filter:blur(18px);
+ -webkit-backdrop-filter:blur(18px);
+ border:1px solid rgba(255,255,255,.6);
+ box-shadow:0 10px 35px rgba(0,0,0,.08);
+ border-radius:var(--radius-card);
+ padding:clamp(20px,5vw,28px);
+ margin-bottom:var(--gap-sm);
+ position:relative;overflow:hidden;">
 
-  <!-- گلۆ لە پشتەوە -->
-  <div style="
-    position:absolute;top:-40px;left:-40px;
-    width:180px;height:180px;
-    background:radial-gradient(circle,rgba(255,212,0,.12) 0%,transparent 70%);
-    pointer-events:none;"></div>
+ <!-- سەرپێچ -->
+ <div style="
+   display:flex;align-items:center;gap:8px;
+   margin-bottom:16px;">
+   <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(0,0,0,.4)">
+     <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+   </svg>
+   <span style="font-size:12px;font-weight:800;color:rgba(0,0,0,.4);letter-spacing:1px;">ژمارەی بەکارهێنەرانی سیخور</span>
+ </div>
 
-  <!-- سەرپێچ -->
-  <div style="
-    display:flex;align-items:center;gap:8px;
-    margin-bottom:16px;">
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255,212,0,.7)">
-      <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-    </svg>
-    <span style="font-size:12px;font-weight:800;color:rgba(255,255,255,.4);letter-spacing:1px;">ژمارەی بەکارهێنەرانی سیخور</span>
-  </div>
+ <!-- ژمارە -->
+ <div style="
+   font-size:clamp(48px,13vw,64px);
+   font-weight:800;
+   color:#111;
+   line-height:1;
+   text-shadow:none;"
+   id="visitorCount">000</div>
 
-  <!-- ژمارە -->
-  <div style="
-    font-size:clamp(48px,13vw,64px);
-    font-weight:800;
-    color:#ffd400;
-    line-height:1;
-    text-shadow:0 0 40px rgba(255,212,0,.35);"
-    id="visitorCount">000</div>
-
-  <!-- خێری -->
-  <div style="
-    margin-top:14px;height:3px;
-    background:rgba(255,255,255,.06);
-    border-radius:100px;overflow:hidden;">
-    <div id="visitorBar" style="
-      height:100%;width:0%;
-      background:linear-gradient(90deg,#ffd400,#ffbc00);
-      border-radius:100px;
-      transition:width 1.5s cubic-bezier(.4,0,.2,1);"></div>
-  </div>
+ <!-- خێری -->
+ <div style="
+   margin-top:14px;height:3px;
+   background:rgba(0,0,0,.06);
+   border-radius:100px;overflow:hidden;">
+   <div id="visitorBar" style="
+     height:100%;width:0%;
+     background:linear-gradient(90deg,#ffd400,#ffbc00);
+     border-radius:100px;
+     transition:width 1.5s cubic-bezier(.4,0,.2,1);"></div>
+ </div>
 </div>
+
 
 
     <div class="creator-version-bar">
