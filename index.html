@@ -4931,8 +4931,8 @@ function awardPoints(spyWon) {
 
     if (!isSuspectSpy && !isVoterSpy) {
       // -1 بۆ دەنگەری هەڵە
-      scores[voter] = (scores[voter] || 0) - 1;
-      lastRoundPoints[voter] = (lastRoundPoints[voter] || 0) - 1;
+      scores[voter] = (scores[voter] || 0) - 0;
+      lastRoundPoints[voter] = (lastRoundPoints[voter] || 0) - 0;
 
       // +1 بۆ هەر سیخورێک
       spyIndexes.forEach(spyIdx => {
