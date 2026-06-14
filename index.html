@@ -886,119 +886,133 @@ select {
 .settings-row{display:flex;flex-direction:column;gap:var(--gap-md);}
 
 /* ══════════════════════════════════════
-   AD BANNER — full-card image slider
+  AD BANNER — full-card image slider
 ══════════════════════════════════════ */
 .ad-banner{
-  margin:var(--gap-md) 0 8px;
-  border-radius:var(--radius-card);
-  overflow:hidden;
-  position:relative;
-  box-shadow:0 8px 28px rgba(0,0,0,.13);
-  user-select:none;
-  -webkit-user-select:none;
+ margin:var(--gap-md) 0 8px;
+ border-radius:var(--radius-card);
+ overflow:hidden;
+ position:relative;
+ box-shadow:0 8px 28px rgba(0,0,0,.13);
+ user-select:none;
+ -webkit-user-select:none;
+ background:rgba(255,255,255,.75);
+ backdrop-filter:blur(18px);
+ -webkit-backdrop-filter:blur(18px);
+ border:1px solid rgba(255,255,255,.6);
+ padding:10px;
 }
 
 /* slides wrapper */
 .ad-track{
-  display:flex;
-  transition:transform .55s cubic-bezier(.4,0,.2,1);
-  will-change:transform;
+ display:flex;
+ transition:transform .55s cubic-bezier(.4,0,.2,1);
+ will-change:transform;
+ border-radius:calc(var(--radius-card) - 6px);
+ overflow:hidden;
 }
 
 /* each slide = full-width card image */
 .ad-slide{
-  min-width:100%;
-  display:block;
-  position:relative;
-  cursor:pointer;
-  text-decoration:none;
-  color:inherit;
-  aspect-ratio:16/7;
-  background:#ffe066;
-  overflow:hidden;
+ min-width:100%;
+ display:block;
+ position:relative;
+ cursor:pointer;
+ text-decoration:none;
+ color:inherit;
+ aspect-ratio:16/7;
+ background:#ffe066;
+ overflow:hidden;
+ border-radius:calc(var(--radius-card) - 6px);
 }
 .ad-slide:active{opacity:.9;}
 
 /* full-cover image */
 .ad-slide-img{
-  width:100%;height:100%;
-  object-fit:cover;
-  display:block;
+ width:100%;height:100%;
+ object-fit:cover;
+ display:block;
+ border-radius:calc(var(--radius-card) - 6px);
 }
 
 /* SVG icon placeholder (when no image) */
 .ad-slide-icon{
-  width:100%;height:100%;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:10px;
-  padding:clamp(16px,4vw,28px);
-  text-align:center;
+ width:100%;height:100%;
+ display:flex;flex-direction:column;
+ align-items:center;justify-content:center;
+ gap:10px;
+ padding:clamp(16px,4vw,28px);
+ text-align:center;
+ border-radius:calc(var(--radius-card) - 6px);
 }
 .ad-slide-icon svg{
-  width:clamp(36px,10vw,54px);
-  height:clamp(36px,10vw,54px);
-  opacity:.85;
+ width:clamp(36px,10vw,54px);
+ height:clamp(36px,10vw,54px);
+ opacity:.85;
 }
 .ad-slide-icon-title{
-  font-size:clamp(15px,4.2vw,20px);
-  font-weight:800;
-  line-height:1.35;
+ font-size:clamp(15px,4.2vw,20px);
+ font-weight:800;
+ line-height:1.35;
 }
 .ad-slide-icon-desc{
-  font-size:clamp(11px,2.8vw,13px);
-  opacity:.65;
-  font-weight:700;
-  line-height:1.5;
+ font-size:clamp(11px,2.8vw,13px);
+ opacity:.65;
+ font-weight:700;
+ line-height:1.5;
 }
 
 /* overlay gradient at bottom for text on images */
 .ad-slide-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top, rgba(0,0,0,.55) 0%, transparent 55%);
-  display:flex;flex-direction:column;
-  justify-content:flex-end;
-  padding:clamp(12px,3vw,18px);
-  pointer-events:none;
+ position:absolute;inset:0;
+ background:linear-gradient(to top, rgba(0,0,0,.55) 0%, transparent 55%);
+ display:flex;flex-direction:column;
+ justify-content:flex-end;
+ padding:clamp(12px,3vw,18px);
+ pointer-events:none;
+ border-radius:calc(var(--radius-card) - 6px);
 }
 .ad-slide-overlay-title{
-  color:#fff;font-size:clamp(14px,3.8vw,18px);font-weight:800;
-  text-shadow:0 1px 6px rgba(0,0,0,.4);
-  margin-bottom:2px;
+ color:#fff;font-size:clamp(14px,3.8vw,18px);font-weight:800;
+ text-shadow:0 1px 6px rgba(0,0,0,.4);
+ margin-bottom:2px;
 }
 .ad-slide-overlay-desc{
-  color:rgba(255,255,255,.75);
-  font-size:clamp(11px,2.8vw,13px);font-weight:700;
+ color:rgba(255,255,255,.75);
+ font-size:clamp(11px,2.8vw,13px);font-weight:700;
 }
 
 /* progress bar at very top */
 .ad-progress{
-  position:absolute;top:0;left:0;right:0;
-  height:3px;background:rgba(255,255,255,.25);
-  z-index:5;
+ position:absolute;top:0;left:0;right:0;
+ height:3px;background:rgba(255,255,255,.25);
+ z-index:5;
+ border-radius:999px;
 }
 .ad-progress-fill{
-  position:absolute;top:0;right:0;bottom:0;
-  background:rgba(255,255,255,.8);
-  transition:width .1s linear;
+ position:absolute;top:0;right:0;bottom:0;
+ background:rgba(255,255,255,.8);
+ transition:width .1s linear;
+ border-radius:999px;
 }
 
 /* dots — centered below the card */
 .ad-footer{
-  display:flex;align-items:center;justify-content:center;
-  padding:10px 0 4px;
+ display:flex;align-items:center;justify-content:center;
+ padding:10px 0 4px;
 }
 .ad-dots{display:flex;gap:6px;align-items:center;}
 .ad-dot{
-  width:7px;height:7px;border-radius:50%;
-  background:rgba(0,0,0,.2);
-  transition:all .3s cubic-bezier(.34,1.56,.64,1);
-  cursor:pointer;
+ width:7px;height:7px;border-radius:50%;
+ background:rgba(255,255,255,.5);
+ transition:all .3s cubic-bezier(.34,1.56,.64,1);
+ cursor:pointer;
 }
 .ad-dot.active{
-  width:20px;border-radius:4px;
-  background:linear-gradient(90deg,#ffd400,#ffbc00);
+ width:20px;border-radius:4px;
+ background:#fff;
 }
+
 
 
 /* ══ WHAT'S NEW ══ */
@@ -3265,86 +3279,182 @@ let customWords = [];
 
 
 /* ══════════════════════════════════════
-   AD BANNER SYSTEM
+  AD BANNER SYSTEM
 ══════════════════════════════════════ */
 
-// ← اێرەوە ریکلامەکانت دابنێ
 const adSlides = [
-  {
-    // وێنە: img: "https://..." — ئەگەر نەبوو ئایکۆن دەردەکەوێت
-
-    img: "bsexur.webp",
-    title: "  ",
-    desc: "  ",
-    link: "https://wa.me/9647509628683"
-  },
-  {
-    img: "fsexur.webp",
-    title: "  ",
-    desc: "  ",
-    link: "https://wa.me/9647509628683"
-  },
-  {
-    img: "ads.webp",
-    title: "  ",
-    desc: "  ",
-    link: "https://wa.me/9647509628683"
-  }
+ {
+   img: "bsexur.webp",
+   title: "  ",
+   desc: "  ",
+   link: "https://wa.me/9647509628683"
+ },
+ {
+   img: "fsexur.webp",
+   title: "  ",
+   desc: "  ",
+   link: "https://wa.me/9647509628683"
+ },
+ {
+   img: "ads.webp",
+   title: "  ",
+   desc: "  ",
+   link: "https://wa.me/9647509628683"
+ }
 ];
-// ← کۆتایی ریکلامەکان
 
 let adCurrent = 0;
 let adAutoTimer = null;
-const AD_INTERVAL = 4000; // ms between auto-slides
+const AD_INTERVAL = 4500;
 let adProgress = 0;
 let adProgressTimer = null;
-
+let adDragging = false;
+let adStartX = 0;
+let adIsAnimating = false;
 
 function buildAdBanner() {
-  const track = document.getElementById('adTrack');
-  const dots = document.getElementById('adDots');
-  track.innerHTML = '';
-  dots.innerHTML = '';
+ const track = document.getElementById('adTrack');
+ const dots = document.getElementById('adDots');
+ track.innerHTML = '';
+ dots.innerHTML = '';
 
-  adSlides.forEach((ad, i) => {
-    const a = document.createElement('a');
-    a.className = 'ad-slide';
-    a.href = ad.link || '#';
-    a.target = '_blank';
-    a.rel = 'noopener';
+ adSlides.forEach((ad, i) => {
+   const a = document.createElement('a');
+   a.className = 'ad-slide';
+   a.href = ad.link || '#';
+   a.target = '_blank';
+   a.rel = 'noopener';
+   a.style.cssText = `
+     border-radius: calc(var(--radius-card) - 6px);
+     overflow: hidden;
+     transform: scale(1);
+     transition: transform .2s ease, opacity .2s ease;
+   `;
 
-    if (ad.img) {
-      // real image — full cover + overlay text
-      a.style.background = '#111';
-      a.innerHTML = `
-        <img class="ad-slide-img" src="${ad.img}" alt="${ad.title}" loading="lazy">
-        <div class="ad-slide-overlay">
-          <div class="ad-slide-overlay-title">${ad.title}</div>
-          <div class="ad-slide-overlay-desc">${ad.desc}</div>
-        </div>`;
-    } else {
-      // SVG icon card
-      a.style.background = ad.bg || 'linear-gradient(135deg,#ffe066,#ffd84d)';
-      a.innerHTML = `
-        <div class="ad-slide-icon">
-          ${ad.icon || ''}
-          <div class="ad-slide-icon-title">${ad.title}</div>
-          <div class="ad-slide-icon-desc">${ad.desc}</div>
-        </div>`;
-    }
+   if (ad.img) {
+     a.style.background = '#111';
+     a.innerHTML = `
+       <img class="ad-slide-img" src="${ad.img}" alt="${ad.title}" loading="lazy"
+         style="border-radius:calc(var(--radius-card) - 6px);">
+       <div class="ad-slide-overlay" style="border-radius:calc(var(--radius-card) - 6px);">
+         <div class="ad-slide-overlay-title">${ad.title}</div>
+         <div class="ad-slide-overlay-desc">${ad.desc}</div>
+       </div>`;
+   } else {
+     a.style.background = ad.bg || 'linear-gradient(135deg,#ffe066,#ffd84d)';
+     a.innerHTML = `
+       <div class="ad-slide-icon">
+         ${ad.icon || ''}
+         <div class="ad-slide-icon-title">${ad.title}</div>
+         <div class="ad-slide-icon-desc">${ad.desc}</div>
+       </div>`;
+   }
 
-    track.appendChild(a);
+   // کلیک ئەنیمەیشن
+   a.addEventListener('pointerdown', () => {
+     a.style.transform = 'scale(.97)';
+     a.style.opacity = '.9';
+   });
+   a.addEventListener('pointerup', () => {
+     a.style.transform = 'scale(1)';
+     a.style.opacity = '1';
+   });
+   a.addEventListener('pointerleave', () => {
+     a.style.transform = 'scale(1)';
+     a.style.opacity = '1';
+   });
 
-    // dot
-    const dot = document.createElement('div');
-    dot.className = 'ad-dot' + (i === 0 ? ' active' : '');
-    dot.onclick = () => { vib(); adGoTo(i); };
-    dots.appendChild(dot);
-  });
+   track.appendChild(a);
 
-  adUpdateUI();
-  adStartAuto();
+   // dot
+   const dot = document.createElement('div');
+   dot.className = 'ad-dot' + (i === 0 ? ' active' : '');
+   dot.onclick = () => { vib(); adGoTo(i); };
+   dots.appendChild(dot);
+ });
+
+ // touch/swipe — نەرم و ئازاد
+ const banner = document.getElementById('adBanner');
+ banner.addEventListener('touchstart', e => {
+   adStartX = e.touches[0].clientX;
+   adDragging = true;
+   adStopAuto();
+ }, { passive: true });
+
+ banner.addEventListener('touchmove', e => {
+   if (!adDragging) return;
+   const dx = e.touches[0].clientX - adStartX;
+   const track = document.getElementById('adTrack');
+   const base = adCurrent * 100;
+   track.style.transition = 'none';
+   track.style.transform = `translateX(calc(${base}% + ${dx}px))`;
+ }, { passive: true });
+
+ banner.addEventListener('touchend', e => {
+   if (!adDragging) return;
+   adDragging = false;
+   const dx = e.changedTouches[0].clientX - adStartX;
+   const track = document.getElementById('adTrack');
+   track.style.transition = 'transform .45s cubic-bezier(.4,0,.2,1)';
+   if (Math.abs(dx) > 50) {
+     dx > 0 ? adPrev() : adNext();
+   } else {
+     adUpdateUI();
+   }
+   adStartAuto();
+ }, { passive: true });
+
+ adUpdateUI();
+ adStartAuto();
 }
+
+function adUpdateUI() {
+ const track = document.getElementById('adTrack');
+ track.style.transition = 'transform .45s cubic-bezier(.4,0,.2,1)';
+ track.style.transform = `translateX(${adCurrent * 100}%)`;
+ document.querySelectorAll('.ad-dot').forEach((d, i) => {
+   d.classList.toggle('active', i === adCurrent);
+ });
+}
+
+function adGoTo(idx) {
+ if (adIsAnimating) return;
+ adIsAnimating = true;
+ adCurrent = (idx + adSlides.length) % adSlides.length;
+ adUpdateUI();
+ adResetProgress();
+ setTimeout(() => adIsAnimating = false, 450);
+}
+
+function adNext() { adGoTo(adCurrent + 1); }
+function adPrev() { adGoTo(adCurrent - 1); }
+
+function adStartAuto() {
+ adStopAuto();
+ adResetProgress();
+ adAutoTimer = setInterval(() => adNext(), AD_INTERVAL);
+}
+
+function adStopAuto() {
+ clearInterval(adAutoTimer);
+ clearInterval(adProgressTimer);
+}
+
+function adResetProgress() {
+ clearInterval(adProgressTimer);
+ adProgress = 100;
+ const fill = document.getElementById('adProgressFill');
+ if (!fill) return;
+ fill.style.width = '100%';
+ const step = 100 / (AD_INTERVAL / 100);
+ adProgressTimer = setInterval(() => {
+   adProgress = Math.max(0, adProgress - step);
+   fill.style.width = adProgress + '%';
+ }, 100);
+}
+
+buildAdBanner();
+
 
 function adUpdateUI() {
   document.getElementById('adTrack').style.transform = `translateX(${adCurrent * 100}%)`;
