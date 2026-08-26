@@ -7,18 +7,25 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>sexur</title>
-<meta property="og:title" content="sexur" />
-<meta property="og:description" content="سیخور" />
+<title>یاری سیخور - Sexur Game | یاری کوردی</title>
+<meta name="description" content="یاری سیخور - یاری کوردی بۆ هاورێیان و خێزان. سیخور بدۆزەرەوە پێش کاتەکە تەواو بێت! یاری گروپی بۆ ٣ تا ١٠ کەس." />
+<meta name="keywords" content="sexur, sexurgame, یاری سیخور, kurdish game, یاری کوردی, سیخور" />
+<meta property="og:title" content="یاری سیخور - Sexur Game" />
+<meta property="og:description" content="یاری سیخور - یاری کوردی بۆ هاورێیان و خێزان. سیخور بدۆزەرەوە!" />
 <meta property="og:image" content="https://sexurgame.com/sexur.webp" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta property="og:url" content="https://sexurgame.com/" />
 <meta property="og:type" content="website" />
-<link rel="icon" type="image/png" href="/sexur.webp" />
-<link rel="apple-touch-icon" href="/sexur.webp" />
+<meta property="og:site_name" content="یاری سیخور" />
+<link rel="icon" type="image/webp" href="https://sexurgame.com/sexur.webp" />
+<link rel="shortcut icon" href="https://sexurgame.com/sexur.webp" />
+<link rel="apple-touch-icon" href="https://sexurgame.com/sexur.webp" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@700;800&family=Caveat:wght@600;700&family=Amiri:wght@700&display=swap" rel="stylesheet">
 <link rel="manifest" href="/manifest.json">
+
 <script>
   if('serviceWorker' in navigator){
     navigator.serviceWorker.register('/sw.js');
@@ -879,119 +886,132 @@ select {
 .settings-row{display:flex;flex-direction:column;gap:var(--gap-md);}
 
 /* ══════════════════════════════════════
-   AD BANNER — full-card image slider
+  AD BANNER — full-card image slider
 ══════════════════════════════════════ */
 .ad-banner{
-  margin:var(--gap-md) 0 8px;
-  border-radius:var(--radius-card);
-  overflow:hidden;
-  position:relative;
-  box-shadow:0 8px 28px rgba(0,0,0,.13);
-  user-select:none;
-  -webkit-user-select:none;
+ margin:var(--gap-md) 0 8px;
+ border-radius:var(--radius-card);
+ overflow:hidden;
+ position:relative;
+ box-shadow:0 8px 28px rgba(0,0,0,.13);
+ user-select:none;
+ -webkit-user-select:none;
+ background:rgba(255,255,255,.75);
+ backdrop-filter:blur(18px);
+ -webkit-backdrop-filter:blur(18px);
+ border:1px solid rgba(255,255,255,.6);
+ padding:10px;
 }
 
 /* slides wrapper */
 .ad-track{
-  display:flex;
-  transition:transform .55s cubic-bezier(.4,0,.2,1);
-  will-change:transform;
+ display:flex;
+ transition:transform .55s cubic-bezier(.4,0,.2,1);
+ will-change:transform;
+ border-radius:calc(var(--radius-card) - 6px);
 }
 
 /* each slide = full-width card image */
 .ad-slide{
-  min-width:100%;
-  display:block;
-  position:relative;
-  cursor:pointer;
-  text-decoration:none;
-  color:inherit;
-  aspect-ratio:16/7;
-  background:#ffe066;
-  overflow:hidden;
+ min-width:100%;
+ display:block;
+ position:relative;
+ cursor:pointer;
+ text-decoration:none;
+ color:inherit;
+ aspect-ratio:16/7;
+ background:#ffe066;
+ overflow:hidden;
+ border-radius:calc(var(--radius-card) - 6px);
 }
 .ad-slide:active{opacity:.9;}
 
 /* full-cover image */
 .ad-slide-img{
-  width:100%;height:100%;
-  object-fit:cover;
-  display:block;
+ width:100%;height:100%;
+ object-fit:cover;
+ display:block;
+ border-radius:calc(var(--radius-card) - 6px);
 }
 
 /* SVG icon placeholder (when no image) */
 .ad-slide-icon{
-  width:100%;height:100%;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:10px;
-  padding:clamp(16px,4vw,28px);
-  text-align:center;
+ width:100%;height:100%;
+ display:flex;flex-direction:column;
+ align-items:center;justify-content:center;
+ gap:10px;
+ padding:clamp(16px,4vw,28px);
+ text-align:center;
+ border-radius:calc(var(--radius-card) - 6px);
 }
 .ad-slide-icon svg{
-  width:clamp(36px,10vw,54px);
-  height:clamp(36px,10vw,54px);
-  opacity:.85;
+ width:clamp(36px,10vw,54px);
+ height:clamp(36px,10vw,54px);
+ opacity:.85;
 }
 .ad-slide-icon-title{
-  font-size:clamp(15px,4.2vw,20px);
-  font-weight:800;
-  line-height:1.35;
+ font-size:clamp(15px,4.2vw,20px);
+ font-weight:800;
+ line-height:1.35;
 }
 .ad-slide-icon-desc{
-  font-size:clamp(11px,2.8vw,13px);
-  opacity:.65;
-  font-weight:700;
-  line-height:1.5;
+ font-size:clamp(11px,2.8vw,13px);
+ opacity:.65;
+ font-weight:700;
+ line-height:1.5;
 }
 
 /* overlay gradient at bottom for text on images */
 .ad-slide-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top, rgba(0,0,0,.55) 0%, transparent 55%);
-  display:flex;flex-direction:column;
-  justify-content:flex-end;
-  padding:clamp(12px,3vw,18px);
-  pointer-events:none;
+ position:absolute;inset:0;
+ background:linear-gradient(to top, rgba(0,0,0,.55) 0%, transparent 55%);
+ display:flex;flex-direction:column;
+ justify-content:flex-end;
+ padding:clamp(12px,3vw,18px);
+ pointer-events:none;
+ border-radius:calc(var(--radius-card) - 6px);
 }
 .ad-slide-overlay-title{
-  color:#fff;font-size:clamp(14px,3.8vw,18px);font-weight:800;
-  text-shadow:0 1px 6px rgba(0,0,0,.4);
-  margin-bottom:2px;
+ color:#fff;font-size:clamp(14px,3.8vw,18px);font-weight:800;
+ text-shadow:0 1px 6px rgba(0,0,0,.4);
+ margin-bottom:2px;
 }
 .ad-slide-overlay-desc{
-  color:rgba(255,255,255,.75);
-  font-size:clamp(11px,2.8vw,13px);font-weight:700;
+ color:rgba(255,255,255,.75);
+ font-size:clamp(11px,2.8vw,13px);font-weight:700;
 }
 
 /* progress bar at very top */
 .ad-progress{
-  position:absolute;top:0;left:0;right:0;
-  height:3px;background:rgba(255,255,255,.25);
-  z-index:5;
+ position:absolute;top:0;left:0;right:0;
+ height:3px;background:rgba(255,255,255,.25);
+ z-index:5;
+ border-radius:999px;
 }
 .ad-progress-fill{
-  position:absolute;top:0;right:0;bottom:0;
-  background:rgba(255,255,255,.8);
-  transition:width .1s linear;
+ position:absolute;top:0;right:0;bottom:0;
+ background:rgba(255,255,255,.8);
+ transition:width .1s linear;
+ border-radius:999px;
 }
 
 /* dots — centered below the card */
 .ad-footer{
-  display:flex;align-items:center;justify-content:center;
-  padding:10px 0 4px;
+ display:flex;align-items:center;justify-content:center;
+ padding:10px 0 4px;
 }
 .ad-dots{display:flex;gap:6px;align-items:center;}
 .ad-dot{
-  width:7px;height:7px;border-radius:50%;
-  background:rgba(0,0,0,.2);
-  transition:all .3s cubic-bezier(.34,1.56,.64,1);
-  cursor:pointer;
+ width:7px;height:7px;border-radius:50%;
+background: rgba(0,0,0,.2);
+ transition:all .3s cubic-bezier(.34,1.56,.64,1);
+ cursor:pointer;
 }
 .ad-dot.active{
-  width:20px;border-radius:4px;
-  background:linear-gradient(90deg,#ffd400,#ffbc00);
+ width:20px;border-radius:4px;
+ background:#111;
 }
+
 
 
 /* ══ WHAT'S NEW ══ */
@@ -1078,6 +1098,12 @@ select {
 .wnew-rtitle{font-size:13px;font-weight:800;margin-bottom:2px;color:#111;}
 .wnew-rdesc{font-size:11px;color:#888;line-height:1.5;font-weight:700;}
 
+
+/* ══ VISITOR COUNT ANIMATION ══ */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 /* CUSTOM MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;z-index:2000;opacity:0;pointer-events:none;transition:.25s;}
@@ -2381,6 +2407,131 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   padding-right: 4px;
 }
 
+/* ══ CONFETTI ══ */
+.confetti-piece {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  top: -20px;
+  z-index: 99999;
+  pointer-events: none;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall {
+  0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg) scale(.5); opacity: 0; }
+}
+
+/* ══ GAME OVER CARD ══ */
+.gameover-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9000;
+  opacity: 0; pointer-events: none;
+  transition: opacity .4s ease;
+}
+.gameover-overlay.active { opacity: 1; pointer-events: auto; }
+
+.gameover-card {
+  background: linear-gradient(145deg, #fff, #fffbe8);
+  border-radius: 36px;
+  padding: clamp(28px,6vw,44px) clamp(22px,5vw,36px);
+  text-align: center;
+  width: clamp(280px, 85vw, 380px);
+  box-shadow: 0 24px 60px rgba(0,0,0,.2);
+  animation: gameoverPop .6s cubic-bezier(.34,1.3,.64,1) both;
+  position: relative;
+  overflow: hidden;
+}
+@keyframes gameoverPop {
+  from { transform: scale(.6) translateY(40px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+.gameover-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255,212,0,.2), transparent 65%);
+  pointer-events: none;
+}
+
+.gameover-trophy {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffd400, #ffbc00);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+  box-shadow: 0 8px 28px rgba(255,188,0,.4);
+  animation: trophySpin 1s cubic-bezier(.34,1.56,.64,1) .3s both;
+}
+@keyframes trophySpin {
+  from { transform: rotate(-180deg) scale(0); }
+  to   { transform: rotate(0deg) scale(1); }
+}
+.gameover-trophy svg { width: 40px; height: 40px; fill: #111; }
+
+.gameover-title {
+  font-size: clamp(26px,7vw,34px);
+  font-weight: 800; color: #111;
+  margin-bottom: 6px;
+}
+.gameover-sub {
+  font-size: var(--fs-sm);
+  color: #888; font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+.gameover-winner {
+  background: linear-gradient(135deg, #111, #2a2a2a);
+  border-radius: 20px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 14px;
+  text-align: right;
+}
+.gameover-winner-avatar {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #ffd400;
+  flex-shrink: 0;
+}
+.gameover-winner-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.gameover-winner-info { flex: 1; }
+.gameover-winner-label {
+  font-size: 11px; font-weight: 800;
+  color: rgba(255,212,0,.7);
+  letter-spacing: 1px; margin-bottom: 4px;
+}
+.gameover-winner-name {
+  font-size: clamp(18px,5vw,24px);
+  font-weight: 800; color: #fff;
+}
+.gameover-winner-pts {
+  font-size: clamp(28px,7vw,36px);
+  font-weight: 800; color: #ffd400;
+  text-shadow: 0 0 20px rgba(255,212,0,.4);
+}
+
+.gameover-btns { display: flex; flex-direction: column; gap: 10px; }
+.gameover-newgame {
+  width: 100%; height: var(--btn-h-lg);
+  border-radius: var(--radius-btn); border: none;
+  background: linear-gradient(135deg, #ffd400, #ffbc00);
+  color: #111; font-size: var(--fs-lg); font-weight: 800;
+  box-shadow: 0 6px 20px rgba(255,188,0,.3);
+}
+.gameover-scores {
+  width: 100%; height: var(--btn-h);
+  border-radius: var(--radius-btn); border: none;
+  background: rgba(0,0,0,.07);
+  color: #555; font-size: var(--fs-base); font-weight: 800;
+}
 
 </style>
 </head>
@@ -2390,7 +2541,8 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   <div class="splash-logo">
     <img src="sexur.webp" alt="سیخور">
   </div>
-  <div class="splash-title">سیخور</div>
+
+<div class="title" style="animation:splashFade .6s .2s ease both;"> سیخور</div>
   <div class="splash-sub">هاورێیان و خێزانی</div>
   <div class="splash-dots">
     <span></span>
@@ -2420,7 +2572,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
     <label>ناوی یاریزانەکان</label>
     <div style="display:flex;gap:10px;align-items:flex-start;">
       <div class="input-wrap">
-        <input type="text" id="playerInput" placeholder="ناو بەکوردی بنووسە" autocomplete="off"
+        <input type="text" id="playerInput" placeholder="ناو بنووسە" autocomplete="off"
           oninput="onPlayerInput()"
           onkeydown="if(event.key==='Enter'){vib();addPlayerFromInput();}"
           onfocus="onPlayerFocus()"
@@ -2452,6 +2604,17 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
           <option value="300">5 خولەک</option>
         </select>
       </div>
+      
+      <div>
+  <label>ژمارەی خول</label>
+  <select id="roundCount" onchange="vib()">
+    <option value="10">10 خول</option>
+    <option value="16">16 خول</option>
+    <option value="25">25 خول</option>
+  </select>
+</div>
+
+      
     </div>
   </div>
 
@@ -2573,51 +2736,69 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
       </button>
     </div>
 
-<!-- VISITOR COUNTER CARD -->
+  <!-- VISITOR COUNTER CARD -->
 <div style="
-  background:linear-gradient(135deg,#111,#2a2a2a);
-  border-radius:var(--radius-card);
-  padding:clamp(20px,5vw,28px);
-  margin-bottom:var(--gap-sm);
-  position:relative;overflow:hidden;">
+ border-radius:32px;
+ overflow:hidden;
+ margin-bottom:var(--gap-sm);
+ position:relative;
+ background:#fff;
+ box-shadow:0 8px 28px rgba(0,0,0,.08);
+ padding:clamp(20px,5vw,26px);">
 
-  <!-- گلۆ لە پشتەوە -->
-  <div style="
-    position:absolute;top:-40px;left:-40px;
-    width:180px;height:180px;
-    background:radial-gradient(circle,rgba(255,212,0,.12) 0%,transparent 70%);
-    pointer-events:none;"></div>
+ <!-- پشتەوەی سەرەوە -->
+ <div style="
+   position:absolute;inset:0;
+   background:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80') center/cover no-repeat;
+   opacity:.06;pointer-events:none;"></div>
 
-  <!-- سەرپێچ -->
-  <div style="
-    display:flex;align-items:center;gap:8px;
-    margin-bottom:16px;">
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="rgba(255,212,0,.7)">
-      <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-    </svg>
-    <span style="font-size:12px;font-weight:800;color:rgba(255,255,255,.4);letter-spacing:1px;">ژمارەی بەکارهێنەرانی سیخور</span>
-  </div>
+ <!-- سەرپێچ -->
+ <div style="
+   position:relative;z-index:1;
+   display:flex;align-items:center;gap:14px;
+   margin-bottom:16px;">
+   <div style="
+     width:clamp(54px,13vw,66px);
+     height:clamp(54px,13vw,66px);
+     border-radius:999px;
+     overflow:hidden;
+     display:flex;align-items:center;justify-content:center;
+     flex-shrink:0;
+     box-shadow:0 6px 18px rgba(255,188,0,.3);
+     background:linear-gradient(135deg,#ffd400,#ffbc00);">
+     <svg viewBox="0 0 24 24" width="30" height="30" fill="#111">
+       <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+     </svg>
+   </div>
+   <div>
+     <div style="font-size:var(--fs-md);font-weight:800;color:#111;margin-bottom:3px;">ژمارەی بەکارهێنەران</div>
+     <div style="font-size:var(--fs-xs);color:#888;font-weight:700;">کۆی ئەوانەی یاری سیخوریان کردووە</div>
+   </div>
+ </div>
 
-  <!-- ژمارە -->
-  <div style="
-    font-size:clamp(48px,13vw,64px);
-    font-weight:800;
-    color:#ffd400;
-    line-height:1;
-    text-shadow:0 0 40px rgba(255,212,0,.35);"
-    id="visitorCount">000</div>
+ <!-- ژمارە -->
+ <div style="
+   position:relative;z-index:1;
+   font-size:clamp(48px,13vw,64px);
+   font-weight:800;
+   color:#111;
+   line-height:1;
+   margin-bottom:14px;"
+   id="visitorCount">000</div>
 
-  <!-- خێری -->
-  <div style="
-    margin-top:14px;height:3px;
-    background:rgba(255,255,255,.06);
-    border-radius:100px;overflow:hidden;">
-    <div id="visitorBar" style="
-      height:100%;width:0%;
-      background:linear-gradient(90deg,#ffd400,#ffbc00);
-      border-radius:100px;
-      transition:width 1.5s cubic-bezier(.4,0,.2,1);"></div>
-  </div>
+ <!-- خێری -->
+ <div style="
+   position:relative;z-index:1;
+   height:3px;
+   background:rgba(0,0,0,.06);
+   border-radius:100px;overflow:hidden;">
+   <div id="visitorBar" style="
+     height:100%;width:0%;
+     background:linear-gradient(90deg,#ffd400,#ffbc00);
+     border-radius:100px;
+     transition:width 1.5s cubic-bezier(.4,0,.2,1);"></div>
+ </div>
+
 </div>
 
 
@@ -3016,26 +3197,29 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
           <button class="wnew-dismiss" onclick="vib();closeWnew()">&#x2715;</button>
         </div>
       </div>
-      <div class="wnew-rows">
-        <div class="wnew-row">
-          <div class="wnew-ico">
-            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-          </div>
-          <div>
-            <div class="wnew-rtitle">پێشنیارکردنی ناو</div>
-            <div class="wnew-rdesc">کاتی نووسینی ناوەکان پێشنیار دەکرێن</div>
-          </div>
-        </div>
-        <div class="wnew-row">
-          <div class="wnew-ico">
-            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-          </div>
-          <div>
-            <div class="wnew-rtitle">وشەی تایبەت</div>
-            <div class="wnew-rdesc">وشەی دڵخوازت خۆت دابنێ</div>
-          </div>
-        </div>
-      </div>
+
+  <div class="wnew-rows">
+  <div class="wnew-row">
+    <div class="wnew-ico">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+    </div>
+    <div>
+      <div class="wnew-rtitle">سیستەمی خول</div>
+      <div class="wnew-rdesc">ئێستا ژمارەی خولەکان هەیە — براوە دیاری دەکەن</div>
+    </div>
+  </div>
+  <div class="wnew-row">
+    <div class="wnew-ico">
+      <svg viewBox="0 0 24 24"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 3.21-1.81 6-4.72 7.28L13 17v5h5l-1.22-1.22C19.91 19.07 22 15.76 22 12c0-5.18-3.95-9.45-9-9.95zM11 2.05C5.95 2.55 2 6.82 2 12c0 3.76 2.09 7.07 5.22 8.78L6 22h5V2.05z"/></svg>
+    </div>
+    <div>
+      <div class="wnew-rtitle">خێراکردنی ماڵپەر</div>
+      <div class="wnew-rdesc">ماڵپەری سیخور خێراتر بووە — بەبێ چاوەڕوانی</div>
+    </div>
+  </div>
+</div>
+
+
     </div>
   </div>
 </div>
@@ -3173,6 +3357,22 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   </div>
 </div>
 
+<!-- GAME OVER -->
+<div class="gameover-overlay" id="gameoverOverlay">
+  <div class="gameover-card">
+    <div class="gameover-trophy">
+      <svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+    </div>
+    <div class="gameover-title">یاری تەواو بوو! 🎉</div>
+    <div class="gameover-sub" id="gameoverSub"></div>
+    <div class="gameover-winner" id="gameoverWinner"></div>
+    <div class="gameover-btns">
+      <button class="gameover-newgame" onclick="vib('success');closeGameover();resetAll()">یاری نوێ</button>
+      <button class="gameover-scores" onclick="vib();closeGameover();openScores()">خشتەی خالەکان</button>
+    </div>
+  </div>
+</div>
+
 
 <div class="suggestion-portal" id="suggPortal"></div>
 
@@ -3233,86 +3433,182 @@ let customWords = [];
 
 
 /* ══════════════════════════════════════
-   AD BANNER SYSTEM
+  AD BANNER SYSTEM
 ══════════════════════════════════════ */
 
-// ← اێرەوە ریکلامەکانت دابنێ
 const adSlides = [
-  {
-    // وێنە: img: "https://..." — ئەگەر نەبوو ئایکۆن دەردەکەوێت
-
-    img: "bsexur.webp",
-    title: "  ",
-    desc: "  ",
-    link: "https://wa.me/9647509628683"
-  },
-  {
-    img: "fsexur.webp",
-    title: "  ",
-    desc: "  ",
-    link: "https://wa.me/9647509628683"
-  },
-  {
-    img: "ads.webp",
-    title: "  ",
-    desc: "  ",
-    link: "https://wa.me/9647509628683"
-  }
+ {
+   img: "bsexur.webp",
+   title: "  ",
+   desc: "  ",
+   link: "https://wa.me/9647509628683"
+ },
+ {
+   img: "fsexur.webp",
+   title: "  ",
+   desc: "  ",
+   link: "https://wa.me/9647509628683"
+ },
+ {
+   img: "ads.webp",
+   title: "  ",
+   desc: "  ",
+   link: "https://wa.me/9647509628683"
+ }
 ];
-// ← کۆتایی ریکلامەکان
 
 let adCurrent = 0;
 let adAutoTimer = null;
-const AD_INTERVAL = 4000; // ms between auto-slides
+const AD_INTERVAL = 4500;
 let adProgress = 0;
 let adProgressTimer = null;
-
+let adDragging = false;
+let adStartX = 0;
+let adIsAnimating = false;
 
 function buildAdBanner() {
-  const track = document.getElementById('adTrack');
-  const dots = document.getElementById('adDots');
-  track.innerHTML = '';
-  dots.innerHTML = '';
+ const track = document.getElementById('adTrack');
+ const dots = document.getElementById('adDots');
+ track.innerHTML = '';
+ dots.innerHTML = '';
 
-  adSlides.forEach((ad, i) => {
-    const a = document.createElement('a');
-    a.className = 'ad-slide';
-    a.href = ad.link || '#';
-    a.target = '_blank';
-    a.rel = 'noopener';
+ adSlides.forEach((ad, i) => {
+   const a = document.createElement('a');
+   a.className = 'ad-slide';
+   a.href = ad.link || '#';
+   a.target = '_blank';
+   a.rel = 'noopener';
+   a.style.cssText = `
+     border-radius: calc(var(--radius-card) - 6px);
+     overflow: hidden;
+     transform: scale(1);
+     transition: transform .2s ease, opacity .2s ease;
+   `;
 
-    if (ad.img) {
-      // real image — full cover + overlay text
-      a.style.background = '#111';
-      a.innerHTML = `
-        <img class="ad-slide-img" src="${ad.img}" alt="${ad.title}" loading="lazy">
-        <div class="ad-slide-overlay">
-          <div class="ad-slide-overlay-title">${ad.title}</div>
-          <div class="ad-slide-overlay-desc">${ad.desc}</div>
-        </div>`;
-    } else {
-      // SVG icon card
-      a.style.background = ad.bg || 'linear-gradient(135deg,#ffe066,#ffd84d)';
-      a.innerHTML = `
-        <div class="ad-slide-icon">
-          ${ad.icon || ''}
-          <div class="ad-slide-icon-title">${ad.title}</div>
-          <div class="ad-slide-icon-desc">${ad.desc}</div>
-        </div>`;
-    }
+   if (ad.img) {
+     a.style.background = '#111';
+     a.innerHTML = `
+       <img class="ad-slide-img" src="${ad.img}" alt="${ad.title}" loading="lazy"
+         style="border-radius:calc(var(--radius-card) - 6px);">
+       <div class="ad-slide-overlay" style="border-radius:calc(var(--radius-card) - 6px);">
+         <div class="ad-slide-overlay-title">${ad.title}</div>
+         <div class="ad-slide-overlay-desc">${ad.desc}</div>
+       </div>`;
+   } else {
+     a.style.background = ad.bg || 'linear-gradient(135deg,#ffe066,#ffd84d)';
+     a.innerHTML = `
+       <div class="ad-slide-icon">
+         ${ad.icon || ''}
+         <div class="ad-slide-icon-title">${ad.title}</div>
+         <div class="ad-slide-icon-desc">${ad.desc}</div>
+       </div>`;
+   }
 
-    track.appendChild(a);
+   // کلیک ئەنیمەیشن
+   a.addEventListener('pointerdown', () => {
+     a.style.transform = 'scale(.97)';
+     a.style.opacity = '.9';
+   });
+   a.addEventListener('pointerup', () => {
+     a.style.transform = 'scale(1)';
+     a.style.opacity = '1';
+   });
+   a.addEventListener('pointerleave', () => {
+     a.style.transform = 'scale(1)';
+     a.style.opacity = '1';
+   });
 
-    // dot
-    const dot = document.createElement('div');
-    dot.className = 'ad-dot' + (i === 0 ? ' active' : '');
-    dot.onclick = () => { vib(); adGoTo(i); };
-    dots.appendChild(dot);
-  });
+   track.appendChild(a);
 
-  adUpdateUI();
-  adStartAuto();
+   // dot
+   const dot = document.createElement('div');
+   dot.className = 'ad-dot' + (i === 0 ? ' active' : '');
+   dot.onclick = () => { vib(); adGoTo(i); };
+   dots.appendChild(dot);
+ });
+
+ // touch/swipe — نەرم و ئازاد
+ const banner = document.getElementById('adBanner');
+ banner.addEventListener('touchstart', e => {
+   adStartX = e.touches[0].clientX;
+   adDragging = true;
+   adStopAuto();
+ }, { passive: true });
+
+ banner.addEventListener('touchmove', e => {
+   if (!adDragging) return;
+   const dx = e.touches[0].clientX - adStartX;
+   const track = document.getElementById('adTrack');
+   const base = adCurrent * 100;
+   track.style.transition = 'none';
+   track.style.transform = `translateX(calc(${base}% + ${dx}px))`;
+ }, { passive: true });
+
+ banner.addEventListener('touchend', e => {
+   if (!adDragging) return;
+   adDragging = false;
+   const dx = e.changedTouches[0].clientX - adStartX;
+   const track = document.getElementById('adTrack');
+   track.style.transition = 'transform .45s cubic-bezier(.4,0,.2,1)';
+   if (Math.abs(dx) > 50) {
+     dx > 0 ? adPrev() : adNext();
+   } else {
+     adUpdateUI();
+   }
+   adStartAuto();
+ }, { passive: true });
+
+ adUpdateUI();
+ adStartAuto();
 }
+
+function adUpdateUI() {
+ const track = document.getElementById('adTrack');
+ track.style.transition = 'transform .45s cubic-bezier(.4,0,.2,1)';
+ track.style.transform = `translateX(${adCurrent * 100}%)`;
+ document.querySelectorAll('.ad-dot').forEach((d, i) => {
+   d.classList.toggle('active', i === adCurrent);
+ });
+}
+
+function adGoTo(idx) {
+ if (adIsAnimating) return;
+ adIsAnimating = true;
+ adCurrent = (idx + adSlides.length) % adSlides.length;
+ adUpdateUI();
+ adResetProgress();
+ setTimeout(() => adIsAnimating = false, 450);
+}
+
+function adNext() { adGoTo(adCurrent + 1); }
+function adPrev() { adGoTo(adCurrent - 1); }
+
+function adStartAuto() {
+ adStopAuto();
+ adResetProgress();
+ adAutoTimer = setInterval(() => adNext(), AD_INTERVAL);
+}
+
+function adStopAuto() {
+ clearInterval(adAutoTimer);
+ clearInterval(adProgressTimer);
+}
+
+function adResetProgress() {
+ clearInterval(adProgressTimer);
+ adProgress = 100;
+ const fill = document.getElementById('adProgressFill');
+ if (!fill) return;
+ fill.style.width = '100%';
+ const step = 100 / (AD_INTERVAL / 100);
+ adProgressTimer = setInterval(() => {
+   adProgress = Math.max(0, adProgress - step);
+   fill.style.width = adProgress + '%';
+ }, 100);
+}
+
+buildAdBanner();
+
 
 function adUpdateUI() {
   document.getElementById('adTrack').style.transform = `translateX(${adCurrent * 100}%)`;
@@ -3430,23 +3726,100 @@ function positionPortal(){
   const maxH=window.innerHeight-rect.bottom-16;
   portal.style.maxHeight=Math.min(230,maxH)+'px';
 }
+
 function onPlayerInput(){
-  const input = document.getElementById("playerInput");
-  const val = input.value;
-  
-  // سڕینەوەی هەر کارەکتەرێک کە کوردی/عەرەبی نییە
-  const cleaned = val.replace(/[^\u0600-\u06FF\u200c\s]/g, '');
-  
-  if(cleaned !== val){
-    input.value = cleaned;
-    vib('error');
-  }
-  
-  // ئەوەی پێشتر هەبوو
-  input.classList.remove("input-error");
-  document.getElementById("inputErrMsg").classList.remove("show");
-  renderSuggestions(cleaned);
+ const input = document.getElementById("playerInput");
+ const val = input.value;
+ 
+ const cleaned = val.replace(/[^\u0600-\u06FF\u200c\s]/g, '');
+ 
+ if(cleaned !== val){
+   input.value = cleaned;
+   vib('error');
+   showKurdishToast();
+   return;
+ }
+ 
+ input.classList.remove("input-error");
+ document.getElementById("inputErrMsg").classList.remove("show");
+ renderSuggestions(cleaned);
 }
+
+let _toastTimer = null;
+let _toastVisible = false; // ← زیادکرا
+
+function showKurdishToast() {
+  if (_toastVisible) return; // ← ئەگەر نۆتیفی هەیە، دووبارە مەکەوە
+  
+  const old = document.getElementById('kurdishToast');
+  if (old) old.remove();
+  clearTimeout(_toastTimer);
+  _toastVisible = true; // ← دەستپێکرد
+
+  const toast = document.createElement('div');
+  toast.id = 'kurdishToast';
+  toast.innerHTML = `
+    <div style="
+      width:36px;height:36px;
+      border-radius:12px;
+      background:rgba(255,212,0,.15);
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="#ffd400">
+        <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+      </svg>
+    </div>
+    <div>
+      <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:2px;">ناوەکە بەکوردی بنووسە</div>
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.45);">تەنها پیتی کوردی قبوڵ دەکرێت</div>
+    </div>
+  `;
+
+  toast.style.cssText = `
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-120px) scale(.92);
+    background: rgba(30,30,30,.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,212,0,.2);
+    border-radius: 20px;
+    padding: 12px 16px;
+    z-index: 99999;
+    box-shadow: 0 8px 32px rgba(0,0,0,.3);
+    transition: transform .4s cubic-bezier(.34,1.3,.64,1), opacity .3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 240px;
+    max-width: 320px;
+    opacity: 0;
+    font-family: 'Noto Sans Arabic', sans-serif;
+    direction: rtl;
+  `;
+
+  document.body.appendChild(toast);
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      toast.style.transform = 'translateX(-50%) translateY(0) scale(1)';
+      toast.style.opacity = '1';
+    });
+  });
+
+  _toastTimer = setTimeout(() => {
+    toast.style.transform = 'translateX(-50%) translateY(-120px) scale(.92)';
+    toast.style.opacity = '0';
+    setTimeout(() => {
+      toast.remove();
+      _toastVisible = false; // ← تەواو بوو، ئێستا دووبارە دێتەوە
+    }, 400);
+  }, 2500);
+}
+
+
+
 
 function addCustomWord(){
   const input = document.getElementById('customWordInput');
@@ -3919,7 +4292,14 @@ function navClick(tab) {
   if (tab === 'home') showScreen('screen1');
   if (tab === 'stats') { showScreen('statsScreen'); renderStats(); }
   if (tab === 'review') { showScreen('reviewScreen'); loadReviews(); }
-if (tab === 'creator') showScreen('creatorScreen');
+if (tab === 'creator') {
+  showScreen('creatorScreen');
+  if (window.replayVisitorCount) {
+    window.replayVisitorCount();
+  }
+}
+
+
 
 }
 
@@ -4711,8 +5091,8 @@ function awardPoints(spyWon) {
       // +1 بۆ هەر سیخورێک
       spyIndexes.forEach(spyIdx => {
         const spyName = players[spyIdx];
-        scores[spyName] = (scores[spyName] || 0) + 1;
-        lastRoundPoints[spyName] = (lastRoundPoints[spyName] || 0) + 1;
+        scores[spyName] = (scores[spyName] || 0) + 0;
+        lastRoundPoints[spyName] = (lastRoundPoints[spyName] || 0) + 0;
       });
     }
   });
@@ -4958,10 +5338,131 @@ function stopHintSystem() {
   if (wrap) wrap.classList.add('hidden');
 }
 
+/* ══ CONFETTI ══ */
+const CONFETTI_COLORS = ['#ffd400','#ff3b3b','#22c55e','#6366f1','#f97316','#ec4899','#111'];
+
+function launchConfetti(count = 120) {
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `
+        left: ${Math.random() * 100}vw;
+        background: ${CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]};
+        width: ${6 + Math.random() * 10}px;
+        height: ${6 + Math.random() * 10}px;
+        border-radius: ${Math.random() > .5 ? '50%' : '2px'};
+        animation-duration: ${1.5 + Math.random() * 2.5}s;
+        animation-delay: ${Math.random() * .5}s;
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 4000);
+    }, i * 18);
+  }
+}
+
+/* ══ GAME OVER ══ */
+function showGameover() {
+  const scores = loadScores();
+
+  // بەرزترین خاڵ
+  const topEntry = Object.entries(scores)
+    .filter(([name]) => players.includes(name))
+    .sort((a, b) => b[1] - a[1])[0];
+
+  // sub text
+  document.getElementById('gameoverSub').innerText =
+    `${totalRounds} خول تەواو بوو — جەنگاوەر و پاڵەوانی خولەکە دیاری کرا!`;
+
+  // بەرزترین یاریزان
+  const winnerEl = document.getElementById('gameoverWinner');
+  if (topEntry) {
+    const [name, pts] = topEntry;
+    const seed = encodeURIComponent(name);
+    winnerEl.innerHTML = `
+      <div class="gameover-winner-avatar">
+        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}">
+      </div>
+      <div class="gameover-winner-info">
+        <div class="gameover-winner-label">🏆 براوەی یاری</div>
+        <div class="gameover-winner-name">${name}</div>
+      </div>
+      <div class="gameover-winner-pts">${pts}</div>`;
+  } else {
+    winnerEl.innerHTML = '';
+  }
+
+  document.getElementById('gameoverOverlay').classList.add('active');
+  launchConfetti(150);
+  vib('success');
+}
+
+function closeGameover() {
+  document.getElementById('gameoverOverlay').classList.remove('active');
+}
+
+/* ══ ROUND SYSTEM ══ */
+let currentRound = 1;
+let totalRounds = 1;
+
+function startCards() {
+  if (selectedCategories.length === 0 && customWords.length === 0) {
+    vib('error');
+    showModal({title:"لیستی وشە هەڵبژێرە", msg:"تکایە لانیکەم یەک وشە هەڵبژێرە.", icon:"warn"});
+    return;
+  }
+  totalRounds = parseInt(document.getElementById('roundCount').value);
+  currentRound = 1;
+  prepareGame();
+  showScreen("screen3");
+  showPlayer();
+}
+
+function playAgain() {
+  currentRound++;
+  if (currentRound > totalRounds) {
+    setTimeout(() => showGameover(), 400);
+    return;
+  }
+  prepareGame();
+  updateRoundBtn();
+  showScreen("screen3");
+  showPlayer();
+}
+
+function updateRoundBtn() {
+  const btn = document.getElementById('playAgainBtn');
+  if (!btn) return;
+  if (currentRound >= totalRounds) {
+    btn.innerText = `کۆتایی یاری — خولی ${totalRounds}`;
+    btn.style.background = '#111';
+    btn.style.color = '#ffd400';
+  } else {
+    btn.innerText = `خولی ${currentRound + 1} / ${totalRounds}`;
+    btn.style.background = '';
+    btn.style.color = '';
+  }
+}
+
+function showStarter() {
+  showScreen("screen4");
+  const starter = Math.floor(Math.random() * players.length);
+  document.getElementById("starterName").innerText = players[starter];
+  document.getElementById("starterAvatar").src = avatars[playerAvatarIndexes[starter]];
+  const titleEl = document.getElementById("screen4").querySelector(".title");
+  if (titleEl) titleEl.innerText = `خولی ${currentRound} / ${totalRounds}`;
+  resetTimerUI();
+}
 
 </script>
 
-<script src="visitor-counter.js"></script>
 
+
+<div style="display:none" aria-hidden="true">
+  یاری سیخور - یاری کوردی بۆ هاورێیان و خێزان. 
+  یاریزانەکان دەبێت سیخورەکە دۆزنەوە. 
+  یاری گروپی سەرگەرمی بۆ ٣ تا ١٠ کەس.
+</div>
+<script src="visitor-counter.js"></script>
 </body>
 </html>
