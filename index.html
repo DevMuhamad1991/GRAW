@@ -3255,7 +3255,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
     <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
     <h2>وەستاوە</h2><p>کاتەکە وەستاوە</p>
     <button class="resume-btn" id="resumeBtnMain" onclick="vib();handleResumeClick()">بەردەوامبە</button>
-    <p class="hidden" id="resumeWaitText" style="margin-top:14px;opacity:.6;font-size:var(--fs-sm);font-weight:700;">چاوەڕوانی هۆست بکە بۆ بەردەوامبوون...</p>
+    <p class="hidden" id="resumeWaitText" style="margin-top:14px;opacity:.6;font-size:var(--fs-sm);font-weight:700;">چاوەڕوانی خاوەن ژووربکە...</p>
   </div>
 </div>
 
@@ -3530,7 +3530,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   <!-- ئەوانی تر ئەمە دەبینن -->
   <div id="lobbyWaitMsg" class="wait-msg-box hidden">
     <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-    <span>چاوەڕوانی هۆست بە بۆ دەستپێکردنی یاری...</span>
+    <span>چاوەڕوانی خاوەن ژووربە بۆ دەستپێکردنی یاری...</span>
   </div>
 </section>
 
@@ -3592,7 +3592,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 
     <div class="wait-msg-box hidden" id="onlineTimerWaitMsg" style="margin-top:24px;">
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      <span>کۆنترۆڵی کات لەلایەن هۆستەوە دەکرێت</span>
+      <span>کۆنترۆڵی کات لەلایەن ئۆنەر دەکرێت</span>
     </div>
   </div>
 </section>
@@ -3718,7 +3718,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
       <svg viewBox="0 0 24 24" width="20" height="20" fill="#fff"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
     </button>
   </div>
-  <div class="chat-muted-notice hidden" id="chatMutedNotice">هۆست چاتی ئازادت بۆ داخستووە</div>
+  <div class="chat-muted-notice hidden" id="chatMutedNotice">میوت کرایت</div>
 </div>
 
 <script>
@@ -5990,7 +5990,7 @@ async function checkPresence(){
     isHost = true;
     vib('success');
     refreshHostUI();
-    showModal({title:"بوویت بە هۆست", msg:"هۆستی پێشوو چالاک نەبوو، تۆ ئێستا هۆستی نوێی ژوورەکەیت.", icon:"ok"});
+    showModal({title:"بوویت بە خاوەن ژوور", msg:"خاوەنی پێشوو چالاک نەبوو، تۆ ئێستا خاوەنی نوێی ژوورەکەیت.", icon:"ok"});
   }
 }
 
@@ -6003,7 +6003,7 @@ function showJoinToast(name, avatarSeed, type='join'){
   el.className = 'join-toast';
   el.innerHTML = `
     <div class="join-toast-av"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(avatarSeed||name)}" loading="lazy"></div>
-    <div class="join-toast-text"><b>${name}</b> ${isJoin ? 'گەیشتە ژوورەوە 👋' : 'چووە دەرەوە'}</div>`;
+    <div class="join-toast-text"><b>${name}</b> ${isJoin ? 'هاتەژوورەوە 👋' : 'چووەدەرەوە'}</div>`;
   stack.appendChild(el);
   requestAnimationFrame(()=> requestAnimationFrame(()=> el.classList.add('show')));
   setTimeout(()=>{
@@ -6181,7 +6181,7 @@ function syncChatMuteUI(){
   const input = document.getElementById('chatInput');
   if(!input) return;
   input.disabled = muted;
-  input.placeholder = muted ? 'هۆست چاتت بۆ داخستووە' : 'پەیامێک بنووسە...';
+  input.placeholder = muted ? 'میوت کراویت' : 'پەیامێک بنووسە...';
   document.querySelectorAll('.chat-quick-btn').forEach(b=> b.disabled = muted);
   document.getElementById('chatMutedNotice')?.classList.toggle('hidden', !muted);
 }
@@ -6311,7 +6311,7 @@ function toggleGameMode(mode){
   const mainBtn = document.getElementById('mainStartBtn');
   if(mainBtn){
     if(mode === 'online'){
-      mainBtn.innerText = 'دەستپێکردنی یاری ئۆنڵاین 🌐';
+      mainBtn.innerText = 'دەستپێکردنی یاری ئۆنڵاین';
       mainBtn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
       mainBtn.style.color = '#fff';
       mainBtn.style.boxShadow = '0 6px 20px rgba(34,197,94,.35)';
@@ -6573,7 +6573,7 @@ async function createOnlineRoom(){
   const { data: existingHosts } = await sb.from('room_players').select('name').eq('is_host', true);
   if(existingHosts && existingHosts.some(p => p.name === name)){
     vib('error');
-    showModal({title:"ناوەکە بەکارهاتووە", msg:"کەسێکی تر ئێستا بەم ناوە ژوورێکی هۆست کردووە. تکایە ناوێکی تر هەڵبژێرە بۆ ئەوەی تێکەڵ نەبن.", icon:"warn"});
+    showModal({title:"ناوەکە بەکارهاتووە", msg:"کەسێکی تر ئێستا بەم ناوە ژوورێکی دروست کردووە. تکایە ناوێکی تر هەڵبژێرە بۆ ئەوەی تێکەڵ نەبن.", icon:"warn"});
     return;
   }
   isHost = true;
@@ -6676,7 +6676,7 @@ function subscribeRoom(){
         syncOnlinePlayerUI();
                             if(!isHost && onlineRoomCode && !onlinePlayers.some(p=>p.client_id===CLIENT_ID)){
           vib('error');
-          showModal({title:"دەرکراویت", msg:"هۆست تۆی لە ژوورەکە دەرکرد.", icon:"err"});
+          showModal({title:"دەرکراویت", msg:"خاوەنی ژوور تۆی دەرکرد.", icon:"err"});
           if(roomChannel) sb.removeChannel(roomChannel);
           clearInterval(roundTimerInterval);
           stopPingLoop();
@@ -6776,7 +6776,7 @@ function handleKickBroadcast(clientId, name){
   if(clientId === CLIENT_ID){
     // خۆم کیک کراوم
     vib('error');
-    showModal({title:"دەرکراویت", msg:"هۆست تۆی لە ژوورەکە دەرکرد.", icon:"err"});
+    showModal({title:"دەرکراویت", msg:"خاوەن ژوور تۆی دەرکرد.", icon:"err"});
     if(roomChannel) sb.removeChannel(roomChannel);
     clearInterval(roundTimerInterval);
     stopPingLoop();
@@ -6961,7 +6961,7 @@ function lockForceStartButton(seconds){
     if(remain <= 0){
       clearInterval(forceStartLockTimer);
       btn.classList.remove('force-start-lock');
-      btn.innerText = 'دەستپێکردن بەبێ چاوەڕوانی (هۆست)';
+      btn.innerText = 'دەستپێکردن بەبێ چاوەڕوانی';
     } else {
       btn.innerText = `دەستپێکردن بەبێ چاوەڕوانی (${remain})`;
     }
