@@ -3491,6 +3491,12 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   <button class="next-btn active hidden" id="onlineReadyBtn" onclick="markReady()">ئامادەم</button>
   <div class="online-ready-badge hidden" id="onlineWaitingReady">چاوەڕوانی یاریزانانی تر بۆ ئامادەبوون...</div>
 
+  <div id="onlineReadyStatusBox" style="display:flex;flex-direction:column;gap:8px;margin-top:20px;"></div>
+
+  <button class="restart-btn dark-btn hidden" id="onlineForceStartBtn" style="margin-top:14px;" onclick="vib('heavy');confirmForceStart()">
+    دەستپێکردن بەبێ چاوەڕوانی (هۆست)
+  </button>
+
   <div class="hidden" id="onlineTimerWrap" style="text-align:center;margin-top:24px;">
     <div class="timer" id="onlineTimer">00:00</div>
     <button class="restart-btn dark-btn hidden" id="onlineEndRoundBtn" style="margin-top:18px;" onclick="vib('heavy');confirmEndOnlineRound()">
@@ -3518,6 +3524,8 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
     <div class="spies-title">سیخورەکان</div>
     <div class="no-spies-badge" id="onlineRevealSpies"></div>
   </div>
+  <div class="spies-title" style="margin-top:16px;">خشتەی خاڵەکان</div>
+  <div id="onlineRevealScoreBox"></div>
   <button class="restart-btn hidden" id="onlineNextRoundBtn" onclick="vib();nextOnlineRound()">خولی نوێ</button>
 </section>
 
@@ -5812,6 +5820,7 @@ function subscribeRoom(){
     .on('postgres_changes', { event:'*', schema:'public', table:'room_players', filter:`room_code=eq.${onlineRoomCode}` },
       async () => {
         await refreshLobbyPlayers();
+        renderReadyStatus();
         if(!isHost && onlineRoomCode && !onlinePlayers.some(p=>p.client_id===CLIENT_ID)){
           vib('error');
           showModal({title:"دەرکراویت", msg:"هۆست تۆی لە ژوورەکە دەرکرد.", icon:"err"});
@@ -5926,6 +5935,39 @@ function showOnlineCard(room){
   document.getElementById('onlineWaitingReady').classList.add('hidden');
   document.getElementById('onlineTimerWrap').classList.add('hidden');
   onlineCardOpened = false;
+  renderReadyStatus();
+  document.getElementById('onlineForceStartBtn').classList.toggle('hidden', !isHost);
+}
+
+function renderReadyStatus(){
+  const box = document.getElementById('onlineReadyStatusBox');
+  if(!box) return;
+  box.innerHTML = '';
+  onlinePlayers.forEach(p=>{
+    const ready = p.vote_for === 'READY';
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:10px 14px;background:#fff;border-radius:16px;';
+    div.innerHTML = `
+      <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;border:2px solid ${ready?'#22c55e':'#eee'};flex-shrink:0;">
+        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.avatar_seed)}" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div style="flex:1;font-size:14px;font-weight:700;">${p.name}</div>
+      <div style="font-size:12px;font-weight:800;color:${ready?'#16a34a':'#aaa'};">${ready?'ئامادەیە ✓':'چاوەڕوانە...'}</div>`;
+    box.appendChild(div);
+  });
+}
+
+async function confirmForceStart(){
+  const notReady = onlinePlayers.filter(p=>p.vote_for!=='READY').map(p=>p.name).join('، ');
+  const yes = await showModal({
+    title:"دەستپێکردن بەبێ چاوەڕوانی",
+    msg: notReady ? `ئەم کەسانە هێشتا ئامادە نین: ${notReady}. دڵنیایت دەست پێبکەیت؟` : "هەموو ئامادەن، دەست پێبکە.",
+    icon:"warn", confirm:true
+  });
+  if(yes && isHost){
+    await sb.from('room_players').update({ vote_for: null }).eq('room_code', onlineRoomCode);
+    await sb.from('rooms').update({ round_start_at: new Date().toISOString() }).eq('code', onlineRoomCode);
+  }
 }
 function openOnlineCard(){ vib('medium'); onlineCardOpened = true; document.getElementById('onlineWordCard').classList.add('flip'); }
 function closeOnlineCard(){
@@ -6014,25 +6056,53 @@ async function checkAllVoted(){
   const { data: room } = await sb.from('rooms').select('status').eq('code', onlineRoomCode).single();
   if(!room || room.status !== 'voting') return;
   const { data: players } = await sb.from('room_players').select('*').eq('room_code', onlineRoomCode);
-  if(players && players.length && players.every(p => p.vote_for)){
+    if(players && players.length && players.every(p => p.vote_for)){
     const tally = {};
     players.forEach(p=>{ tally[p.vote_for] = (tally[p.vote_for]||0)+1; });
     const sorted = Object.entries(tally).sort((a,b)=>b[1]-a[1]);
     const accusedId = sorted[0][0];
     window._lastAccusedId = accusedId;
+
+    const { data: room } = await sb.from('rooms').select('spy_client_ids').eq('code', onlineRoomCode).single();
+    const spyIds = room.spy_client_ids || [];
+    const spyWon = !spyIds.includes(accusedId); // سیخور نەدۆزرایەوە → سیخور براوەیە
+
+    for(const p of players){
+      let delta = 0;
+      if(spyWon && spyIds.includes(p.client_id)) delta = 3;
+      if(!spyWon && !spyIds.includes(p.client_id)) delta = 2;
+      if(delta !== 0){
+        await sb.from('room_players').update({ score: (p.score||0) + delta }).eq('room_code', onlineRoomCode).eq('client_id', p.client_id);
+      }
+    }
+    window._lastSpyWon = spyWon;
+
     await sb.from('room_players').update({ vote_for: null }).eq('room_code', onlineRoomCode);
     await sb.from('rooms').update({ status:'reveal' }).eq('code', onlineRoomCode);
   }
 }
 
 /* ── ئاشکراکردن ── */
-function showOnlineReveal(room){
+async function showOnlineReveal(room){
   showScreen('onlineRevealScreen');
   const spyNames = onlinePlayers.filter(p=>(room.spy_client_ids||[]).includes(p.client_id)).map(p=>p.name).join('، ');
   document.getElementById('onlineRevealWord').innerText = room.game_word;
   document.getElementById('onlineRevealCat').innerText = 'جۆری وشەکە: ' + room.current_category;
   document.getElementById('onlineRevealSpies').innerText = spyNames || 'نەدۆزرایەوە';
   document.getElementById('onlineNextRoundBtn').classList.toggle('hidden', !isHost);
+
+  const { data: players } = await sb.from('room_players').select('*').eq('room_code', onlineRoomCode).order('score', { ascending:false });
+  const box = document.getElementById('onlineRevealScoreBox');
+  if(box && players){
+    box.innerHTML = players.map(p=>`
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#fff;border-radius:16px;margin-bottom:8px;">
+        <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;">
+          <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.avatar_seed)}" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div style="flex:1;font-size:14px;font-weight:700;">${p.name}</div>
+        <div style="font-size:16px;font-weight:800;color:#c8960a;">${p.score||0}</div>
+      </div>`).join('');
+  }
 }
 
 async function nextOnlineRound(){
