@@ -2570,9 +2570,26 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   border-radius:18px;padding:16px;margin-top:10px;}
 .wait-msg-box svg{width:24px;height:24px;fill:#b88600;flex-shrink:0;}
 .wait-msg-box span{font-size:var(--fs-sm);font-weight:700;color:#7a5200;}
-
 .online-ready-badge{text-align:center;padding:14px;background:rgba(34,197,94,.1);
   border-radius:16px;color:#16a34a;font-weight:800;font-size:var(--fs-sm);margin-top:14px;}
+.offline-only{transition:opacity .3s ease, filter .3s ease;}
+.offline-only.locked{opacity:.35;filter:grayscale(.4);pointer-events:none;}
+.ready-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:16px;margin-top:24px;}
+.ready-slot{display:flex;flex-direction:column;align-items:center;gap:7px;position:relative;}
+.ready-av-wrap{position:relative;width:58px;height:58px;}
+.ready-av{width:58px;height:58px;border-radius:50%;overflow:hidden;border:3px solid #f0f0e8;transition:border-color .3s,opacity .3s;background:#fff;opacity:.6;}
+.ready-slot.is-ready .ready-av{border-color:#22c55e;opacity:1;}
+.ready-check{position:absolute;bottom:-2px;right:-2px;width:21px;height:21px;border-radius:50%;background:#22c55e;border:2.5px solid #fff7cf;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.4);transition:opacity .25s,transform .25s cubic-bezier(.34,1.56,.64,1);}
+.ready-check svg{width:11px;height:11px;fill:#fff;}
+.ready-slot.is-ready .ready-check{opacity:1;transform:scale(1);}
+.ready-name{font-size:11px;font-weight:800;color:#666;max-width:68px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ready-ping{font-size:10px;font-weight:800;margin-top:1px;direction:ltr;}
+.ping-good{color:#16a34a;}
+.ping-mid{color:#e6a800;}
+.ping-bad{color:#c62828;}
+.lobby-ping-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:800;padding:3px 9px;border-radius:100px;margin-right:auto;direction:ltr;flex-shrink:0;}
+.ready-kick{position:absolute;top:-5px;left:-5px;width:19px;height:19px;border-radius:50%;background:#ff4d4d;border:2px solid #fff7cf;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;cursor:pointer;line-height:1;z-index:2;}
+.force-start-lock{opacity:.45;pointer-events:none;}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -2604,13 +2621,13 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
       <div class="title">یاری سیخور</div>
       <div class="sub">هاورێیان و خێزانی</div>
     </div>
-    <button class="info-btn" onclick="vib();openInfo()">
+    <button class="info-btn offline-only" id="infoBtnLockable" onclick="vib();openInfo()">
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
       چۆن یاری بکەین؟
     </button>
   </div>
 
-  <div class="glass input-card">
+  <div class="glass input-card offline-only" id="playerCardLockable">
     <label>ناوی یاریزانەکان</label>
     <div style="display:flex;gap:10px;align-items:flex-start;">
       <div class="input-wrap">
@@ -2628,7 +2645,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 
   <div class="glass settings-card">
     <div class="settings-row">
-      <div>
+      <div class="offline-only" id="spyCountLockable">
         <label>ژمارەی سیخور</label>
         <select id="spyCount" onchange="vib()">
           <option value="1">1 سیخور</option>
@@ -2646,7 +2663,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   </div>
 </div>
       
-      <div>
+      <div class="offline-only" id="gameTimeLockable">
         <label>کاتی یاری</label>
         <select id="gameTime" onchange="vib()">
           <option value="60">1 خولەک</option>
@@ -2656,7 +2673,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
         </select>
       </div>
       
-      <div>
+      <div class="offline-only" id="roundCountLockable">
   <label>ژمارەی خول</label>
   <select id="roundCount" onchange="vib()">
     <option value="10">10 خول</option>
@@ -2677,7 +2694,8 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   </div>
 
   <!-- ══ AD BANNER ══ -->
-  <div class="ad-banner" id="adBanner">
+  <!-- ══ AD BANNER ══ -->
+  <div class="ad-banner offline-only" id="adBanner">
     <div class="ad-progress"><div class="ad-progress-fill" id="adProgressFill"></div></div>
     <div class="ad-track" id="adTrack"></div>
     <div class="ad-footer">
@@ -3491,10 +3509,10 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   <button class="next-btn active hidden" id="onlineReadyBtn" onclick="markReady()">ئامادەم</button>
   <div class="online-ready-badge hidden" id="onlineWaitingReady">چاوەڕوانی یاریزانانی تر بۆ ئامادەبوون...</div>
 
-  <div id="onlineReadyStatusBox" style="display:flex;flex-direction:column;gap:8px;margin-top:20px;"></div>
+  <div class="ready-grid" id="onlineReadyStatusBox"></div>
 
-  <button class="restart-btn dark-btn hidden" id="onlineForceStartBtn" style="margin-top:14px;" onclick="vib('heavy');confirmForceStart()">
-    دەستپێکردن بەبێ چاوەڕوانی (هۆست)
+  <button class="restart-btn dark-btn hidden" id="onlineForceStartBtn" style="margin-top:22px;" onclick="vib('heavy');confirmForceStart()">
+    دەستپێکردن بەبێ چاوەڕوانی
   </button>
 
   <div class="hidden" id="onlineTimerWrap" style="text-align:center;margin-top:24px;">
@@ -5694,6 +5712,39 @@ function getClientId(){
 }
 const CLIENT_ID = getClientId();
 
+/* ── پێداچوونەوەی خێرایی ئینتەرنێت (ping) ── */
+let pingInterval = null;
+let lastPingValue = 0;
+
+async function measurePing(){
+  try{
+    const start = performance.now();
+    await fetch(SUPABASE_URL + '/rest/v1/', { method:'HEAD', headers:{ apikey: SUPABASE_ANON_KEY } });
+    const ms = Math.round(performance.now() - start);
+    lastPingValue = ms;
+    if(onlineRoomCode){
+      await sb.from('room_players').update({ ping_ms: ms }).eq('room_code', onlineRoomCode).eq('client_id', CLIENT_ID);
+    }
+  }catch(e){ /* بێدەنگ - ئینتەرنێت لادراوە */ }
+}
+
+function startPingLoop(){
+  stopPingLoop();
+  measurePing();
+  pingInterval = setInterval(measurePing, 5000);
+}
+function stopPingLoop(){
+  clearInterval(pingInterval);
+  pingInterval = null;
+}
+
+function pingClass(ms){
+  if(ms <= 0) return 'ping-mid';
+  if(ms < 150) return 'ping-good';
+  if(ms < 400) return 'ping-mid';
+  return 'ping-bad';
+}
+
 let gameMode = 'offline';
 let onlineRoomCode = null;
 let isHost = false;
@@ -5737,8 +5788,10 @@ function toggleGameMode(mode){
   vib();
   document.getElementById('modeOffline').classList.toggle('active', mode==='offline');
   document.getElementById('modeOnline').classList.toggle('active', mode==='online');
+  document.querySelectorAll('.offline-only').forEach(el=>{
+    el.classList.toggle('locked', mode==='online');
+  });
 }
-
 /* بەکارهێنانی هەمان دوگمەی "دەستپێکردنی یاری" ی سەرەکی — گۆڕانکاری بچووک */
 function handleModeStart(){
   if(gameMode === 'online'){
@@ -5812,6 +5865,7 @@ function enterLobby(){
   document.getElementById('lobbyWaitMsg').classList.toggle('hidden', isHost);
   subscribeRoom();
   refreshLobbyPlayers();
+  startPingLoop();
 }
 
 function subscribeRoom(){
@@ -5820,7 +5874,7 @@ function subscribeRoom(){
     .on('postgres_changes', { event:'*', schema:'public', table:'room_players', filter:`room_code=eq.${onlineRoomCode}` },
       async () => {
         await refreshLobbyPlayers();
-        renderReadyStatus();
+        syncOnlinePlayerUI();
         if(!isHost && onlineRoomCode && !onlinePlayers.some(p=>p.client_id===CLIENT_ID)){
           vib('error');
           showModal({title:"دەرکراویت", msg:"هۆست تۆی لە ژوورەکە دەرکرد.", icon:"err"});
@@ -5847,8 +5901,11 @@ async function refreshLobbyPlayers(){
     const div = document.createElement('div');
     div.className = 'player-item';
     const canKick = isHost && p.client_id !== CLIENT_ID;
+    const pingMs = p.ping_ms || 0;
+    const pc = pingClass(pingMs);
     div.innerHTML = `<div class="avatar"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.avatar_seed)}"></div>
       <div class="player-name">${p.name}${p.is_host?' 👑':''}</div>
+      <div class="lobby-ping-badge ${pc}" style="background:rgba(0,0,0,.05);">${pingMs>0?pingMs+' ms':'...'}</div>
       ${canKick ? `<button class="remove-player" onclick="vib('medium');kickPlayer('${p.client_id}','${p.name}')">&#x2715;</button>` : ''}`;
     box.appendChild(div);
   });
@@ -5874,6 +5931,7 @@ async function leaveLobby(){
   if(isHost) await sb.from('rooms').delete().eq('code', onlineRoomCode);
   if(roomChannel) sb.removeChannel(roomChannel);
   clearInterval(roundTimerInterval);
+  stopPingLoop();
   onlineRoomCode = null; isHost = false; onlinePlayers = [];
   showScreen('screen1');
 }
@@ -5937,6 +5995,8 @@ function showOnlineCard(room){
   onlineCardOpened = false;
   renderReadyStatus();
   document.getElementById('onlineForceStartBtn').classList.toggle('hidden', !isHost);
+  if(isHost) lockForceStartButton(10);
+  if(!pingInterval) startPingLoop();
 }
 
 function renderReadyStatus(){
@@ -5945,16 +6005,40 @@ function renderReadyStatus(){
   box.innerHTML = '';
   onlinePlayers.forEach(p=>{
     const ready = p.vote_for === 'READY';
-    const div = document.createElement('div');
-    div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:10px 14px;background:#fff;border-radius:16px;';
-    div.innerHTML = `
-      <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;border:2px solid ${ready?'#22c55e':'#eee'};flex-shrink:0;">
-        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.avatar_seed)}" style="width:100%;height:100%;object-fit:cover;">
+    const canKick = isHost && p.client_id !== CLIENT_ID;
+    const slot = document.createElement('div');
+    slot.className = 'ready-slot' + (ready ? ' is-ready' : '');
+    const pingMs = p.ping_ms || 0;
+    slot.innerHTML = `
+      <div class="ready-av-wrap">
+        ${canKick ? `<div class="ready-kick" onclick="event.stopPropagation();vib('medium');kickPlayer('${p.client_id}','${p.name}')">✕</div>` : ''}
+        <div class="ready-av"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.avatar_seed)}" loading="lazy"></div>
+        <div class="ready-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
       </div>
-      <div style="flex:1;font-size:14px;font-weight:700;">${p.name}</div>
-      <div style="font-size:12px;font-weight:800;color:${ready?'#16a34a':'#aaa'};">${ready?'ئامادەیە ✓':'چاوەڕوانە...'}</div>`;
-    box.appendChild(div);
+      <div class="ready-name">${p.name}</div>
+      <div class="ready-ping ${pingClass(pingMs)}">${pingMs>0?pingMs+'ms':'...'}</div>`;
+    box.appendChild(slot);
   });
+}
+
+let forceStartLockTimer = null;
+function lockForceStartButton(seconds){
+  const btn = document.getElementById('onlineForceStartBtn');
+  if(!btn) return;
+  clearInterval(forceStartLockTimer);
+  let remain = seconds;
+  btn.classList.add('force-start-lock');
+  btn.innerText = `دەستپێکردن بەبێ چاوەڕوانی (${remain})`;
+  forceStartLockTimer = setInterval(()=>{
+    remain--;
+    if(remain <= 0){
+      clearInterval(forceStartLockTimer);
+      btn.classList.remove('force-start-lock');
+      btn.innerText = 'دەستپێکردن بەبێ چاوەڕوانی (هۆست)';
+    } else {
+      btn.innerText = `دەستپێکردن بەبێ چاوەڕوانی (${remain})`;
+    }
+  }, 1000);
 }
 
 async function confirmForceStart(){
@@ -6019,23 +6103,42 @@ async function confirmEndOnlineRound(){
 }
 
 /* ── دەنگدان ── */
+/* ── هاوکاتکردنی UI بۆ گۆڕانی لیستی یاریزانان (کیک/چوونەژوورەوە) ── */
+function syncOnlinePlayerUI(){
+  if(!document.getElementById('onlineCardScreen').classList.contains('hidden')) renderReadyStatus();
+  if(!document.getElementById('onlineVotingScreen').classList.contains('hidden')) refreshOnlineVoteList();
+}
+
+/* ── دەنگدان ── */
 function showOnlineVoting(room){
   showScreen('onlineVotingScreen');
   onlineSelectedVote = null;
+  refreshOnlineVoteList();
+  document.getElementById('onlineVoteBtn').innerText = 'دەنگدان';
+  document.getElementById('onlineVoteBtn').classList.remove('ready');
+}
+
+function refreshOnlineVoteList(){
   const list = document.getElementById('onlineVoteList');
+  if(!list) return;
+  const prevSelected = onlineSelectedVote;
   list.innerHTML = '';
+  let stillValid = false;
   onlinePlayers.forEach(p=>{
     if(p.client_id === CLIENT_ID) return;
     const div = document.createElement('div');
-    div.className = 'dadga-suspect-item';
+    div.className = 'dadga-suspect-item' + (p.client_id === prevSelected ? ' selected' : '');
+    if(p.client_id === prevSelected) stillValid = true;
     div.onclick = ()=>{ vib('light'); selectOnlineVote(p.client_id, div); };
     div.innerHTML = `<div class="dadga-suspect-avatar"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.avatar_seed)}"></div>
       <div class="dadga-suspect-name">${p.name}</div>
       <div class="dadga-suspect-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>`;
     list.appendChild(div);
   });
-  document.getElementById('onlineVoteBtn').innerText = 'دەنگدان';
-  document.getElementById('onlineVoteBtn').classList.remove('ready');
+  if(!stillValid){
+    onlineSelectedVote = null;
+    document.getElementById('onlineVoteBtn').classList.remove('ready');
+  }
 }
 function selectOnlineVote(id, el){
   onlineSelectedVote = id;
