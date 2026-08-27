@@ -3378,6 +3378,24 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
     </div>
   </div>
 </div>
+<!-- JOIN CODE MODAL -->
+<div class="review-popup-overlay" id="joinCodeOverlay">
+  <div class="review-popup-sheet">
+    <div class="review-popup-handle"></div>
+    <div class="review-popup-title">کۆدی ژوور بنووسە</div>
+    <div class="review-popup-sub" id="joinCodeHostLabel">ژووری ...</div>
+    <div style="margin-bottom:16px;">
+      <input type="text" id="joinCodeModalInput" class="review-input" placeholder="کۆدی ژوور" autocomplete="off"
+        style="text-transform:uppercase;text-align:center;font-weight:800;letter-spacing:4px;font-size:20px;margin-bottom:0;"
+        oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"
+        onkeydown="if(event.key==='Enter'){vib();confirmJoinCodeModal();}">
+    </div>
+    <div class="review-popup-btns">
+      <button class="review-popup-yes" onclick="vib();confirmJoinCodeModal()">چوونەژوورەوە</button>
+      <button class="review-popup-no" onclick="vib();closeJoinCodeModal()">پاشگەزبوونەوە</button>
+    </div>
+  </div>
+</div>
 
 <section class="screen hidden" id="onlineChooseScreen">
   <div class="screen-top-bar">
@@ -5969,22 +5987,43 @@ async function loadPublicRooms(){
   });
 }
 
-async function promptJoinRoom(code, hostName){
+let _joinCodeTarget = null;
+
+function promptJoinRoom(code, hostName){
   const name = document.getElementById('onlinePlayerName').value.trim();
   if(!name){
     vib('error');
     showModal({title:"ناوت بنووسە", msg:"تکایە پێش چوونەژوورەوە ناوی خۆت بنووسە.", icon:"warn"});
     return;
   }
-  const entered = prompt(`کۆدی ژووری "${hostName}" بنووسە:`);
-  if(entered === null) return;
-  const clean = entered.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
-  if(!clean || clean !== code.toUpperCase()){
+  _joinCodeTarget = { code, hostName };
+  document.getElementById('joinCodeHostLabel').innerText = `ژووری ${hostName}`;
+  document.getElementById('joinCodeModalInput').value = '';
+  document.getElementById('joinCodeModalInput').classList.remove('input-error');
+  document.getElementById('joinCodeOverlay').classList.add('active');
+  setTimeout(()=>document.getElementById('joinCodeModalInput').focus(), 300);
+}
+
+function closeJoinCodeModal(){
+  document.getElementById('joinCodeOverlay').classList.remove('active');
+  _joinCodeTarget = null;
+}
+
+async function confirmJoinCodeModal(){
+  if(!_joinCodeTarget) return;
+  const input = document.getElementById('joinCodeModalInput');
+  const clean = input.value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(!clean || clean !== _joinCodeTarget.code.toUpperCase()){
     vib('error');
-    showModal({title:"کۆد هەڵەیە", msg:"کۆدەکە ڕاست نییە، دووبارە هەوڵبدەرەوە.", icon:"err"});
+    input.classList.remove('input-shake');
+    void input.offsetWidth;
+    input.classList.add('input-shake','input-error');
     return;
   }
-  await joinOnlineRoomByCode(code, name);
+  const name = document.getElementById('onlinePlayerName').value.trim();
+  const target = _joinCodeTarget;
+  closeJoinCodeModal();
+  await joinOnlineRoomByCode(target.code, name);
 }
 
 /* ── سنووردارکردنی ناوی یاریزان بە پیتی کوردی — وەک مۆدی ئۆفڵاین ── */
@@ -6072,11 +6111,12 @@ function subscribeRoom(){
             updatePingDom(newRow.client_id, newRow.ping_ms);
             return;
           }
-          if(isOnlyReadyDiff(cached, newRow)){
+                    if(isOnlyReadyDiff(cached, newRow)){
             cached.vote_for = newRow.vote_for;
             cached.ping_ms = newRow.ping_ms;
             updateReadyDom(newRow.client_id, newRow.vote_for === 'READY');
-            if(isHost) checkAllReady();
+            syncOnlinePlayerUI();
+            if(isHost){ checkAllReady(); checkAllVoted(); }
             return;
           }
         }
