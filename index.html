@@ -5916,6 +5916,9 @@ function enterLobby(){
 function subscribeRoom(){
   if(roomChannel) sb.removeChannel(roomChannel);
   roomChannel = sb.channel('room_' + onlineRoomCode)
+    .on('broadcast', { event:'player_kicked' }, ({ payload }) => {
+      handleKickBroadcast(payload.clientId, payload.name);
+    })
     .on('postgres_changes', { event:'*', schema:'public', table:'room_players', filter:`room_code=eq.${onlineRoomCode}` },
       async (payload) => {
         if(payload.eventType === 'UPDATE' && payload.new){
@@ -5948,6 +5951,11 @@ function subscribeRoom(){
 async function refreshLobbyPlayers(){
   const { data } = await sb.from('room_players').select('*').eq('room_code', onlineRoomCode).order('joined_at');
   onlinePlayers = data || [];
+  refreshLobbyPlayersUI();
+}
+
+/* تەنها ری‌ڕێندەری DOM — بەبێ fetch، بۆ نوێکردنەوەی خێرا لە کاتی کیک */
+function refreshLobbyPlayersUI(){
   const box = document.getElementById('lobbyPlayersList');
   if(!box) return;
   box.innerHTML = '';
@@ -5965,12 +5973,44 @@ async function refreshLobbyPlayers(){
   });
   document.getElementById('lobbyCount').innerText = onlinePlayers.length + ' / ١٠ یاریزان';
 }
-
 async function kickPlayer(clientId, name){
   const yes = await showModal({title:"دەرکردنی یاریزان", msg:`ئایا دڵنیایت لە دەرکردنی ${name}؟`, icon:"warn", confirm:true});
   if(!yes) return;
-  await sb.from('room_players').delete().eq('room_code', onlineRoomCode).eq('client_id', clientId);
+
+  // ١. یەکسەر لای هۆست خۆی نوێ بکەرەوە (optimistic)
+  onlinePlayers = onlinePlayers.filter(p => p.client_id !== clientId);
+  refreshLobbyPlayersUI();
+  syncOnlinePlayerUI();
   vib('success');
+
+  // ٢. ڕاستەوخۆ بۆ هەموو ئامێرەکانی تر broadcast بکە — خێراترە لە دیتابەیس
+  roomChannel.send({
+    type: 'broadcast',
+    event: 'player_kicked',
+    payload: { clientId, name }
+  });
+
+  // ٣. لە دیتابەیس بیسڕەوە بۆ مانەوەی دروستی
+  await sb.from('room_players').delete().eq('room_code', onlineRoomCode).eq('client_id', clientId);
+}
+
+/* وەرگرتنی broadcast‌ی کیک — بۆ هەموو ئامێرەکان دەستبەجێ */
+function handleKickBroadcast(clientId, name){
+  if(clientId === CLIENT_ID){
+    // خۆم کیک کراوم
+    vib('error');
+    showModal({title:"دەرکراویت", msg:"هۆست تۆی لە ژوورەکە دەرکرد.", icon:"err"});
+    if(roomChannel) sb.removeChannel(roomChannel);
+    clearInterval(roundTimerInterval);
+    stopPingLoop();
+    onlineRoomCode = null; isHost = false; onlinePlayers = [];
+    showScreen('screen1');
+    return;
+  }
+  // یاریزانێکی تر کیک کراوە — یەکسەر لای من نوێ بکەرەوە
+  onlinePlayers = onlinePlayers.filter(p => p.client_id !== clientId);
+  refreshLobbyPlayersUI();
+  syncOnlinePlayerUI();
 }
 function copyRoomCode(){
   navigator.clipboard?.writeText(onlineRoomCode).then(()=>{
