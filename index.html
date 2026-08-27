@@ -6395,7 +6395,6 @@ function renderAllPublicRooms(){
   box.innerHTML = '';
   codes.forEach(code=> box.appendChild(buildRoomCard(code)));
 }
-
 function buildRoomCard(code){
   const r = publicRoomsCache[code];
   const div = document.createElement('div');
@@ -6404,12 +6403,16 @@ function buildRoomCard(code){
   div.setAttribute('data-room', code);
   div.onclick = ()=>{ vib(); promptJoinRoom(code, publicRoomsCache[code].hostName); };
   div.innerHTML = `
-    <div class="avatar"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(r.avatarSeed)}" loading="lazy"></div>
+    <div class="avatar-disc-wrap">
+      <div class="avatar"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(r.avatarSeed)}" loading="lazy"></div>
+      <div style="position:absolute;bottom:-2px;right:-2px;width:19px;height:19px;border-radius:50%;background:#22c55e;border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 24 24" width="11" height="11" fill="#fff"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      </div>
+    </div>
     <div class="player-name">ژووری ${r.hostName}<div class="room-count-label" style="font-size:12px;font-weight:700;opacity:.55;margin-top:2px;">${r.count} / ١٠ یاریزان</div></div>
     <svg viewBox="0 0 24 24" width="20" height="20" style="fill:#bbb;flex-shrink:0;"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>`;
   return div;
 }
-
 function updateRoomCardCount(code){
   const box = document.getElementById('publicRoomsList');
   if(!box) return;
