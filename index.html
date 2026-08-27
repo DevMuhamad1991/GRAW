@@ -5947,44 +5947,161 @@ function generateRoomCode(){
 
 /* ── فۆرماتی خۆکاری کۆدی ژوور و پاست ── */
 /* ── لیستی ژوورە بەردەستەکان (چاوەڕوانی) ── */
-let publicRoomsInterval = null;
+/* ── لیستی ژوورە بەردەستەکان (realtime، بەبێ refresh) ── */
+let publicRoomsChannel = null;
+let publicRoomsCache = {}; // code -> {hostName, avatarSeed, count}
 
 function startPublicRoomsPolling(){
   stopPublicRoomsPolling();
-  loadPublicRooms();
-  publicRoomsInterval = setInterval(loadPublicRooms, 4000);
-}
-function stopPublicRoomsPolling(){
-  clearInterval(publicRoomsInterval);
-  publicRoomsInterval = null;
+  loadPublicRoomsInitial();
+  subscribePublicRooms();
 }
 
-async function loadPublicRooms(){
+function stopPublicRoomsPolling(){
+  if(publicRoomsChannel){ sb.removeChannel(publicRoomsChannel); publicRoomsChannel = null; }
+  publicRoomsCache = {};
+}
+
+async function loadPublicRoomsInitial(){
   const box = document.getElementById('publicRoomsList');
   if(!box) return;
+  box.innerHTML = '<div class="stat-empty">چاوەڕوانبە...</div>';
   const { data: rooms } = await sb.from('rooms').select('*').eq('status','lobby').order('created_at', { ascending:false });
+  publicRoomsCache = {};
   if(!rooms || rooms.length === 0){
-    box.innerHTML = '<div class="stat-empty">هیچ ژوورێک ئێستا بەردەست نییە</div>';
+    renderPublicRoomsEmpty();
     return;
   }
   const codes = rooms.map(r=>r.code);
   const { data: allPlayers } = await sb.from('room_players').select('room_code,name,avatar_seed,is_host').in('room_code', codes);
-
-  box.innerHTML = '';
   rooms.forEach(r=>{
     const rp = (allPlayers||[]).filter(p=>p.room_code===r.code);
     const host = rp.find(p=>p.is_host);
-    const hostName = host ? host.name : 'نەناسراو';
-    const div = document.createElement('div');
-    div.className = 'player-item';
-    div.style.cursor = 'pointer';
-    div.onclick = ()=>{ vib(); promptJoinRoom(r.code, hostName); };
-    div.innerHTML = `
-      <div class="avatar"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(host?host.avatar_seed:r.code)}" loading="lazy"></div>
-      <div class="player-name">ژووری ${hostName}<div style="font-size:12px;font-weight:700;opacity:.55;margin-top:2px;">${rp.length} / ١٠ یاریزان</div></div>
-      <svg viewBox="0 0 24 24" width="20" height="20" style="fill:#bbb;flex-shrink:0;"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>`;
-    box.appendChild(div);
+    publicRoomsCache[r.code] = {
+      hostName: host ? host.name : 'نەناسراو',
+      avatarSeed: host ? host.avatar_seed : r.code,
+      count: rp.length
+    };
   });
+  renderAllPublicRooms();
+}
+
+function renderPublicRoomsEmpty(){
+  const box = document.getElementById('publicRoomsList');
+  if(box) box.innerHTML = '<div class="stat-empty">هیچ ژوورێک ئێستا بەردەست نییە</div>';
+}
+
+function renderAllPublicRooms(){
+  const box = document.getElementById('publicRoomsList');
+  if(!box) return;
+  const codes = Object.keys(publicRoomsCache);
+  if(codes.length === 0){ renderPublicRoomsEmpty(); return; }
+  box.innerHTML = '';
+  codes.forEach(code=> box.appendChild(buildRoomCard(code)));
+}
+
+function buildRoomCard(code){
+  const r = publicRoomsCache[code];
+  const div = document.createElement('div');
+  div.className = 'player-item';
+  div.style.cursor = 'pointer';
+  div.setAttribute('data-room', code);
+  div.onclick = ()=>{ vib(); promptJoinRoom(code, publicRoomsCache[code].hostName); };
+  div.innerHTML = `
+    <div class="avatar"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(r.avatarSeed)}" loading="lazy"></div>
+    <div class="player-name">ژووری ${r.hostName}<div class="room-count-label" style="font-size:12px;font-weight:700;opacity:.55;margin-top:2px;">${r.count} / ١٠ یاریزان</div></div>
+    <svg viewBox="0 0 24 24" width="20" height="20" style="fill:#bbb;flex-shrink:0;"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>`;
+  return div;
+}
+
+function updateRoomCardCount(code){
+  const box = document.getElementById('publicRoomsList');
+  if(!box) return;
+  const card = box.querySelector(`[data-room="${code}"]`);
+  if(!card) return;
+  const label = card.querySelector('.room-count-label');
+  if(label) label.innerText = `${publicRoomsCache[code].count} / ١٠ یاریزان`;
+}
+
+function addRoomCard(code){
+  const box = document.getElementById('publicRoomsList');
+  if(!box) return;
+  if(box.querySelector('.stat-empty')) box.innerHTML = '';
+  if(box.querySelector(`[data-room="${code}"]`)) return;
+  const card = buildRoomCard(code);
+  box.insertBefore(card, box.firstChild);
+}
+
+function removeRoomCard(code){
+  const box = document.getElementById('publicRoomsList');
+  if(!box) return;
+  const card = box.querySelector(`[data-room="${code}"]`);
+  if(card) card.remove();
+  if(Object.keys(publicRoomsCache).length === 0) renderPublicRoomsEmpty();
+}
+
+async function refreshRoomCardFull(code){
+  const { data: rp } = await sb.from('room_players').select('*').eq('room_code', code);
+  if(!rp || !publicRoomsCache[code]) return;
+  const host = rp.find(p=>p.is_host);
+  publicRoomsCache[code].hostName = host ? host.name : 'نەناسراو';
+  publicRoomsCache[code].avatarSeed = host ? host.avatar_seed : code;
+  publicRoomsCache[code].count = rp.length;
+  const box = document.getElementById('publicRoomsList');
+  const oldCard = box && box.querySelector(`[data-room="${code}"]`);
+  if(oldCard){
+    const newCard = buildRoomCard(code);
+    oldCard.replaceWith(newCard);
+  }
+}
+
+function subscribePublicRooms(){
+  publicRoomsChannel = sb.channel('public_rooms_browser')
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'rooms' }, (payload)=>{
+      const room = payload.new;
+      if(room.status !== 'lobby') return;
+      publicRoomsCache[room.code] = { hostName:'نەناسراو', avatarSeed: room.code, count: 0 };
+      addRoomCard(room.code);
+      // زانیاری هۆست کەمێک دواتر دێت، بۆیە نوێی دەکەینەوە
+      setTimeout(()=> refreshRoomCardFull(room.code), 600);
+    })
+    .on('postgres_changes', { event:'UPDATE', schema:'public', table:'rooms' }, (payload)=>{
+      const room = payload.new;
+      if(room.status !== 'lobby' && publicRoomsCache[room.code]){
+        delete publicRoomsCache[room.code];
+        removeRoomCard(room.code);
+      }
+    })
+    .on('postgres_changes', { event:'DELETE', schema:'public', table:'rooms' }, (payload)=>{
+      const code = payload.old?.code;
+      if(code && publicRoomsCache[code]){
+        delete publicRoomsCache[code];
+        removeRoomCard(code);
+      }
+    })
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'room_players' }, (payload)=>{
+      const p = payload.new;
+      if(publicRoomsCache[p.room_code]){
+        publicRoomsCache[p.room_code].count++;
+        if(p.is_host){
+          publicRoomsCache[p.room_code].hostName = p.name;
+          publicRoomsCache[p.room_code].avatarSeed = p.avatar_seed;
+        }
+        updateRoomCardCount(p.room_code);
+      }
+    })
+    .on('postgres_changes', { event:'DELETE', schema:'public', table:'room_players' }, (payload)=>{
+      const p = payload.old;
+      const code = p?.room_code;
+      if(code && publicRoomsCache[code]){
+        publicRoomsCache[code].count = Math.max(0, publicRoomsCache[code].count - 1);
+        updateRoomCardCount(code);
+      } else if(!code){
+        // REPLICA IDENTITY FULL دانەمەزراوە — بەبێ ئاگاداری تەواو refresh دەکەین
+        loadPublicRoomsInitial();
+      }
+    })
+    .subscribe();
 }
 
 let _joinCodeTarget = null;
