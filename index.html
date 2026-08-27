@@ -2495,6 +2495,8 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   font-weight:800;font-size:var(--fs-sm);color:#999;cursor:pointer;transition:.2s;
   font-family:'Noto Sans Arabic',sans-serif;}
 .mode-btn.active{background:#111;color:#ffd400;}
+#modeOffline.active{background:#888 !important;color:#fff !important;}
+#modeOnline.active{background:#22c55e !important;color:#fff !important;}
 
 .room-code-box{
   background:linear-gradient(135deg,#111,#2a2a2a);
@@ -2721,7 +2723,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
     </div>
   </div>
 
-<button class="start-btn" onclick="vib();handleModeStart()">دەستپێکردنی یاری</button>
+<button class="start-btn" id="mainStartBtn" onclick="vib();handleModeStart()">دەستپێکردنی یاری</button>
 
   <div class="minp-err" id="minpErr">
     <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
@@ -3689,6 +3691,11 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 </div>
 <div class="suggestion-portal" id="suggPortal"></div>
 <div id="joinToastStack" style="position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:5000;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;"></div>
+
+<!-- LEAVE ROOM -->
+<button class="chat-fab hidden" id="leaveRoomFab" style="left:auto;right:clamp(14px,4vw,26px);background:#ff4d4d;" onclick="vib();confirmLeaveOnlineGame()">
+  <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+</button>
 
 <!-- CHAT -->
 <button class="chat-fab hidden" id="chatFab" onclick="vib();toggleChatPanel()">
@@ -6076,11 +6083,33 @@ function renderChatQuickButtons(){
 }
 renderChatQuickButtons();
 
-function showChatFab(){ document.getElementById('chatFab')?.classList.remove('hidden'); syncChatMuteUI(); }
+function showChatFab(){
+  document.getElementById('chatFab')?.classList.remove('hidden');
+  document.getElementById('leaveRoomFab')?.classList.remove('hidden');
+  syncChatMuteUI();
+}
 function hideChatFab(){
   document.getElementById('chatFab')?.classList.add('hidden');
+  document.getElementById('leaveRoomFab')?.classList.add('hidden');
   document.getElementById('chatPanel')?.classList.remove('open');
   chatOpen = false;
+}
+
+async function confirmLeaveOnlineGame(){
+  const yes = await showModal({title:"دەرچوون لە یاری", msg:"دڵنیایت لە دەرچوون؟ ناتوانیت بگەڕێیتەوە ئەم یارییە.", icon:"danger", dangerConfirm:true});
+  if(!yes) return;
+  if(!onlineRoomCode){ showScreen('screen1'); return; }
+  await sb.from('room_players').delete().eq('room_code', onlineRoomCode).eq('client_id', CLIENT_ID);
+  if(isHost) await sb.from('rooms').delete().eq('code', onlineRoomCode);
+  if(roomChannel) sb.removeChannel(roomChannel);
+  clearInterval(roundTimerInterval);
+  stopPingLoop();
+  clearOnlineSession();
+  onlineRoomCode = null; isHost = false; onlinePlayers = [];
+  hideChatFab();
+  clearChatMessages();
+  vib('success');
+  showScreen('screen1');
 }
 function toggleChatPanel(){
   const panel = document.getElementById('chatPanel');
@@ -6223,7 +6252,7 @@ function appendChatMessage(payload, isMine){
   const muteBtnHtml = (isHost && !isMine)
     ? `<button class="mute-toggle-btn ${senderMuted?'is-muted':''}" data-mute-for="${payload.clientId}"
         style="width:26px;height:26px;border-radius:9px;flex-shrink:0;background:rgba(0,0,0,.05);border:none;display:flex;align-items:center;justify-content:center;"
-        onclick="vib('medium');toggleMutePlayer('${payload.clientId}',${senderMuted})">
+onclick="vib('medium');toggleMutePlayer('${payload.clientId}')">
         ${senderMuted
           ? '<svg viewBox="0 0 24 24" width="13" height="13"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#c62828" opacity=".35"/><line x1="3" y1="3" x2="21" y2="21" stroke="#c62828" stroke-width="2.4" stroke-linecap="round"/></svg>'
           : '<svg viewBox="0 0 24 24" width="13" height="13" fill="#888"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>'
@@ -6240,12 +6269,12 @@ function clearChatMessages(){
   document.getElementById('chatMessages').innerHTML = '';
   chatUnread = 0; updateChatBadge();
 }
-async function toggleMutePlayer(clientId, currentlyMuted){
+async function toggleMutePlayer(clientId){
   vib('medium');
-  const newMuted = !currentlyMuted;
-
-  // یەکسەر نوێی بکەرەوە — تەنها ئەم یاریزانە، بەبێ چاوەڕوانی دیتابەیس
+  // ── هەمیشە دۆخی ئێستای ڕاستی وەردەگرین لە onlinePlayers، نەک لە پارامیتەری کۆن ──
   const p = onlinePlayers.find(x => x.client_id === clientId);
+  const newMuted = !(p && p.is_muted);
+
   if(p) p.is_muted = newMuted;
   updateMuteDom(clientId, newMuted);
   if(clientId === CLIENT_ID) syncChatMuteUI();
@@ -6291,6 +6320,20 @@ function toggleGameMode(mode){
   document.querySelectorAll('.offline-only').forEach(el=>{
     el.classList.toggle('locked', mode==='online');
   });
+  const mainBtn = document.getElementById('mainStartBtn');
+  if(mainBtn){
+    if(mode === 'online'){
+      mainBtn.innerText = 'دەستپێکردنی یاری ئۆنڵاین 🌐';
+      mainBtn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+      mainBtn.style.color = '#fff';
+      mainBtn.style.boxShadow = '0 6px 20px rgba(34,197,94,.35)';
+    } else {
+      mainBtn.innerText = 'دەستپێکردنی یاری';
+      mainBtn.style.background = '';
+      mainBtn.style.color = '';
+      mainBtn.style.boxShadow = '';
+    }
+  }
 }
 /* بەکارهێنانی هەمان دوگمەی "دەستپێکردنی یاری" ی سەرەکی — گۆڕانکاری بچووک */
 function handleModeStart(){
@@ -6523,8 +6566,15 @@ function onOnlineNameInput(){
 async function createOnlineRoom(){
   const name = document.getElementById('onlinePlayerName').value.trim();
   if(!name){ vib('error'); showModal({title:"ناوت بنووسە", msg:"تکایە ناوی خۆت بنووسە.", icon:"warn"}); return; }
-  isHost = true;
 
+  // ── پشکنین: ئایا ئەم ناوە ئێستا لەلایەن کەسێکی تر بۆ هۆستکردنی ژوورێک بەکاردێت؟ ──
+  const { data: existingHosts } = await sb.from('room_players').select('name').eq('is_host', true);
+  if(existingHosts && existingHosts.some(p => p.name === name)){
+    vib('error');
+    showModal({title:"ناوەکە بەکارهاتووە", msg:"کەسێکی تر ئێستا بەم ناوە ژوورێکی هۆست کردووە. تکایە ناوێکی تر هەڵبژێرە بۆ ئەوەی تێکەڵ نەبن.", icon:"warn"});
+    return;
+  }
+  isHost = true;
   const code = generateRoomCode();
   const { error: roomErr } = await sb.from('rooms').insert({ code, host_client_id: CLIENT_ID, status: 'lobby' });
   if(roomErr){ vib('error'); showModal({title:"هەڵە", msg:"نەتوانرا ژوور دروست بکرێت.", icon:"err"}); return; }
@@ -6663,7 +6713,7 @@ function refreshLobbyPlayersUI(){
     const canKick = isHost && p.client_id !== CLIENT_ID;
     const pingMs = p.ping_ms || 0;
     const pc = pingClass(pingMs);
-        const muteBtn = canKick ? `<button class="mute-toggle-btn ${p.is_muted?'is-muted':''}" onclick="toggleMutePlayer('${p.client_id}',${!!p.is_muted})">
+        const muteBtn = ${canKick ? `<button class="mute-toggle-btn ${p.is_muted?'is-muted':''}" onclick="toggleMutePlayer('${p.client_id}')">
         ${p.is_muted
           ? '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#c62828" opacity=".35"/><line x1="3" y1="3" x2="21" y2="21" stroke="#c62828" stroke-width="2.4" stroke-linecap="round"/></svg>'
           : '<svg viewBox="0 0 24 24" width="16" height="16" fill="#555"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>'
