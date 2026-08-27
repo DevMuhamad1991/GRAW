@@ -2732,12 +2732,83 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 .contact-visitor-strip svg{width:22px;height:22px;fill:#b88600;flex-shrink:0;}
 .contact-visitor-num{font-size:clamp(18px,5vw,22px);font-weight:800;color:#111;line-height:1;}
 .contact-visitor-label{font-size:11px;color:#999;font-weight:700;margin-top:2px;}
+.mode-btn{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;}
+.mode-new-badge{
+  position:absolute;
+  top:-9px;right:-6px;
+  background:linear-gradient(135deg,#ff3b3b,#c62828);
+  color:#fff;
+  font-size:8.5px;
+  font-weight:800;
+  letter-spacing:.3px;
+  padding:2.5px 6px;
+  border-radius:999px;
+  box-shadow:0 2px 8px rgba(255,59,59,.45);
+  animation:modeNewPulse 1.6s ease infinite;
+  line-height:1;
+}
+@keyframes modeNewPulse{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.12);}
+}
+/* ══ DISCORD FEATURED BLOCK ══ */
+.discord-block{
+  display:block;
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(150deg,#5865F2,#4752C4);
+  margin:14px 20px 0;
+  border-radius:22px;
+  padding:18px 18px 0;
+  text-decoration:none;
+  box-shadow:0 10px 26px rgba(88,101,242,.32);
+  transition:transform .25s cubic-bezier(.34,1.3,.64,1);
+}
+.discord-block:active{transform:scale(.97);}
+.discord-block-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 85% 0%,rgba(255,255,255,.18) 0%,transparent 55%);
+  pointer-events:none;
+}
+.discord-block-top{position:relative;z-index:1;display:flex;align-items:center;gap:12px;}
+.discord-block-icon{
+  width:46px;height:46px;border-radius:14px;
+  background:rgba(255,255,255,.16);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.discord-block-icon svg{width:24px;height:24px;}
+.discord-block-body{flex:1;min-width:0;}
+.discord-block-title{font-size:var(--fs-base);font-weight:800;color:#fff;}
+.discord-block-sub{font-size:11px;color:rgba(255,255,255,.65);font-weight:700;margin-top:2px;}
+.discord-block-join{
+  background:#fff;color:#4752C4;
+  font-size:12px;font-weight:800;
+  padding:8px 16px;border-radius:999px;flex-shrink:0;
+}
+.discord-block-stats{
+  position:relative;z-index:1;
+  display:flex;align-items:center;
+  gap:14px;
+  margin-top:16px;
+  padding:12px 4px 14px;
+  border-top:1px solid rgba(255,255,255,.15);
+}
+.discord-stat{display:flex;align-items:center;gap:6px;}
+.discord-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.discord-dot.online{background:#3ba55d;box-shadow:0 0 0 0 rgba(59,165,93,.6);animation:discordPulse 1.8s ease infinite;}
+.discord-dot.total{background:rgba(255,255,255,.5);}
+@keyframes discordPulse{
+  0%{box-shadow:0 0 0 0 rgba(59,165,93,.6);}
+  70%{box-shadow:0 0 0 6px rgba(59,165,93,0);}
+  100%{box-shadow:0 0 0 0 rgba(59,165,93,0);}
+}
+.discord-stat-num{font-size:13px;font-weight:800;color:#fff;}
+.discord-stat-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.6);}
+.discord-stat-divider{width:1px;height:14px;background:rgba(255,255,255,.2);}
 </style>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  
   <div id="loadingScreen">
   <div class="splash-logo">
     <img src="sexur.webp" alt="سیخور">
@@ -2800,8 +2871,15 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
       <div>
   <label>دۆخی یاری</label>
   <div class="mode-toggle">
-    <button class="mode-btn active" id="modeOffline" onclick="toggleGameMode('offline')">ئۆفڵاین</button>
-    <button class="mode-btn" id="modeOnline" onclick="toggleGameMode('online')">ئۆنڵاین</button>
+    <button class="mode-btn active" id="modeOffline" onclick="toggleGameMode('offline')">
+      <svg viewBox="0 0 24 24" width="16" height="16" style="fill:currentColor;flex-shrink:0;"><path d="M15 7.5V2H9v5.5l3 3 3-3zM7.5 9H2v6h5.5l3-3-3-3zM9 16.5V22h6v-5.5l-3-3-3 3zM16.5 9l-3 3 3 3H22V9h-5.5z"/></svg>
+      ئۆفڵاین
+    </button>
+    <button class="mode-btn" id="modeOnline" onclick="toggleGameMode('online')">
+      <svg viewBox="0 0 24 24" width="16" height="16" style="fill:currentColor;flex-shrink:0;"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      ئۆنڵاین
+      <span class="mode-new-badge">NEW</span>
+    </button>
   </div>
 </div>
       
@@ -2870,10 +2948,6 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
           </div>
           <div class="contact-hero-name">Dev.Muhamad</div>
           <div class="contact-hero-role">Kurdish Developer & Designer</div>
-          <a class="creator-profile-wa" href="https://wa.me/9647509628683" target="_blank" rel="noopener" onclick="vib()">
-            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.528 5.858L.057 23.5l5.797-1.517A11.93 11.93 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.006-1.367l-.36-.214-3.713.973.99-3.618-.234-.372A9.818 9.818 0 1 1 12 21.818z"/></svg>
-            پەیوەندی
-          </a>
         </div>
       </div>
 
@@ -2881,17 +2955,34 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
       <div class="contact-rows">
 
         <!-- دیسکۆرد -->
-        <a class="contact-row" href="https://discord.gg/PASTE_YOUR_INVITE_CODE" target="_blank" rel="noopener" onclick="vib('medium')">
-          <div class="contact-row-icon" style="background:linear-gradient(135deg,#5865F2,#4752C4);">
-            <svg viewBox="0 0 127.14 96.36" style="width:24px;height:24px;">
-              <path fill="#fff" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
-            </svg>
+            <!-- ══ DISCORD FEATURED BLOCK ══ -->
+        <a class="discord-block" id="discordBlock" href="https://discord.gg/driverkurdi" target="_blank" rel="noopener" onclick="vib('medium')">
+          <div class="discord-block-bg"></div>
+          <div class="discord-block-top">
+            <div class="discord-block-icon">
+              <svg viewBox="0 0 127.14 96.36">
+                <path fill="#fff" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+              </svg>
+            </div>
+            <div class="discord-block-body">
+              <div class="discord-block-title"> دیسکۆرد</div>
+              <div class="discord-block-sub">سەردانی دیسکۆردەکەمان بکە بۆ بەسەربردنی کاتێکی خۆش</div>
+            </div>
+            <div class="discord-block-join">جۆین</div>
           </div>
-          <div class="contact-row-body">
-            <div class="contact-row-title">جۆینی دیسکۆرد</div>
-            <div class="contact-row-sub">کۆمەڵگای یاریزانانی سیخور — نوێترین هەواڵ</div>
+          <div class="discord-block-stats">
+            <div class="discord-stat">
+              <span class="discord-dot online"></span>
+              <span class="discord-stat-num" id="discordOnlineCount">--</span>
+              <span class="discord-stat-label">ئۆنڵاین</span>
+            </div>
+            <div class="discord-stat-divider"></div>
+            <div class="discord-stat">
+              <span class="discord-dot total"></span>
+              <span class="discord-stat-num" id="discordMemberCount">--</span>
+              <span class="discord-stat-label">میمبەر</span>
+            </div>
           </div>
-          <div class="contact-row-arrow"><svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></div>
         </a>
 
         <!-- یاری درایڤەری کوردی -->
@@ -5034,6 +5125,23 @@ function copyLink() {
     showModal({title:"کۆپی نەکرا", msg:"لینکەکە دەستی کۆپی بکە: https://sexurgame.com", icon:"warn"});
   });
 }
+
+/* ══ DISCORD LIVE STATS ══ */
+async function loadDiscordStats(){
+  const inviteCode = 'driverkurdi'; // هەمان کۆدی ناو href
+  try{
+    const res = await fetch(`https://discord.com/api/v10/invites/${inviteCode}?with_counts=true`);
+    const data = await res.json();
+    const online = data.approximate_presence_count;
+    const total  = data.approximate_member_count;
+    if(online != null) document.getElementById('discordOnlineCount').innerText = online.toLocaleString('en-US');
+    if(total  != null) document.getElementById('discordMemberCount').innerText  = total.toLocaleString('en-US');
+  }catch(e){
+    document.getElementById('discordOnlineCount').innerText = '?';
+    document.getElementById('discordMemberCount').innerText = '?';
+  }
+}
+window.addEventListener('load', () => setTimeout(loadDiscordStats, 1200));
 
 /* ══════════════════════════════════════
    DADGA SYSTEM
@@ -7246,17 +7354,12 @@ async function showOnlineReveal(room){
       </div>`).join('');
   }
 }
-
 async function nextOnlineRound(){
   await sb.from('rooms').update({ status:'lobby', current_round: (await sb.from('rooms').select('current_round').eq('code',onlineRoomCode).single()).data.current_round + 1 }).eq('code', onlineRoomCode);
 }
-
 /* ئەم فایلانە پێویستیان بە _screens زیادکردنە بۆ ئەوەی showScreen بتوانێت بیانبینێت */
 _screens.push('onlineChooseScreen','onlineLobbyScreen','onlineCardScreen','onlineTimerScreen','onlineVotingScreen','onlineRevealScreen');
 </script>
-
-
-
 <div style="display:none" aria-hidden="true">
   یاری سیخور - یاری کوردی بۆ هاورێیان و خێزان. 
   یاریزانەکان دەبێت سیخورەکە دۆزنەوە. 
