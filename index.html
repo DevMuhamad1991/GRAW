@@ -3368,14 +3368,16 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
     <input type="text" id="onlinePlayerName" placeholder="ناوت بنووسە" autocomplete="off">
   </div>
 
-  <button class="start-btn" onclick="vib();createOnlineRoom()">دروستکردنی ژووری نوێ</button>
-
   <div class="glass input-card" style="margin-top:var(--gap-md);">
-    <label>یان بچۆرە ژوورێکی هەیە</label>
+    <label>کۆدی ژوور (تەنها بۆ چوونەژوورەوە پێویستە)</label>
     <input type="text" id="joinCodeInput" placeholder="کۆدی ژوور بنووسە" autocomplete="off"
       style="text-transform:uppercase;letter-spacing:3px;text-align:center;font-weight:800;">
   </div>
-  <button class="start-btn dark-btn" onclick="vib();joinOnlineRoom()">چوونە ژوورەوە</button>
+  <div style="display:flex;gap:10px;">
+    <button class="start-btn" style="margin-top:0;flex:1;" onclick="vib();createOnlineRoom()">دروستکردنی ژوور</button>
+    <button class="start-btn dark-btn" style="margin-top:0;flex:1;" onclick="vib();joinOnlineRoom()">چوونەژوورەوە</button>
+  </div>
+
 </section>
 
 <!-- لۆبی چاوەڕوانی -->
@@ -3416,6 +3418,13 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
         <div class="mini-cat" data-cat="شوێن" onclick="vib();this.classList.toggle('active')">شوێن</div>
         <div class="mini-cat" data-cat="رەنگ" onclick="vib();this.classList.toggle('active')">رەنگ</div>
       </div>
+     <label style="margin-top:14px;">وشەی تایبەت (ئارەزوومەندانە)</label>
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <input type="text" id="lobbyCustomWordInput" placeholder="وشەیەک بنووسە..." autocomplete="off"
+          onkeydown="if(event.key==='Enter'){vib();addLobbyCustomWord();}">
+        <button class="add-btn" onclick="vib();addLobbyCustomWord()">زیادکردن</button>
+      </div>
+      <div id="lobbyCustomWordTags" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
     </div>
     <div class="glass settings-card">
       <div class="settings-row">
@@ -3440,6 +3449,10 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
       </div>
     </div>
     <button class="start-btn" id="lobbyStartBtn" onclick="vib('medium');startOnlineGame()">دەستپێکردنی یاری</button>
+    <div class="minp-err" id="lobbyMinpErr">
+      <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+      کەمترین یاریزان بۆ دەستپێکردن ٣ کەسە — چاوەڕێی هاوڕێیەکانت بکە
+    </div>
   </div>
 
   <!-- ئەوانی تر ئەمە دەبینن -->
@@ -3480,6 +3493,9 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 
   <div class="hidden" id="onlineTimerWrap" style="text-align:center;margin-top:24px;">
     <div class="timer" id="onlineTimer">00:00</div>
+    <button class="restart-btn dark-btn hidden" id="onlineEndRoundBtn" style="margin-top:18px;" onclick="vib('heavy');confirmEndOnlineRound()">
+      کۆتایی هێنان بە خول (هۆست)
+    </button>
   </div>
 </section>
 
@@ -5678,6 +5694,35 @@ let roomChannel = null;
 let roundTimerInterval = null;
 let onlineCardOpened = false;
 let onlineSelectedVote = null;
+let lobbyCustomWords = [];
+
+function addLobbyCustomWord(){
+  const input = document.getElementById('lobbyCustomWordInput');
+  const val = input.value.trim();
+  if(!val) return;
+  if(lobbyCustomWords.includes(val)){
+    showModal({title:"هەڵەیە", msg:"ئەم وشەیە هەیە.", icon:"err"});
+    return;
+  }
+  lobbyCustomWords.push(val);
+  input.value = '';
+  renderLobbyCustomWordTags();
+}
+function removeLobbyCustomWord(word){
+  lobbyCustomWords = lobbyCustomWords.filter(w => w !== word);
+  renderLobbyCustomWordTags();
+}
+function renderLobbyCustomWordTags(){
+  const box = document.getElementById('lobbyCustomWordTags');
+  if(!box) return;
+  box.innerHTML = '';
+  lobbyCustomWords.forEach(w => {
+    const tag = document.createElement('div');
+    tag.style.cssText = 'display:inline-flex;align-items:center;gap:6px;background:#fff;border:2px solid #ffd400;border-radius:100px;padding:6px 14px;font-size:14px;font-weight:700;';
+    tag.innerHTML = `${w} <button onclick="vib();removeLobbyCustomWord('${w}')" style="background:none;border:none;color:#ff4d4d;font-size:16px;font-weight:900;cursor:pointer;padding:0;line-height:1;">✕</button>`;
+    box.appendChild(tag);
+  });
+}
 
 function toggleGameMode(mode){
   gameMode = mode;
@@ -5765,12 +5810,24 @@ function subscribeRoom(){
   if(roomChannel) sb.removeChannel(roomChannel);
   roomChannel = sb.channel('room_' + onlineRoomCode)
     .on('postgres_changes', { event:'*', schema:'public', table:'room_players', filter:`room_code=eq.${onlineRoomCode}` },
-      () => { refreshLobbyPlayers(); if(isHost) checkAllReady(); if(isHost) checkAllVoted(); })
+      async () => {
+        await refreshLobbyPlayers();
+        if(!isHost && onlineRoomCode && !onlinePlayers.some(p=>p.client_id===CLIENT_ID)){
+          vib('error');
+          showModal({title:"دەرکراویت", msg:"هۆست تۆی لە ژوورەکە دەرکرد.", icon:"err"});
+          if(roomChannel) sb.removeChannel(roomChannel);
+          clearInterval(roundTimerInterval);
+          onlineRoomCode = null; onlinePlayers = [];
+          showScreen('screen1');
+          return;
+        }
+        if(isHost) checkAllReady();
+        if(isHost) checkAllVoted();
+      })
     .on('postgres_changes', { event:'UPDATE', schema:'public', table:'rooms', filter:`code=eq.${onlineRoomCode}` },
       payload => onRoomUpdate(payload.new))
     .subscribe();
 }
-
 async function refreshLobbyPlayers(){
   const { data } = await sb.from('room_players').select('*').eq('room_code', onlineRoomCode).order('joined_at');
   onlinePlayers = data || [];
@@ -5780,15 +5837,21 @@ async function refreshLobbyPlayers(){
   onlinePlayers.forEach(p=>{
     const div = document.createElement('div');
     div.className = 'player-item';
+    const canKick = isHost && p.client_id !== CLIENT_ID;
     div.innerHTML = `<div class="avatar"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.avatar_seed)}"></div>
-      <div class="player-name">${p.name}${p.is_host?' 👑':''}</div>`;
+      <div class="player-name">${p.name}${p.is_host?' 👑':''}</div>
+      ${canKick ? `<button class="remove-player" onclick="vib('medium');kickPlayer('${p.client_id}','${p.name}')">&#x2715;</button>` : ''}`;
     box.appendChild(div);
   });
   document.getElementById('lobbyCount').innerText = onlinePlayers.length + ' / ١٠ یاریزان';
-  const startBtn = document.getElementById('lobbyStartBtn');
-  if(startBtn) startBtn.disabled = onlinePlayers.length < 3;
 }
 
+async function kickPlayer(clientId, name){
+  const yes = await showModal({title:"دەرکردنی یاریزان", msg:`ئایا دڵنیایت لە دەرکردنی ${name}؟`, icon:"warn", confirm:true});
+  if(!yes) return;
+  await sb.from('room_players').delete().eq('room_code', onlineRoomCode).eq('client_id', clientId);
+  vib('success');
+}
 function copyRoomCode(){
   navigator.clipboard?.writeText(onlineRoomCode).then(()=>{
     vib('success');
@@ -5809,13 +5872,24 @@ async function leaveLobby(){
 /* ── دەستپێکردن (هۆست) ── */
 async function startOnlineGame(){
   if(!isHost) return;
-  if(onlinePlayers.length < 3){ vib('error'); showModal({title:"کەمە", msg:"کەمترین یاریزان ٣ کەسە.", icon:"warn"}); return; }
+  if(onlinePlayers.length < 3){
+    vib('error');
+    const err = document.getElementById('lobbyMinpErr');
+    err.classList.remove('show'); void err.offsetWidth; err.classList.add('show');
+    showModal({title:"کەمە", msg:"کەمترین یاریزان بۆ دەستپێکردنی یاری ٣ کەسە. چاوەڕێ بکە هاوڕێیەکانت بچنە ژوورەوە یان کۆدی ژوورەکە بنێرە بۆیان.", icon:"warn"});
+    setTimeout(()=>err.classList.remove('show'),3000);
+    return;
+  }
+  document.getElementById('lobbyMinpErr').classList.remove('show');
 
   const selectedCats = Array.from(document.querySelectorAll('#lobbyCategoryGrid .mini-cat.active')).map(el=>el.dataset.cat);
-  if(selectedCats.length === 0){ vib('error'); showModal({title:"وشە هەڵبژێرە", msg:"لانیکەم یەک جۆری وشە هەڵبژێرە.", icon:"warn"}); return; }
+  if(selectedCats.length === 0 && lobbyCustomWords.length === 0){
+    vib('error'); showModal({title:"وشە هەڵبژێرە", msg:"لانیکەم یەک جۆری وشە یان وشەیەکی تایبەت هەڵبژێرە.", icon:"warn"}); return;
+  }
 
   const pool = [];
   selectedCats.forEach(c => (words[c]||[]).forEach(w => pool.push({w, c})));
+  lobbyCustomWords.forEach(w => pool.push({w, c:'تایبەت'}));
   const chosen = pool[Math.floor(Math.random()*pool.length)];
 
   const spyCountRaw = document.getElementById('lobbySpyCount').value;
@@ -5830,7 +5904,6 @@ async function startOnlineGame(){
     spy_client_ids: spyIds, game_time: gameTime, round_start_at: null
   }).eq('code', onlineRoomCode);
 }
-
 /* ── وەرگرتنی گۆڕانکاری ژوور بۆ هەموو ئامێرەکان ── */
 function onRoomUpdate(room){
   if(room.status === 'playing') showOnlineCard(room);
@@ -5881,6 +5954,7 @@ async function checkAllReady(){
 
 function startOnlineTimer(room){
   document.getElementById('onlineTimerWrap').classList.remove('hidden');
+  document.getElementById('onlineEndRoundBtn').classList.toggle('hidden', !isHost);
   const endTime = new Date(room.round_start_at).getTime() + room.game_time*1000;
   clearInterval(roundTimerInterval);
   roundTimerInterval = setInterval(()=>{
@@ -5893,6 +5967,13 @@ function startOnlineTimer(room){
       if(isHost) sb.from('rooms').update({ status:'voting' }).eq('code', onlineRoomCode);
     }
   },250);
+}
+async function confirmEndOnlineRound(){
+  const yes = await showModal({title:"کۆتایی خول", msg:"دەچیتە بەشی دەنگدان — ناچیتە دادگای مۆدی ئۆفڵاین.", icon:"warn", confirm:true});
+  if(yes && isHost){
+    clearInterval(roundTimerInterval);
+    await sb.from('rooms').update({ status:'voting' }).eq('code', onlineRoomCode);
+  }
 }
 
 /* ── دەنگدان ── */
