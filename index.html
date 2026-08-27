@@ -1730,7 +1730,12 @@ background: rgba(0,0,0,.2);
   background: rgba(0,0,0,.1);
   display: inline-block;
 }
-
+.creator-section-label{
+  font-size:12px;font-weight:800;color:rgba(0,0,0,.35);
+  letter-spacing:.5px;margin:4px 4px 10px;
+  display:flex;align-items:center;gap:7px;
+}
+.creator-section-label svg{width:13px;height:13px;fill:rgba(0,0,0,.3);}
 /* ══ DADGA SYSTEM ══ */
 #dadgaScreen {
   background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
@@ -2785,6 +2790,11 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
         </div>
       </div>
     </div>
+    <!-- ناونیشانی بەشی پشتگیری -->
+    <div class="creator-section-label">
+      <svg viewBox="0 0 24 24"><path d="M20.16 12.594l-7.978 4.539a.365.365 0 01-.363 0l-7.978-4.54a.354.354 0 00-.521.311v1.657c0 .13.07.25.183.315l8.316 4.72c.113.064.25.064.363 0l8.316-4.72a.36.36 0 00.183-.315v-1.657a.354.354 0 00-.521-.31zM12.18 2.148a.365.365 0 00-.364 0L3.5 6.688a.354.354 0 000 .62l8.316 4.719c.113.064.25.064.364 0l8.315-4.72a.354.354 0 000-.619l-8.315-4.54z"/></svg>
+      پشتگیری یاریەکە
+    </div>
 
     <!-- کارتی دۆنەیت — کلیک بکە ژمارە دەکەوێتەوە -->
     <div class="creator-donate-card" id="donateCard">
@@ -2820,6 +2830,13 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
     </div>
 
     <!-- کارتی شەریکردن -->
+    <!-- ناونیشانی بەشی شەریکردن -->
+    <div class="creator-section-label" style="margin-top:20px;">
+      <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+      شەریکردنی یاریەکە
+    </div>
+
+    <!-- کارتی شەریکردن -->
     <div class="creator-share-card">
       <div class="creator-share-top">
         <div class="creator-share-icon">
@@ -2841,6 +2858,12 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
         لینکەکە کۆپی بکە
       </button>
     </div>
+
+  <!-- ناونیشانی بەشی ئامار -->
+  <div class="creator-section-label" style="margin-top:20px;">
+    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+    ئامار
+  </div>
 
   <!-- VISITOR COUNTER CARD -->
 <div style="
@@ -3308,20 +3331,29 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   <div class="wnew-rows">
   <div class="wnew-row">
     <div class="wnew-ico">
-      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
     </div>
     <div>
-      <div class="wnew-rtitle">سیستەمی خول</div>
-      <div class="wnew-rdesc">ئێستا ژمارەی خولەکان هەیە — براوە دیاری دەکەن</div>
+      <div class="wnew-rtitle">یاری ئۆنڵاین </div>
+      <div class="wnew-rdesc">ئێستا دەتوانیت لەگەڵ هاوڕێیانت ئۆنڵاین یاری بکەیت — ژوور دروست بکە، کۆدەکە بنێرە بۆیان</div>
     </div>
   </div>
   <div class="wnew-row">
     <div class="wnew-ico">
-      <svg viewBox="0 0 24 24"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 3.21-1.81 6-4.72 7.28L13 17v5h5l-1.22-1.22C19.91 19.07 22 15.76 22 12c0-5.18-3.95-9.45-9-9.95zM11 2.05C5.95 2.55 2 6.82 2 12c0 3.76 2.09 7.07 5.22 8.78L6 22h5V2.05z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
     </div>
     <div>
-      <div class="wnew-rtitle">خێراکردنی ماڵپەر</div>
-      <div class="wnew-rdesc">ماڵپەری سیخور خێراتر بووە — بەبێ چاوەڕوانی</div>
+      <div class="wnew-rtitle">چاتی ناو یاری</div>
+      <div class="wnew-rdesc">لەکاتی یاری ئۆنڵاین لەگەل یاریزانەکانی تر قسە بکە و گومانەکانت بڵێ</div>
+    </div>
+  </div>
+  <div class="wnew-row">
+    <div class="wnew-ico">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+    </div>
+    <div>
+      <div class="wnew-rtitle">دەنگدان و خاڵی ڕاستەوخۆ</div>
+      <div class="wnew-rdesc">دەنگدان و خشتەی خاڵەکان ئێستا ڕاستەوخۆ نوێ دەبنەوە بۆ هەموو یاریزانەکانی ئۆنڵاین</div>
     </div>
   </div>
 </div>
