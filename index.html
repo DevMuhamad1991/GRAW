@@ -6600,7 +6600,7 @@ async function loadPublicRoomsInitial(){
   const box = document.getElementById('publicRoomsList');
   if(!box) return;
   box.innerHTML = '<div class="stat-empty">چاوەڕوانبە...</div>';
-    const { data: rooms } = await sb.from('rooms').select('*').eq('status','lobby').eq('is_public', true).order('created_at', { ascending:false });
+        const { data: rooms } = await sb.from('rooms').select('*').eq('status','lobby').order('created_at', { ascending:false });
   publicRoomsCache = {};
   if(!rooms || rooms.length === 0){
     renderPublicRoomsEmpty();
@@ -6615,7 +6615,8 @@ async function loadPublicRoomsInitial(){
     publicRoomsCache[r.code] = {
       hostName: host ? host.name : 'نەناسراو',
       avatarSeed: host ? host.avatar_seed : r.code,
-      count: rp.length
+      count: rp.length,
+      isPublic: r.is_public
     };
   });
   renderAllPublicRooms();
@@ -6641,14 +6642,19 @@ function buildRoomCard(code){
   div.style.cursor = 'pointer';
   div.setAttribute('data-room', code);
   div.onclick = ()=>{ vib(); promptJoinRoom(code, publicRoomsCache[code].hostName); };
+  const badgeColor = r.isPublic ? '#22c55e' : '#ff4d4d';
+  const badgeIcon = r.isPublic
+    ? '<svg viewBox="0 0 24 24" width="11" height="11" fill="#fff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>'
+    : '<svg viewBox="0 0 24 24" width="11" height="11" fill="#fff"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>';
+  const roomTypeLabel = r.isPublic ? '' : ' — تایبەت';
   div.innerHTML = `
     <div class="avatar-disc-wrap">
       <div class="avatar"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(r.avatarSeed)}" loading="lazy"></div>
-      <div style="position:absolute;bottom:-2px;right:-2px;width:19px;height:19px;border-radius:50%;background:#22c55e;border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
-        <svg viewBox="0 0 24 24" width="11" height="11" fill="#fff"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <div style="position:absolute;bottom:-2px;right:-2px;width:19px;height:19px;border-radius:50%;background:${badgeColor};border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
+        ${badgeIcon}
       </div>
     </div>
-    <div class="player-name">ژووری ${r.hostName}<div class="room-count-label" style="font-size:12px;font-weight:700;opacity:.55;margin-top:2px;">${r.count} / ١٠ یاریزان</div></div>
+    <div class="player-name">ژووری ${r.hostName}<div class="room-count-label" style="font-size:12px;font-weight:700;opacity:.55;margin-top:2px;">${r.count} / ١٠ یاریزان${roomTypeLabel}</div></div>
     <svg viewBox="0 0 24 24" width="20" height="20" style="fill:#bbb;flex-shrink:0;"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>`;
   return div;
 }
@@ -6766,10 +6772,10 @@ function renderFakeRoomsIntoList(){
 }
 function subscribePublicRooms(){
   publicRoomsChannel = sb.channel('public_rooms_browser')
-    .on('postgres_changes', { event:'INSERT', schema:'public', table:'rooms' }, (payload)=>{
+        .on('postgres_changes', { event:'INSERT', schema:'public', table:'rooms' }, (payload)=>{
       const room = payload.new;
-      if(room.status !== 'lobby' || !room.is_public) return;
-      publicRoomsCache[room.code] = { hostName:'نەناسراو', avatarSeed: room.code, count: 0 };
+      if(room.status !== 'lobby') return;
+      publicRoomsCache[room.code] = { hostName:'نەناسراو', avatarSeed: room.code, count: 0, isPublic: room.is_public };
       addRoomCard(room.code);
       // زانیاری هۆست کەمێک دواتر دێت، بۆیە نوێی دەکەینەوە
       setTimeout(()=> refreshRoomCardFull(room.code), 600);
