@@ -3712,6 +3712,7 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   <div class="chat-quick-row" id="chatQuickRow"></div>
   <div class="chat-input-row">
     <input type="text" id="chatInput" placeholder="پەیامێک بنووسە..." maxlength="80"
+      oninput="onChatInput()"
       onkeydown="if(event.key==='Enter'){vib();sendFreeChatMessage();}">
     <button class="chat-send-btn" onclick="vib();sendFreeChatMessage()">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="#fff"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
@@ -4488,7 +4489,6 @@ function togglePause(){
   vib(isPaused?'medium':'light');
   document.getElementById("pauseOverlay").classList.toggle("active",isPaused);
 }
-
 /* دەستنیشانکردن: ئایا دوگمەی بەردەوامبوون بۆ ئۆفڵاینە یان ئۆنڵاین */
 function handleResumeClick(){
   if(onlineRoomCode){ toggleOnlinePause(); }
@@ -4504,7 +4504,6 @@ function finishRound(){
   document.getElementById("timer").style.color="#d60000";
 setTimeout(()=>openDadga(), 300);
 }
-
 function updateTimer(sec){
   const m=Math.floor(sec/60).toString().padStart(2,"0");
   const s=(sec%60).toString().padStart(2,"0");
@@ -4536,26 +4535,20 @@ function showResults(){
       spyCardsEl.appendChild(div);
     });
   }
-
   // ← ئەمە زیاد بکە
   setTimeout(() => openScores(), 600);
 }
-
 function playAgain(){
   prepareGame();
   updateRoundBtn(); // ← زیاد بکە
   showScreen("screen3");
   showPlayer();
 }
-
 function updateRoundBtn(){
   const rounds = getTotalRounds();
   const btn = document.getElementById('playAgainBtn');
   if(btn) btn.innerText = `خولی ${rounds + 1}`;
 }
-
-
-
 function resetAll(){
   document.getElementById('bottomNav').classList.remove('hidden');
 navClick('home'); // active state بگەڕێنەوە
@@ -4567,23 +4560,18 @@ navClick('home'); // active state بگەڕێنەوە
   gameCountForReview = parseInt(localStorage.getItem('sexur_game_count') || '0');
 
 }
-
-
 const _screens = ['screen1','screen2','screen3','screen4','screen5','statsScreen','reviewScreen','creatorScreen','dadgaScreen'
 
 ];
-
 function showScreen(id){
   _screens.forEach(s=>{
     const el=document.getElementById(s);
     if(el) el.classList.toggle('hidden',s!==id);
   });
-const gameScreens = ['screen3','screen4','screen5','onlineCardScreen','onlineTimerScreen','onlineVotingScreen','onlineRevealScreen'];
+const gameScreens = ['screen3','screen4','screen5','onlineChooseScreen','onlineLobbyScreen','onlineCardScreen','onlineTimerScreen','onlineVotingScreen','onlineRevealScreen'];
   document.getElementById('bottomNav')
     .classList.toggle('hidden', gameScreens.includes(id));
 }
-
-
 /* ── Spring press ── */
 function attachPress(btn){
   if(btn._pressAttached)return;btn._pressAttached=true;
@@ -6563,6 +6551,17 @@ function onOnlineNameInput(){
     return;
   }
 }
+function onChatInput(){
+  const input = document.getElementById('chatInput');
+  const val = input.value;
+  const cleaned = val.replace(/[^\u0600-\u06FF\u200c\s]/g, '');
+  if(cleaned !== val){
+    input.value = cleaned;
+    vib('error');
+    showKurdishToast();
+    return;
+  }
+}
 async function createOnlineRoom(){
   const name = document.getElementById('onlinePlayerName').value.trim();
   if(!name){ vib('error'); showModal({title:"ناوت بنووسە", msg:"تکایە ناوی خۆت بنووسە.", icon:"warn"}); return; }
@@ -6667,7 +6666,8 @@ function subscribeRoom(){
           showJoinToast(payload.new.name, payload.new.avatar_seed, 'join');
         }
         if(payload.eventType === 'DELETE' && payload.old && payload.old.client_id !== CLIENT_ID){
-          showJoinToast(payload.old.name, payload.old.avatar_seed, 'leave');
+          const leftPlayer = onlinePlayers.find(p => p.client_id === payload.old.client_id);
+          if(leftPlayer) showJoinToast(leftPlayer.name, leftPlayer.avatar_seed, 'leave');
         }
         await refreshLobbyPlayers();
         syncOnlinePlayerUI();
