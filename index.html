@@ -6713,11 +6713,11 @@ function refreshLobbyPlayersUI(){
     const canKick = isHost && p.client_id !== CLIENT_ID;
     const pingMs = p.ping_ms || 0;
     const pc = pingClass(pingMs);
-        const muteBtn = ${canKick ? `<button class="mute-toggle-btn ${p.is_muted?'is-muted':''}" onclick="toggleMutePlayer('${p.client_id}')">
+         const muteBtn = `${canKick ? `<button class="mute-toggle-btn ${p.is_muted?'is-muted':''}" onclick="toggleMutePlayer('${p.client_id}')">
         ${p.is_muted
           ? '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#c62828" opacity=".35"/><line x1="3" y1="3" x2="21" y2="21" stroke="#c62828" stroke-width="2.4" stroke-linecap="round"/></svg>'
           : '<svg viewBox="0 0 24 24" width="16" height="16" fill="#555"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>'
-        }</button>` : '';
+        }</button>` : ''}`;
     div.innerHTML = `<div class="avatar-disc-wrap"><div class="avatar"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.avatar_seed)}"></div><div class="disc-badge-lobby">🔌</div></div>
       <div class="player-name">${p.name}${p.is_host?' 👑':''}<span data-mute-emoji="${p.client_id}">${p.is_muted?' 🔇':''}</span></div>
       <div class="lobby-ping-badge ${pc}" data-ping="${p.client_id}" style="background:rgba(0,0,0,.05);">${pingMs>0?pingMs+' ms':'...'}</div>
