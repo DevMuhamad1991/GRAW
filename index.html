@@ -1730,12 +1730,7 @@ background: rgba(0,0,0,.2);
   background: rgba(0,0,0,.1);
   display: inline-block;
 }
-.creator-section-label{
-  font-size:12px;font-weight:800;color:rgba(0,0,0,.35);
-  letter-spacing:.5px;margin:4px 4px 10px;
-  display:flex;align-items:center;gap:7px;
-}
-.creator-section-label svg{width:13px;height:13px;fill:rgba(0,0,0,.3);}
+
 /* ══ DADGA SYSTEM ══ */
 #dadgaScreen {
   background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
@@ -2632,6 +2627,111 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 .chat-muted-notice{text-align:center;font-size:12px;font-weight:800;color:#c62828;padding:0 16px 14px;}
 .mute-toggle-btn{width:36px;height:36px;border-radius:11px;border:none;background:rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .mute-toggle-btn.is-muted{background:rgba(255,59,59,.12);}
+/* ══ CONTACT MEGA CARD ══ */
+.contact-mega-card{
+  background:#fff;
+  border-radius:32px;
+  overflow:hidden;
+  box-shadow:0 14px 44px rgba(0,0,0,.1);
+  margin-bottom:var(--gap-sm);
+}
+.contact-hero{
+  position:relative;
+  background:#111;
+  overflow:hidden;
+  padding:clamp(26px,6vw,36px) clamp(20px,5vw,28px) clamp(22px,5.5vw,30px);
+  text-align:center;
+}
+.contact-hero-bg{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80') center/cover no-repeat;
+  opacity:.16;
+}
+.contact-hero::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(255,212,0,.15) 0%,rgba(0,0,0,.75) 100%);
+}
+.contact-hero-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;}
+.contact-hero-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(255,212,0,.18);border:1px solid rgba(255,212,0,.3);
+  color:#ffd400;font-size:10px;font-weight:800;letter-spacing:1px;
+  padding:4px 12px;border-radius:999px;margin-top:14px;text-transform:uppercase;
+}
+.contact-hero-badge svg{width:10px;height:10px;fill:#ffd400;}
+.contact-hero-name{font-size:clamp(21px,5.8vw,27px);font-weight:800;color:#fff;margin-top:8px;}
+.contact-hero-role{font-size:var(--fs-xs);color:rgba(255,255,255,.45);font-weight:700;margin-top:3px;margin-bottom:16px;}
+
+.contact-rows{padding:6px 0;}
+.contact-row{
+  display:flex;align-items:center;gap:14px;
+  padding:15px 20px;cursor:pointer;
+  border-bottom:1px solid rgba(0,0,0,.055);
+  text-decoration:none;color:inherit;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .15s;
+}
+.contact-row:last-child{border-bottom:none;}
+.contact-row:active{background:rgba(0,0,0,.03);}
+.contact-row-icon{
+  width:46px;height:46px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;overflow:hidden;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
+}
+.contact-row-icon svg{width:22px;height:22px;}
+.contact-row-icon img{width:100%;height:100%;object-fit:cover;}
+.contact-row-body{flex:1;min-width:0;}
+.contact-row-title{font-size:var(--fs-base);font-weight:800;color:#111;}
+.contact-row-sub{font-size:12px;color:#999;font-weight:700;margin-top:2px;line-height:1.4;}
+.contact-row-arrow{
+  width:32px;height:32px;border-radius:11px;background:#f5f5f5;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:transform .32s cubic-bezier(.34,1.3,.64,1),background .2s;
+}
+.contact-row-arrow svg{width:15px;height:15px;fill:#aaa;transition:fill .2s;}
+.contact-row.open .contact-row-arrow{background:#111;transform:rotate(180deg);}
+.contact-row.open .contact-row-arrow svg{fill:#ffd400;}
+
+.contact-detail{
+  overflow:hidden;max-height:0;opacity:0;
+  transition:max-height .38s cubic-bezier(.4,0,.2,1),opacity .28s ease;
+  background:#fafafa;
+}
+.contact-detail.open{max-height:160px;opacity:1;}
+.contact-detail-inner{padding:16px 20px 20px;}
+
+.contact-share-url-box{
+  display:flex;align-items:center;gap:10px;
+  background:#fff;border:1.5px solid #eee;border-radius:999px;
+  padding:10px 18px;margin-bottom:12px;
+}
+.contact-share-url-text{flex:1;font-size:12px;font-weight:700;color:#666;direction:ltr;text-align:left;}
+.contact-copy-btn{
+  width:100%;height:clamp(46px,11.5vw,52px);border-radius:999px;border:none;
+  color:#fff;font-size:var(--fs-sm);font-weight:800;
+  display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  font-family:'Noto Sans Arabic',sans-serif;
+}
+.contact-copy-btn svg{width:16px;height:16px;fill:#fff;}
+.contact-copy-btn.share-btn{background:linear-gradient(135deg,#6366f1,#4f46e5);box-shadow:0 4px 14px rgba(99,102,241,.3);}
+.contact-copy-btn.donate-btn{background:linear-gradient(135deg,#16a34a,#15803d);box-shadow:0 4px 14px rgba(22,163,74,.3);}
+.contact-copy-btn.copied{background:linear-gradient(135deg,#22c55e,#16a34a) !important;}
+
+.contact-donate-num-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;}
+.contact-donate-num{
+  font-size:clamp(19px,5.2vw,24px);font-weight:800;color:#111;
+  letter-spacing:2px;direction:ltr;font-variant-numeric:tabular-nums;
+}
+
+.contact-visitor-strip{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 20px;background:#fffbe8;border-top:1px solid rgba(0,0,0,.05);
+}
+.contact-visitor-strip svg{width:22px;height:22px;fill:#b88600;flex-shrink:0;}
+.contact-visitor-num{font-size:clamp(18px,5vw,22px);font-weight:800;color:#111;line-height:1;}
+.contact-visitor-label{font-size:11px;color:#999;font-weight:700;margin-top:2px;}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -2752,188 +2852,124 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 <section class="screen hidden" id="creatorScreen">
   <div class="creator-wrap">
 
-    <!-- کارتی پرۆفایل -->
-    <div class="creator-profile-card">
-      <div class="creator-profile-inner">
-        <div class="creator-av-wrap">
-          <div class="creator-av-ring"></div>
-          <div class="creator-av-img">
-            <img src="sexur.webp" alt="Muhamad">
+    <!-- ══ CONTACT MEGA CARD ══ -->
+    <div class="contact-mega-card">
+
+      <!-- Hero / پرۆفایل -->
+      <div class="contact-hero">
+        <div class="contact-hero-bg"></div>
+        <div class="contact-hero-inner">
+          <div class="creator-av-wrap">
+            <div class="creator-av-ring"></div>
+            <div class="creator-av-img"><img src="sexur.webp" alt="Muhamad"></div>
+            <div class="creator-av-status"></div>
           </div>
-          <div class="creator-av-status"></div>
-        </div>
-        <div class="creator-profile-info">
-          <div class="creator-profile-badge">
+          <div class="contact-hero-badge">
             <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             دروستکەر
           </div>
-          <div class="creator-profile-name">Dev.Muhamad</div>
-          <div class="creator-profile-role">Kurdish Developer & Designer</div>
-          <a class="creator-profile-wa" href="https://wa.me/9647509628683" target="_blank" onclick="vib()">
+          <div class="contact-hero-name">Dev.Muhamad</div>
+          <div class="contact-hero-role">Kurdish Developer & Designer</div>
+          <a class="creator-profile-wa" href="https://wa.me/9647509628683" target="_blank" rel="noopener" onclick="vib()">
             <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.528 5.858L.057 23.5l5.797-1.517A11.93 11.93 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.006-1.367l-.36-.214-3.713.973.99-3.618-.234-.372A9.818 9.818 0 1 1 12 21.818z"/></svg>
             پەیوەندی
           </a>
         </div>
       </div>
-      <div class="creator-profile-chips">
-        <div class="creator-chip">
-          <svg viewBox="0 0 24 24"><path d="M15 7.5V2H9v5.5l3 3 3-3zM7.5 9H2v6h5.5l3-3-3-3zM9 16.5V22h6v-5.5l-3-3-3 3zM16.5 9l-3 3 3 3H22V9h-5.5z"/></svg>
-          یاری سیخور
+
+      <!-- ڕیزەکان -->
+      <div class="contact-rows">
+
+        <!-- دیسکۆرد -->
+        <a class="contact-row" href="https://discord.gg/PASTE_YOUR_INVITE_CODE" target="_blank" rel="noopener" onclick="vib('medium')">
+          <div class="contact-row-icon" style="background:linear-gradient(135deg,#5865F2,#4752C4);">
+            <svg viewBox="0 0 127.14 96.36" style="width:24px;height:24px;">
+              <path fill="#fff" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+            </svg>
+          </div>
+          <div class="contact-row-body">
+            <div class="contact-row-title">جۆینی دیسکۆرد</div>
+            <div class="contact-row-sub">کۆمەڵگای یاریزانانی سیخور — نوێترین هەواڵ</div>
+          </div>
+          <div class="contact-row-arrow"><svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></div>
+        </a>
+
+        <!-- یاری درایڤەری کوردی -->
+        <a class="contact-row" href="PASTE_DRIVER_GAME_LINK_HERE" target="_blank" rel="noopener" onclick="vib('medium')">
+          <div class="contact-row-icon" style="background:linear-gradient(135deg,#ff9500,#ff6a00);">
+            <svg viewBox="0 0 24 24"><path fill="#fff" d="M18.92 5.01C18.72 4.42 18.16 4 17.5 4h-11c-.66 0-1.21.42-1.42 1.01L3 11v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16C5.67 16 5 15.33 5 14.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 10l1.5-4.5h11L19 10H5z"/></svg>
+          </div>
+          <div class="contact-row-body">
+            <div class="contact-row-title">یاری درایڤەری کوردی</div>
+            <div class="contact-row-sub">یاریەکی تری کوردیم — سەیری بکە 🚗</div>
+          </div>
+          <div class="contact-row-arrow"><svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></div>
+        </a>
+
+        <!-- شەریکردن (expandable) -->
+        <div class="contact-row" id="shareRowTrigger" onclick="vib('medium');toggleContactDetail('share')">
+          <div class="contact-row-icon" style="background:linear-gradient(135deg,#6366f1,#4f46e5);">
+            <svg viewBox="0 0 24 24"><path fill="#fff" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+          </div>
+          <div class="contact-row-body">
+            <div class="contact-row-title">شەریکردنی یاریەکە</div>
+            <div class="contact-row-sub">لینکەکە بنێرە بۆ هاوڕێیەکانت</div>
+          </div>
+          <div class="contact-row-arrow" id="shareRowArrow"><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
         </div>
-        <div class="creator-chip">
-          <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
-          v2.0
+        <div class="contact-detail" id="shareDetail">
+          <div class="contact-detail-inner">
+            <div class="contact-share-url-box">
+              <div class="contact-share-url-text">sexurgame.com</div>
+              <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:#bbb;flex-shrink:0"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+            </div>
+            <button class="contact-copy-btn share-btn" id="shareCopyBtn" onclick="event.stopPropagation();vib();copyLink()">
+              <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+              لینکەکە کۆپی بکە
+            </button>
+          </div>
         </div>
-        <div class="creator-chip">
-          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
-          کوردی
+
+        <!-- پشتگیری/دۆنەیت (expandable) -->
+        <div class="contact-row" id="donateRowTrigger" onclick="vib('medium');toggleContactDetail('donate')">
+          <div class="contact-row-icon" style="background:linear-gradient(135deg,#16a34a,#15803d);">
+            <img src="https://crystalpng.com/wp-content/uploads/2025/12/First-Iraqi-Bank-Logo.png" alt="FIB"
+                 onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' style=\'width:22px;height:22px;fill:#fff\'><path d=\'M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z\'/></svg>'">
+          </div>
+          <div class="contact-row-body">
+            <div class="contact-row-title">پشتگیری یاریەکە</div>
+            <div class="contact-row-sub">پشتگیریمان بکە بە FIB</div>
+          </div>
+          <div class="contact-row-arrow" id="donateRowArrow"><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+        </div>
+        <div class="contact-detail" id="donateDetail">
+          <div class="contact-detail-inner">
+            <div class="contact-donate-num-row">
+              <div class="contact-donate-num">0750 962 8683</div>
+            </div>
+            <button class="contact-copy-btn donate-btn" id="donateCopyBtn" onclick="event.stopPropagation();copyFIB()">
+              <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+              کۆپی بکە
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ژمارەی بەکارهێنەران -->
+      <div class="contact-visitor-strip">
+        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <div>
+          <div class="contact-visitor-num" id="visitorCount">2,000</div>
+          <div class="contact-visitor-label">بەکارهێنەری یاری سیخور</div>
         </div>
       </div>
-    </div>
-    <!-- ناونیشانی بەشی پشتگیری -->
-    <div class="creator-section-label">
-      <svg viewBox="0 0 24 24"><path d="M20.16 12.594l-7.978 4.539a.365.365 0 01-.363 0l-7.978-4.54a.354.354 0 00-.521.311v1.657c0 .13.07.25.183.315l8.316 4.72c.113.064.25.064.363 0l8.316-4.72a.36.36 0 00.183-.315v-1.657a.354.354 0 00-.521-.31zM12.18 2.148a.365.365 0 00-.364 0L3.5 6.688a.354.354 0 000 .62l8.316 4.719c.113.064.25.064.364 0l8.315-4.72a.354.354 0 000-.619l-8.315-4.54z"/></svg>
-      پشتگیری یاریەکە
-    </div>
-
-    <!-- کارتی دۆنەیت — کلیک بکە ژمارە دەکەوێتەوە -->
-    <div class="creator-donate-card" id="donateCard">
-
-      <!-- بەشی سەرەوە — دوگمەی کلیک -->
-      <div class="creator-donate-trigger" onclick="vib('medium');toggleDonateCard()">
-        <div class="creator-donate-icon">
-          <img src="https://crystalpng.com/wp-content/uploads/2025/12/First-Iraqi-Bank-Logo.png" alt="FIB"
-               onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' style=\'width:32px;height:32px;fill:#fff\'><path d=\'M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z\'/></svg>';this.parentElement.style.background='linear-gradient(135deg,#16a34a,#15803d)'">
-        </div>
-        <div class="creator-donate-body">
-          <div class="creator-donate-title">پشتگیری یاریەکە</div>
-          <div class="creator-donate-sub">ئەگەر یاریەکەت بەدڵ بوو، بۆ پەرەپێدانی زیاتر<br>پشتگیریم بکە بـــە FIB</div>
-        </div>
-        <div class="creator-donate-arrow">
-          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-        </div>
-      </div>
-
-      <!-- بەشی ژمارە — پەنهانە بەدەستپێک -->
-      <div class="creator-donate-detail" id="donateDetail">
-        <div class="creator-donate-divider"></div>
-        <div class="creator-donate-num-label">FIB Number</div>
-        <div class="creator-donate-num-row">
-          <div class="creator-donate-num">0750 962 8683</div>
-          <button class="creator-donate-copy-btn" id="donateCopyBtn" onclick="copyFIB()">
-            <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-            کۆپی بکە
-          </button>
-        </div>
-      </div>
 
     </div>
-
-    <!-- کارتی شەریکردن -->
-    <!-- ناونیشانی بەشی شەریکردن -->
-    <div class="creator-section-label" style="margin-top:20px;">
-      <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-      شەریکردنی یاریەکە
-    </div>
-
-    <!-- کارتی شەریکردن -->
-    <div class="creator-share-card">
-      <div class="creator-share-top">
-        <div class="creator-share-icon">
-          <img src="https://cdn-icons-png.flaticon.com/512/10016/10016975.png" alt="سیخور"
-               onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 24 24\' style=\'width:32px;height:32px;fill:#fff\'><path d=\'M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z\'/></svg>';this.parentElement.style.background='linear-gradient(135deg,#6366f1,#4f46e5)'">
-        </div>
-        <div class="creator-share-body">
-          <div class="creator-share-title">شەریکردنی یاریەکە</div>
-          <div class="creator-share-sub">لینکەکە کۆپی بکە و<br>بۆ هاوڕێیەکانت بنێرە</div>
-        </div>
-      </div>
-      <div class="creator-share-url-box">
-        <div class="creator-share-url-text">sexurgame.com</div>
-        <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:#bbb;flex-shrink:0"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
-      </div>
-      <button class="creator-copy-btn" id="shareCopyBtn" onclick="vib();copyLink()">
-        <img src=".webp" style="width:22px;height:22px;border-radius:6px;object-fit:cover;flex-shrink:0;"
-             onerror="this.outerHTML='<svg viewBox=\'0 0 24 24\' style=\'width:18px;height:18px;fill:#fff\'><path d=\'M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z\'/></svg>'">
-        لینکەکە کۆپی بکە
-      </button>
-    </div>
-
-  <!-- ناونیشانی بەشی ئامار -->
-  <div class="creator-section-label" style="margin-top:20px;">
-    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
-    ئامار
-  </div>
-
-  <!-- VISITOR COUNTER CARD -->
-<div style="
- border-radius:32px;
- overflow:hidden;
- margin-bottom:var(--gap-sm);
- position:relative;
- background:#fff;
- box-shadow:0 8px 28px rgba(0,0,0,.08);
- padding:clamp(20px,5vw,26px);">
-
- <!-- پشتەوەی سەرەوە -->
- <div style="
-   position:absolute;inset:0;
-   background:url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80') center/cover no-repeat;
-   opacity:.06;pointer-events:none;"></div>
-
- <!-- سەرپێچ -->
- <div style="
-   position:relative;z-index:1;
-   display:flex;align-items:center;gap:14px;
-   margin-bottom:16px;">
-   <div style="
-     width:clamp(54px,13vw,66px);
-     height:clamp(54px,13vw,66px);
-     border-radius:999px;
-     overflow:hidden;
-     display:flex;align-items:center;justify-content:center;
-     flex-shrink:0;
-     box-shadow:0 6px 18px rgba(255,188,0,.3);
-     background:linear-gradient(135deg,#ffd400,#ffbc00);">
-     <svg viewBox="0 0 24 24" width="30" height="30" fill="#111">
-       <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-     </svg>
-   </div>
-   <div>
-     <div style="font-size:var(--fs-md);font-weight:800;color:#111;margin-bottom:3px;">ژمارەی بەکارهێنەران</div>
-     <div style="font-size:var(--fs-xs);color:#888;font-weight:700;">کۆی ئەوانەی یاری سیخوریان کردووە</div>
-   </div>
- </div>
-
- <!-- ژمارە -->
- <div style="
-   position:relative;z-index:1;
-   font-size:clamp(48px,13vw,64px);
-   font-weight:800;
-   color:#111;
-   line-height:1;
-   margin-bottom:14px;"
-   id="visitorCount">000</div>
-
- <!-- خێری -->
- <div style="
-   position:relative;z-index:1;
-   height:3px;
-   background:rgba(0,0,0,.06);
-   border-radius:100px;overflow:hidden;">
-   <div id="visitorBar" style="
-     height:100%;width:0%;
-     background:linear-gradient(90deg,#ffd400,#ffbc00);
-     border-radius:100px;
-     transition:width 1.5s cubic-bezier(.4,0,.2,1);"></div>
- </div>
-
-</div>
-
 
     <div class="creator-version-bar">
       <span></span>
-      یاری سیخور — v2.0
+      یاری سیخور — V3.0
       <span></span>
     </div>
   </div>
@@ -3331,29 +3367,20 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   <div class="wnew-rows">
   <div class="wnew-row">
     <div class="wnew-ico">
-      <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
     </div>
     <div>
-      <div class="wnew-rtitle">یاری ئۆنڵاین </div>
-      <div class="wnew-rdesc">ئێستا دەتوانیت لەگەڵ هاوڕێیانت ئۆنڵاین یاری بکەیت — ژوور دروست بکە، کۆدەکە بنێرە بۆیان</div>
+      <div class="wnew-rtitle">سیستەمی خول</div>
+      <div class="wnew-rdesc">ئێستا ژمارەی خولەکان هەیە — براوە دیاری دەکەن</div>
     </div>
   </div>
   <div class="wnew-row">
     <div class="wnew-ico">
-      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 3.21-1.81 6-4.72 7.28L13 17v5h5l-1.22-1.22C19.91 19.07 22 15.76 22 12c0-5.18-3.95-9.45-9-9.95zM11 2.05C5.95 2.55 2 6.82 2 12c0 3.76 2.09 7.07 5.22 8.78L6 22h5V2.05z"/></svg>
     </div>
     <div>
-      <div class="wnew-rtitle">چاتی ناو یاری</div>
-      <div class="wnew-rdesc">لەکاتی یاری ئۆنڵاین لەگەل یاریزانەکانی تر قسە بکە و گومانەکانت بڵێ</div>
-    </div>
-  </div>
-  <div class="wnew-row">
-    <div class="wnew-ico">
-      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-    </div>
-    <div>
-      <div class="wnew-rtitle">دەنگدان و خاڵی ڕاستەوخۆ</div>
-      <div class="wnew-rdesc">دەنگدان و خشتەی خاڵەکان ئێستا ڕاستەوخۆ نوێ دەبنەوە بۆ هەموو یاریزانەکانی ئۆنڵاین</div>
+      <div class="wnew-rtitle">خێراکردنی ماڵپەر</div>
+      <div class="wnew-rdesc">ماڵپەری سیخور خێراتر بووە — بەبێ چاوەڕوانی</div>
     </div>
   </div>
 </div>
@@ -4955,6 +4982,23 @@ function closeReviewPopup(goToReview) {
 }
 
 /* ══ CREATOR ══ */
+function toggleContactDetail(which){
+  const rows = { share:['shareRowTrigger','shareDetail'], donate:['donateRowTrigger','donateDetail'] };
+  Object.keys(rows).forEach(key=>{
+    const [rowId, detId] = rows[key];
+    const row = document.getElementById(rowId);
+    const det = document.getElementById(detId);
+    if(key === which){
+      const isOpen = row.classList.contains('open');
+      row.classList.toggle('open', !isOpen);
+      det.classList.toggle('open', !isOpen);
+    } else {
+      row.classList.remove('open');
+      det.classList.remove('open');
+    }
+  });
+}
+
 function toggleDonateCard() {
   const card = document.getElementById('donateCard');
   card.classList.toggle('open');
