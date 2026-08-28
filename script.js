@@ -21,19 +21,16 @@ const avatars=[
   "https://api.dicebear.com/7.x/adventurer/svg?seed=Cedar",
   "https://api.dicebear.com/7.x/adventurer/svg?seed=Wren"
 ];
-
 function avatarUrl(seed){
   if(!seed) return avatars[0];
   if(seed.startsWith('data:') || seed.startsWith('http')) return seed;
   return `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(seed)}`;
 }
-
 const nameSuggestions=[
   "ئەحمەد","موحەمەد","عەلی","سارا","ئایا","ئەمین","ڕێناس","شیلان","ئەرمان","ڕووناک",
   "باخان","ژیار","هەژار","دیلان","جیهاد","نازدار","سەعید","بینا","زیکە","لانە","کاروان",
   "هاوژین","ئارام","سروە","ڕاپەرین","گوڵالە","ئاکۆ","ئاسۆ","زەنون","عەبۆ","نالین","رویا","پشتیوان"
 ];
-
 const words={
   کەسایەتی:["فەرهاد پیرباڵ","شێرکۆ بێکەس","ئومێد خۆشناو","شێخ لایلۆن","هەڵکەوت زاهیر","فاخیر هەریری","کەیفی","خدر بێگڵاسی","رەجەب","شرێک","موراد حەلەمدار","ترەمپ"],
   وڵات:["عیراق","فەرەنسا","ئەرجەنتین","دوبەی","کوردستان","تورکیا","سوریا","ئێران","ئەمریکا","صین"],
@@ -46,19 +43,14 @@ const words={
   شوێن:["بازار","مارکێت","قەڵای هەولێر","مەلەوانگە","سلێمانی","هەولێر خەبات","دارەتوو","هەورامان","بارزان","خەلیفان"],
   رەنگ:["مۆر "," سەوز"," سور"," زەرد","پرتەقالی ","شین"]
 };
-
 let players=[],playerAvatarIndexes=[],selectedCategories=[],selectedCategory="";
 let currentIndex=0,spyIndexes=[],gameWord="",usedWords=[];
 let holdTimer,timerInterval,currentTime=0,timerStarted=false,isPaused=false,cardWasOpened=false;
 let suggBlurTimer=null;
-
 let customWords = [];
-
-
 /* ══════════════════════════════════════
   AD BANNER SYSTEM
 ══════════════════════════════════════ */
-
 const adSlides = [
  {
    img: "bsexur.webp",
@@ -79,7 +71,6 @@ const adSlides = [
    link: "https://wa.me/9647509628683"
  }
 ];
-
 let adCurrent = 0;
 let adAutoTimer = null;
 const AD_INTERVAL = 4500;
@@ -88,13 +79,11 @@ let adProgressTimer = null;
 let adDragging = false;
 let adStartX = 0;
 let adIsAnimating = false;
-
 function buildAdBanner() {
  const track = document.getElementById('adTrack');
  const dots = document.getElementById('adDots');
  track.innerHTML = '';
  dots.innerHTML = '';
-
  adSlides.forEach((ad, i) => {
    const a = document.createElement('a');
    a.className = 'ad-slide';
@@ -107,7 +96,6 @@ function buildAdBanner() {
      transform: scale(1);
      transition: transform .2s ease, opacity .2s ease;
    `;
-
    if (ad.img) {
      a.style.background = '#111';
      a.innerHTML = `
@@ -126,7 +114,6 @@ function buildAdBanner() {
          <div class="ad-slide-icon-desc">${ad.desc}</div>
        </div>`;
    }
-
    // کلیک ئەنیمەیشن
    a.addEventListener('pointerdown', () => {
      a.style.transform = 'scale(.97)';
@@ -140,16 +127,13 @@ function buildAdBanner() {
      a.style.transform = 'scale(1)';
      a.style.opacity = '1';
    });
-
    track.appendChild(a);
-
    // dot
    const dot = document.createElement('div');
    dot.className = 'ad-dot' + (i === 0 ? ' active' : '');
    dot.onclick = () => { vib(); adGoTo(i); };
    dots.appendChild(dot);
  });
-
  // touch/swipe — نەرم و ئازاد
  const banner = document.getElementById('adBanner');
  banner.addEventListener('touchstart', e => {
@@ -157,7 +141,6 @@ function buildAdBanner() {
    adDragging = true;
    adStopAuto();
  }, { passive: true });
-
  banner.addEventListener('touchmove', e => {
    if (!adDragging) return;
    const dx = e.touches[0].clientX - adStartX;
@@ -166,7 +149,6 @@ function buildAdBanner() {
    track.style.transition = 'none';
    track.style.transform = `translateX(calc(${base}% + ${dx}px))`;
  }, { passive: true });
-
  banner.addEventListener('touchend', e => {
    if (!adDragging) return;
    adDragging = false;
@@ -180,11 +162,9 @@ function buildAdBanner() {
    }
    adStartAuto();
  }, { passive: true });
-
  adUpdateUI();
  adStartAuto();
 }
-
 function adUpdateUI() {
  const track = document.getElementById('adTrack');
  track.style.transition = 'transform .45s cubic-bezier(.4,0,.2,1)';
@@ -193,7 +173,6 @@ function adUpdateUI() {
    d.classList.toggle('active', i === adCurrent);
  });
 }
-
 function adGoTo(idx) {
  if (adIsAnimating) return;
  adIsAnimating = true;
@@ -202,21 +181,17 @@ function adGoTo(idx) {
  adResetProgress();
  setTimeout(() => adIsAnimating = false, 450);
 }
-
 function adNext() { adGoTo(adCurrent + 1); }
 function adPrev() { adGoTo(adCurrent - 1); }
-
 function adStartAuto() {
  adStopAuto();
  adResetProgress();
  adAutoTimer = setInterval(() => adNext(), AD_INTERVAL);
 }
-
 function adStopAuto() {
  clearInterval(adAutoTimer);
  clearInterval(adProgressTimer);
 }
-
 function adResetProgress() {
  clearInterval(adProgressTimer);
  adProgress = 100;
@@ -229,17 +204,13 @@ function adResetProgress() {
    fill.style.width = adProgress + '%';
  }, 100);
 }
-
 buildAdBanner();
-
-
 function adUpdateUI() {
   document.getElementById('adTrack').style.transform = `translateX(${adCurrent * 100}%)`;
   document.querySelectorAll('.ad-dot').forEach((d, i) => {
     d.classList.toggle('active', i === adCurrent);
   });
 }
-
 function adGoTo(idx) {
   adCurrent = (idx + adSlides.length) % adSlides.length;
   adUpdateUI();
@@ -247,7 +218,6 @@ function adGoTo(idx) {
 }
 function adNext() { adGoTo(adCurrent + 1); }
 function adPrev() { adGoTo(adCurrent - 1); }
-
 function adStartAuto() {
   adStopAuto();
   adResetProgress();
@@ -1346,14 +1316,41 @@ async function redeemVipCode(){
   renderAuthOrProfile();
 }
 
-const vipAvatarSeeds = ["Zara","Titan","Blaze","Nova","Cleo","Orion","Luna","Axel"];
+const vipAvatarSeeds = ["Zara","Titan","Blaze","Nova","Cleo","Orion","Luna"];
 
 function renderVipAvatarGrid(){
   const grid = document.getElementById('vipAvatarGrid');
   if(!grid) return;
-  grid.innerHTML = '';
 
   const isCustom = currentUser.avatar_seed && (currentUser.avatar_seed.startsWith('data:') || currentUser.avatar_seed.startsWith('http'));
+
+  // ئەگەر پێشتر دروستکراوە، تەنها چالاککردنەکە نوێ بکەرەوە — بێ دروستکردنەوەی وێنەکان (ریفرێش نابنەوە)
+  if(grid.dataset.built === '1'){
+    grid.querySelectorAll('.vip-avatar-opt[data-seed]').forEach(el=>{
+      el.classList.toggle('active', !isCustom && el.dataset.seed === currentUser.avatar_seed);
+    });
+    const customTile = grid.querySelector('.vip-avatar-opt[data-custom]');
+    if(isCustom){
+      if(customTile){
+        if(customTile.querySelector('img').src !== currentUser.avatar_seed){
+          customTile.querySelector('img').src = currentUser.avatar_seed;
+        }
+        customTile.classList.add('active');
+      } else {
+        const div = document.createElement('div');
+        div.className = 'vip-avatar-opt active';
+        div.setAttribute('data-custom','1');
+        div.innerHTML = `<img src="${currentUser.avatar_seed}" loading="lazy">`;
+        grid.insertBefore(div, grid.children[1] || null);
+      }
+    } else if(customTile){
+      customTile.remove();
+    }
+    return;
+  }
+
+  grid.innerHTML = '';
+  grid.dataset.built = '1';
 
   const uploadDiv = document.createElement('div');
   uploadDiv.className = 'vip-avatar-upload';
@@ -1366,6 +1363,7 @@ function renderVipAvatarGrid(){
   if(isCustom){
     const div = document.createElement('div');
     div.className = 'vip-avatar-opt active';
+    div.setAttribute('data-custom','1');
     div.innerHTML = `<img src="${currentUser.avatar_seed}" loading="lazy">`;
     grid.appendChild(div);
   }
@@ -1373,7 +1371,8 @@ function renderVipAvatarGrid(){
   vipAvatarSeeds.forEach(seed=>{
     const url = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
     const div = document.createElement('div');
-    div.className = 'vip-avatar-opt' + (currentUser.avatar_seed===seed ? ' active' : '');
+    div.className = 'vip-avatar-opt' + (!isCustom && currentUser.avatar_seed===seed ? ' active' : '');
+    div.setAttribute('data-seed', seed);
     div.innerHTML = `<img src="${url}" loading="lazy">`;
     div.onclick = () => { vib('medium'); selectVipAvatar(seed); };
     grid.appendChild(div);
@@ -1474,18 +1473,6 @@ async function selectVipCardTheme(themeId){
   const { data: updatedUser } = await sb.from('app_users').update({ card_theme: themeId }).eq('id', currentUser.id).select().single();
   currentUser = updatedUser;
   renderAuthOrProfile();
-}
-
-function renderVipPreview(){
-  const card = document.getElementById('vipPreviewCard');
-  if(!card) return;
-  card.className = 'player-item' + (currentUser.card_theme && currentUser.card_theme!=='default' ? ' theme-'+currentUser.card_theme : '');
-  const avWrap = document.getElementById('vipPreviewAvatar');
-  avWrap.className = 'avatar ' + vipFrameClass(currentUser.frame_style);
-  avWrap.innerHTML = `<img src="${avatarUrl(currentUser.avatar_seed)}">`;
-  const crownIco = ` <svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z" fill="#ffd400"/></svg>`;
-  const verifiedIco = currentUser.is_verified ? ` <svg viewBox="0 0 24 24" width="17" height="17" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : '';
-  document.getElementById('vipPreviewName').innerHTML = currentUser.username + crownIco + verifiedIco;
 }
 async function sha256Hex(text){
   const enc = new TextEncoder().encode(text);
@@ -1610,23 +1597,23 @@ function renderAuthOrProfile(){
     lockedView.classList.add('hidden');
     unlockedView.classList.remove('hidden');
 
-        document.getElementById('profileAvatarImg').src = avatarUrl(currentUser.avatar_seed);
+            document.getElementById('profileAvatarImg').src = avatarUrl(currentUser.avatar_seed);
+    document.getElementById('profileAvatarWrap').className = vipFrameClass(currentUser.frame_style);
     document.getElementById('profileUsernameText').innerText = currentUser.username;
     document.getElementById('profileVerifiedBadge').classList.toggle('hidden', !currentUser.is_verified);
 
     const vip = isVipActive(currentUser);
     document.getElementById('vipRedeemWrap').classList.toggle('hidden', vip);
-    document.getElementById('vipStatusCardWrap').classList.toggle('hidden', !vip);
+    document.getElementById('profileVipStatusRow').classList.toggle('hidden', !vip);
     document.getElementById('vipCustomizeCard').classList.toggle('vip-locked', !vip);
     document.getElementById('vipLockBadge').classList.toggle('hidden', vip);
     if(vip){
       const daysLeft = Math.max(0, Math.ceil((new Date(currentUser.vip_until) - new Date())/(24*60*60*1000)));
-      document.getElementById('vipDaysLeft').innerText = `${daysLeft} ڕۆژ ماوە`;
+      document.getElementById('profileVipDaysLeft').innerText = `${daysLeft} ڕۆژ ماوە`;
     }
     renderVipAvatarGrid();
     renderVipThemeRow();
     renderVipCardThemeRow();
-    renderVipPreview();
     const vTog = document.getElementById('vipVerifiedToggle');
     if(vTog) vTog.checked = !!currentUser.is_verified;
   } else {
