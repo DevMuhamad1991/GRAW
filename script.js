@@ -1254,6 +1254,7 @@ function copyLink() {
 
 /* ══ DISCORD LIVE STATS ══ */
 async function loadDiscordStats(){
+  if(!document.getElementById('discordOnlineCount')) return;
   const inviteCode = 'driverkurdi'; // هەمان کۆدی ناو href
   try{
     const res = await fetch(`https://discord.com/api/v10/invites/${inviteCode}?with_counts=true`);
@@ -3633,7 +3634,6 @@ function showOnlineCard(room){
   document.getElementById('onlineSecretWord').innerText = amSpy ? 'تۆ سیخوریت' : room.game_word;
   document.getElementById('onlineWordCard').classList.remove('flip');
   document.getElementById('onlineWaitingReady').classList.add('hidden');
-  document.getElementById('onlineTimerWrap').classList.add('hidden');
   onlineCardOpened = false;
   onlineAlreadyReady = false;
   renderReadyStatus();
