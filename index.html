@@ -1530,6 +1530,22 @@ background: rgba(0,0,0,.2);
 .vip-frame-confetti{border-color:transparent !important;background:linear-gradient(135deg,#ff3b3b,#ffd400,#22c55e,#6366f1) !important;box-shadow:0 0 0 3px rgba(255,255,255,.5);}
 .vip-mini-badge{position:absolute;bottom:-3px;left:-3px;width:16px;height:16px;border-radius:50%;background:#1da1f2;border:2px solid #fff;display:flex;align-items:center;justify-content:center;z-index:2;}
 .vip-mini-badge svg{width:9px;height:9px;fill:#fff;}
+.vip-lock-badge{
+  position:absolute;top:14px;left:14px;z-index:2;
+  display:inline-flex;align-items:center;gap:5px;
+  background:#111;color:#fff;font-size:11px;font-weight:800;
+  padding:5px 11px;border-radius:999px;
+}
+.vip-locked{opacity:.4;filter:grayscale(.55);}
+.vip-locked .vip-avatar-grid,
+.vip-locked .vip-theme-row{pointer-events:none;}
+.vip-avatar-upload{
+  aspect-ratio:1;border-radius:16px;overflow:hidden;border:3px dashed #ccc;
+  cursor:pointer;background:#fafafa;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+}
+.vip-avatar-upload svg{width:20px;height:20px;fill:#999;}
+.vip-avatar-upload span{font-size:10px;font-weight:800;color:#999;}
 
 /* ── کارتی دۆنەیت ── */
 .creator-donate-card {
@@ -3018,15 +3034,17 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
         <button onclick="vib('medium');logoutUser()" title="دەرچوون" style="position:absolute;top:16px;left:16px;width:36px;height:36px;border-radius:11px;background:rgba(255,59,59,.1);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;">
           <svg viewBox="0 0 24 24" width="17" height="17" fill="#c62828"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
         </button>
-        <div style="position:relative;">
+         <div style="position:relative;">
           <div style="width:84px;height:84px;border-radius:50%;overflow:hidden;border:3px solid #ffd400;background:#fff;">
             <img id="profileAvatarImg" src="" style="width:100%;height:100%;object-fit:cover;">
           </div>
-          <div id="profileVerifiedBadge" class="hidden" style="position:absolute;bottom:-2px;right:-2px;width:26px;height:26px;border-radius:50%;background:#1da1f2;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="font-weight:800;font-size:var(--fs-lg);" id="profileUsernameText"></div>
+          <div id="profileVerifiedBadge" class="hidden" style="width:30px;height:30px;border-radius:50%;background:#1da1f2;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="#fff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
           </div>
         </div>
-        <div style="font-weight:800;font-size:var(--fs-lg);" id="profileUsernameText"></div>
         <div style="font-size:12px;font-weight:700;color:#22c55e;background:rgba(34,197,94,.1);padding:4px 12px;border-radius:100px;">یاریزانی سیخوڕ</div>
       </div>
 
@@ -3048,9 +3066,9 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
       </div>
     </div>
 
-    <!-- ══ VIP STATUS — تەنها بۆ VIP چالاک ══ -->
-    <div id="vipManageWrap" class="hidden">
-      <div class="vip-status-card">
+    <!-- ══ VIP STATUS ══ -->
+    <div id="vipManageWrap">
+      <div class="vip-status-card hidden" id="vipStatusCardWrap">
         <div class="vip-status-row">
           <div class="vip-status-badge">
             <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
@@ -3060,15 +3078,20 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
         <div class="vip-status-days" id="vipDaysLeft"></div>
       </div>
 
-      <div class="glass" style="padding:var(--pad-card);margin-bottom:var(--gap-sm);">
+      <div class="glass" id="vipCustomizeCard" style="padding:var(--pad-card);margin-bottom:var(--gap-sm);position:relative;">
+        <div class="vip-lock-badge hidden" id="vipLockBadge">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="#fff"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
+          تایبەتە بە VIP
+        </div>
         <div class="vip-section-title">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="#111"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
           گۆڕینی وێنەی پرۆفایل
         </div>
         <div class="vip-avatar-grid" id="vipAvatarGrid"></div>
-      </div>
+        <input type="file" id="vipPhotoInput" accept="image/*" class="hidden" onchange="handleCustomPhotoUpload(event)">
 
-      <div class="glass" style="padding:var(--pad-card);margin-bottom:var(--gap-sm);">
+        <div style="height:1px;background:rgba(0,0,0,.07);margin:18px 0;"></div>
+
         <div class="vip-section-title">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="#111"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
           ڕازاندنەوەی کارت
@@ -3937,6 +3960,12 @@ const avatars=[
   "https://api.dicebear.com/7.x/adventurer/svg?seed=Cedar",
   "https://api.dicebear.com/7.x/adventurer/svg?seed=Wren"
 ];
+
+function avatarUrl(seed){
+  if(!seed) return avatars[0];
+  if(seed.startsWith('data:') || seed.startsWith('http')) return seed;
+  return `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(seed)}`;
+}
 
 const nameSuggestions=[
   "ئەحمەد","موحەمەد","عەلی","سارا","ئایا","ئەمین","ڕێناس","شیلان","ئەرمان","ڕووناک",
@@ -5261,6 +5290,24 @@ function renderVipAvatarGrid(){
   const grid = document.getElementById('vipAvatarGrid');
   if(!grid) return;
   grid.innerHTML = '';
+
+  const isCustom = currentUser.avatar_seed && (currentUser.avatar_seed.startsWith('data:') || currentUser.avatar_seed.startsWith('http'));
+
+  const uploadDiv = document.createElement('div');
+  uploadDiv.className = 'vip-avatar-upload';
+  uploadDiv.innerHTML = `
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+    <span>وێنەی خۆت</span>`;
+  uploadDiv.onclick = () => { vib('medium'); document.getElementById('vipPhotoInput').click(); };
+  grid.appendChild(uploadDiv);
+
+  if(isCustom){
+    const div = document.createElement('div');
+    div.className = 'vip-avatar-opt active';
+    div.innerHTML = `<img src="${currentUser.avatar_seed}" loading="lazy">`;
+    grid.appendChild(div);
+  }
+
   vipAvatarSeeds.forEach(seed=>{
     const url = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
     const div = document.createElement('div');
@@ -5273,6 +5320,48 @@ function renderVipAvatarGrid(){
 async function selectVipAvatar(seed){
   const { data: updatedUser } = await sb.from('app_users').update({ avatar_seed: seed }).eq('id', currentUser.id).select().single();
   currentUser = updatedUser;
+  renderAuthOrProfile();
+}
+
+function handleCustomPhotoUpload(event){
+  if(!isVipActive(currentUser)){
+    vib('error');
+    showModal({title:"تایبەتە بە VIP", msg:"بۆ ئەپلۆدکردنی وێنەی خۆت پێویستە پاکێتی VIP چالاک بکەیت.", icon:"warn"});
+    event.target.value = '';
+    return;
+  }
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const size = 260;
+      const canvas = document.createElement('canvas');
+      canvas.width = size; canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const scale = Math.max(size/img.width, size/img.height);
+      const w = img.width*scale, h = img.height*scale;
+      ctx.drawImage(img, (size-w)/2, (size-h)/2, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      saveCustomAvatar(dataUrl);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+async function saveCustomAvatar(dataUrl){
+  vib('medium');
+  const { data: updatedUser, error } = await sb.from('app_users').update({ avatar_seed: dataUrl }).eq('id', currentUser.id).select().single();
+  if(error || !updatedUser){
+    vib('error');
+    showModal({title:"هەڵە", msg:"نەتوانرا وێنەکە هەڵبگیرێت.", icon:"err"});
+    return;
+  }
+  currentUser = updatedUser;
+  vib('success');
   renderAuthOrProfile();
 }
 
@@ -5405,19 +5494,21 @@ function renderAuthOrProfile(){
     lockedView.classList.add('hidden');
     unlockedView.classList.remove('hidden');
 
-    document.getElementById('profileAvatarImg').src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(currentUser.avatar_seed)}`;
+        document.getElementById('profileAvatarImg').src = avatarUrl(currentUser.avatar_seed);
     document.getElementById('profileUsernameText').innerText = currentUser.username;
     document.getElementById('profileVerifiedBadge').classList.toggle('hidden', !currentUser.is_verified);
 
     const vip = isVipActive(currentUser);
     document.getElementById('vipRedeemWrap').classList.toggle('hidden', vip);
-    document.getElementById('vipManageWrap').classList.toggle('hidden', !vip);
+    document.getElementById('vipStatusCardWrap').classList.toggle('hidden', !vip);
+    document.getElementById('vipCustomizeCard').classList.toggle('vip-locked', !vip);
+    document.getElementById('vipLockBadge').classList.toggle('hidden', vip);
     if(vip){
       const daysLeft = Math.max(0, Math.ceil((new Date(currentUser.vip_until) - new Date())/(24*60*60*1000)));
       document.getElementById('vipDaysLeft').innerText = `${daysLeft} ڕۆژ ماوە`;
-      renderVipAvatarGrid();
-      renderVipThemeRow();
     }
+    renderVipAvatarGrid();
+    renderVipThemeRow();
   } else {
     lockedView.classList.remove('hidden');
     unlockedView.classList.add('hidden');
@@ -6728,7 +6819,7 @@ onclick="vib('medium');toggleMutePlayer('${payload.clientId}')">
           : '<svg viewBox="0 0 24 24" width="13" height="13" fill="#888"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>'
         }</button>`
     : '';
-  div.innerHTML = `<div class="chat-msg-avatar ${vipFrameClass(payload.frameStyle)}" style="position:relative;"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(payload.avatarSeed)}" loading="lazy">${vipBadgeHtml(payload.isVerified)}</div>
+  div.innerHTML = `<div class="chat-msg-avatar ${vipFrameClass(payload.frameStyle)}" style="position:relative;"><img src="${avatarUrl(payload.avatarSeed)}" loading="lazy">${vipBadgeHtml(payload.isVerified)}</div>
     <div class="chat-msg-bubble">${isMine ? '' : `<div class="chat-msg-name">${payload.name}</div>`}<div>${payload.text}</div></div>
     ${muteBtnHtml}`;
   box.appendChild(div);
@@ -6893,7 +6984,7 @@ function buildRoomCard(code){
   const roomTypeLabel = r.isPublic ? '' : ' — تایبەت';
   div.innerHTML = `
     <div class="avatar-disc-wrap">
-      <div class="avatar"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(r.avatarSeed)}" loading="lazy"></div>
+    <div class="avatar"><img src="${avatarUrl(r.avatarSeed)}" loading="lazy"></div>
       <div style="position:absolute;bottom:-2px;right:-2px;width:19px;height:19px;border-radius:50%;background:${badgeColor};border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
         ${badgeIcon}
       </div>
@@ -7295,7 +7386,7 @@ function refreshLobbyPlayersUI(){
           ? '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#c62828" opacity=".35"/><line x1="3" y1="3" x2="21" y2="21" stroke="#c62828" stroke-width="2.4" stroke-linecap="round"/></svg>'
           : '<svg viewBox="0 0 24 24" width="16" height="16" fill="#555"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>'
         }</button>` : ''}`;
-    div.innerHTML = `<div class="avatar-disc-wrap"><div class="avatar ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.avatar_seed)}">${vipBadgeHtml(p.is_verified)}</div><div class="disc-badge-lobby">🔌</div></div>
+    div.innerHTML = `<div class="avatar-disc-wrap"><div class="avatar ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="${avatarUrl(p.avatar_seed)}">${vipBadgeHtml(p.is_verified)}</div><div class="disc-badge-lobby">🔌</div></div>`
       <div class="player-name">${p.name}${p.is_host?' 👑':''}<span data-mute-emoji="${p.client_id}">${p.is_muted?' 🔇':''}</span></div>
       <div class="lobby-ping-badge ${pc}" data-ping="${p.client_id}" style="background:rgba(0,0,0,.05);">${pingMs>0?pingMs+' ms':'...'}</div>
       ${muteBtn}
@@ -7505,7 +7596,7 @@ function renderReadyStatus(){
     slot.innerHTML = `
       <div class="ready-av-wrap">
         ${canKick ? `<div class="ready-kick" onclick="event.stopPropagation();vib('medium');kickPlayer('${p.client_id}','${p.name}')">✕</div>` : ''}
-        <div class="ready-av ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.avatar_seed)}" loading="lazy">${vipBadgeHtml(p.is_verified)}</div>
+        <div class="ready-av ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="${avatarUrl(p.avatar_seed)}" loading="lazy">${vipBadgeHtml(p.is_verified)}</div>
         <div class="ready-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
         <div class="disc-badge">🔌</div>
       </div>
@@ -7650,7 +7741,7 @@ function refreshOnlineVoteList(){
     div.className = 'dadga-suspect-item' + (p.client_id === prevSelected ? ' selected' : '');
     if(p.client_id === prevSelected) stillValid = true;
     div.onclick = ()=>{ vib('light'); selectOnlineVote(p.client_id, div); };
-    div.innerHTML = `<div class="dadga-suspect-avatar ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.avatar_seed)}">${vipBadgeHtml(p.is_verified)}</div>
+    div.innerHTML = `<div class="dadga-suspect-avatar ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="${avatarUrl(p.avatar_seed)}">${vipBadgeHtml(p.is_verified)}</div>
       <div class="dadga-suspect-name">${p.name}</div>
       <div class="dadga-suspect-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>`;
     list.appendChild(div);
@@ -7737,7 +7828,7 @@ async function showOnlineReveal(room){
     box.innerHTML = players.map(p=>`
       <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#fff;border-radius:16px;margin-bottom:8px;">
         <div class="${vipFrameClass(p.frame_style)}" style="width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;position:relative;border:2px solid transparent;">
-          <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(p.avatar_seed)}" style="width:100%;height:100%;object-fit:cover;">
+          <img src="${avatarUrl(p.avatar_seed)}" style="width:100%;height:100%;object-fit:cover;">
           ${vipBadgeHtml(p.is_verified)}
         </div>
         <div style="flex:1;font-size:14px;font-weight:700;">${p.name}</div>
