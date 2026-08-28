@@ -1639,8 +1639,11 @@ function renderAuthOrProfile(){
      document.getElementById('profileAvatarWrap').className = vipFrameClass(currentUser.frame_style);
     document.getElementById('profileUsernameText').innerText = currentUser.username;
     document.getElementById('profileVerifiedBadge').classList.toggle('hidden', !currentUser.is_verified);
-
     const vip = isVipActive(currentUser);
+    document.getElementById('profileCard').classList.remove('theme-fire','theme-neon','theme-royal','theme-dark');
+    if(vip && currentUser.card_theme && currentUser.card_theme !== 'default'){
+      document.getElementById('profileCard').classList.add('theme-' + currentUser.card_theme);
+    }
     document.getElementById('vipRedeemWrap').classList.toggle('hidden', vip);
     document.getElementById('profileVipStatusRow').classList.toggle('hidden', !vip);
     document.getElementById('vipCustomizeCard').classList.toggle('vip-locked', !vip);
@@ -3774,7 +3777,7 @@ function renderReadyStatus(){
         <div class="ready-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
         <div class="disc-badge">🔌</div>
       </div>
-       <div class="ready-name">${p.name}</div>
+       <div class="ready-name">${p.name}${p.is_verified ? ` <svg viewBox="0 0 24 24" width="12" height="12" style="vertical-align:-2px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : ''}</div>
       <div class="ready-ping ${pingClass(pingMs)}" data-ping="${p.client_id}">${pingMs>0?pingMs+' ms':'...'}</div>`;
     box.appendChild(slot);
   });
@@ -3911,12 +3914,13 @@ function refreshOnlineVoteList(){
   let stillValid = false;
   onlinePlayers.forEach(p=>{
     if(p.client_id === CLIENT_ID) return;
+     const themeClass = p.card_theme && p.card_theme!=='default' ? ' theme-'+p.card_theme : '';
     const div = document.createElement('div');
-    div.className = 'dadga-suspect-item' + (p.client_id === prevSelected ? ' selected' : '');
+    div.className = 'dadga-suspect-item' + themeClass + (p.client_id === prevSelected ? ' selected' : '');
     if(p.client_id === prevSelected) stillValid = true;
     div.onclick = ()=>{ vib('light'); selectOnlineVote(p.client_id, div); };
     div.innerHTML = `<div class="dadga-suspect-avatar ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="${avatarUrl(p.avatar_seed)}">${vipBadgeHtml(p.is_verified)}</div>
-      <div class="dadga-suspect-name">${p.name}</div>
+      <div class="dadga-suspect-name">${p.name}${p.is_verified ? ` <svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : ''}</div>
       <div class="dadga-suspect-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>`;
     list.appendChild(div);
   });
@@ -3944,9 +3948,10 @@ async function checkAllVoted(){
   const { data: room } = await sb.from('rooms').select('status').eq('code', onlineRoomCode).single();
   if(!room || room.status !== 'voting') return;
   const { data: players } = await sb.from('room_players').select('*').eq('room_code', onlineRoomCode);
-    if(players && players.length && players.every(p => p.vote_for)){
+  const activeVoters = (players||[]).filter(p => !isStale(p.last_seen_at, STALE_MS));
+  if(players && players.length && activeVoters.length && activeVoters.every(p => p.vote_for)){
     const tally = {};
-    players.forEach(p=>{ tally[p.vote_for] = (tally[p.vote_for]||0)+1; });
+    players.forEach(p=>{ if(p.vote_for) tally[p.vote_for] = (tally[p.vote_for]||0)+1; });
     const sorted = Object.entries(tally).sort((a,b)=>b[1]-a[1]);
     const accusedId = sorted[0][0];
     window._lastAccusedId = accusedId;
@@ -4007,7 +4012,7 @@ async function showOnlineReveal(room){
           <img src="${avatarUrl(p.avatar_seed)}" loading="lazy">
           ${vipBadgeHtml(p.is_verified)}
         </div>
-        <div class="player-name" style="flex:1;">${p.name}</div>
+        <div class="player-name" style="flex:1;">${p.name}${p.is_verified ? ` <svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : ''}</div>
         <div style="font-size:16px;font-weight:800;color:#c8960a;flex-shrink:0;">${p.score||0}</div>
       </div>`;
     }).join('');
