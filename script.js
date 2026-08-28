@@ -2973,7 +2973,7 @@ onclick="vib('medium');toggleMutePlayer('${payload.clientId}')">
   const vipNameHtml = payload.isVerified
     ? `<div class="chat-msg-name" style="color:#c8960a;display:flex;align-items:center;gap:4px;">${payload.name}<svg viewBox="0 0 24 24" width="11" height="11"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z" fill="#ffd400"/></svg></div>`
     : `<div class="chat-msg-name">${payload.name}</div>`;
-  div.innerHTML = `<div class="chat-msg-avatar ${vipFrameClass(payload.frameStyle)}" style="position:relative;"><img src="${avatarUrl(payload.avatarSeed)}" loading="lazy">${vipBadgeHtml(payload.isVerified)}</div>
+  div.innerHTML = `<div class="chat-msg-avatar ${vipFrameClass(payload.frameStyle)}"><img src="${avatarUrl(payload.avatarSeed)}" loading="lazy"></div>
     <div class="chat-msg-bubble" style="${payload.isVerified ? 'border:1.5px solid rgba(255,212,0,.5);background:linear-gradient(135deg,#fffbe8,#fff5cc);' : ''}">${isMine ? '' : vipNameHtml}<div>${payload.text}</div></div>
     ${muteBtnHtml}`;
   box.appendChild(div);
@@ -3773,7 +3773,7 @@ function renderReadyStatus(){
     slot.innerHTML = `
       <div class="ready-av-wrap">
         ${canKick ? `<div class="ready-kick" onclick="event.stopPropagation();vib('medium');kickPlayer('${p.client_id}','${p.name}')">✕</div>` : ''}
-        <div class="ready-av ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="${avatarUrl(p.avatar_seed)}" loading="lazy">${vipBadgeHtml(p.is_verified)}</div>
+<div class="ready-av ${vipFrameClass(p.frame_style)}"><img src="${avatarUrl(p.avatar_seed)}" loading="lazy"></div>
         <div class="ready-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
         <div class="disc-badge">🔌</div>
       </div>
@@ -3919,7 +3919,7 @@ function refreshOnlineVoteList(){
     div.className = 'dadga-suspect-item' + themeClass + (p.client_id === prevSelected ? ' selected' : '');
     if(p.client_id === prevSelected) stillValid = true;
     div.onclick = ()=>{ vib('light'); selectOnlineVote(p.client_id, div); };
-    div.innerHTML = `<div class="dadga-suspect-avatar ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="${avatarUrl(p.avatar_seed)}">${vipBadgeHtml(p.is_verified)}</div>
+<div class="dadga-suspect-avatar ${vipFrameClass(p.frame_style)}"><img src="${avatarUrl(p.avatar_seed)}"></div>
       <div class="dadga-suspect-name">${p.name}${p.is_verified ? ` <svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : ''}</div>
       <div class="dadga-suspect-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>`;
     list.appendChild(div);
@@ -4008,9 +4008,8 @@ async function showOnlineReveal(room){
       const themeClass = p.card_theme && p.card_theme!=='default' ? ' theme-'+p.card_theme : '';
       return `
       <div class="player-item${themeClass}" style="margin-bottom:8px;">
-        <div class="avatar ${vipFrameClass(p.frame_style)}" style="position:relative;">
+        <div class="avatar ${vipFrameClass(p.frame_style)}">
           <img src="${avatarUrl(p.avatar_seed)}" loading="lazy">
-          ${vipBadgeHtml(p.is_verified)}
         </div>
         <div class="player-name" style="flex:1;">${p.name}${p.is_verified ? ` <svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : ''}</div>
         <div style="font-size:16px;font-weight:800;color:#c8960a;flex-shrink:0;">${p.score||0}</div>
