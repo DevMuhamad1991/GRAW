@@ -5370,18 +5370,19 @@ function setUserSession(user){
   localStorage.setItem('sexur_user_session', JSON.stringify({ id: user.id, username: user.username }));
   renderAuthOrProfile();
 }
-
 async function loadUserSession(){
   const saved = localStorage.getItem('sexur_user_session');
   if(!saved) return;
   try{
     const { id } = JSON.parse(saved);
     const { data: user } = await sb.from('app_users').select('*').eq('id', id).maybeSingle();
-    if(user) currentUser = user;
+    if(user){
+      currentUser = user;
+      renderAuthOrProfile();
+    }
     else localStorage.removeItem('sexur_user_session');
   }catch(e){ localStorage.removeItem('sexur_user_session'); }
 }
-
 function logoutUser(){
   currentUser = null;
   localStorage.removeItem('sexur_user_session');
