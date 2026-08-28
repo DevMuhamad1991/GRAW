@@ -5236,9 +5236,16 @@ async function redeemVipCode(){
     btn.disabled=false; btn.innerText='چالاککردن'; return;
   }
 
-  const { data: updatedUser } = await sb.from('app_users').update({
+    const { data: updatedUser, error: e2 } = await sb.from('app_users').update({
     vip_until: newUntil.toISOString(), is_verified: true
   }).eq('id', currentUser.id).select().single();
+
+  console.error('VIP activation error:', e2);
+  if(e2 || !updatedUser){
+    vib('error');
+    showModal({title:"هەڵە لە چالاککردن", msg:"کۆدەکە تۆمارکرا بەڵام نەتوانرا هەژمارەکەت نوێ بکرێتەوە. تکایە پەیوەندی بکە.", icon:"err"});
+    btn.disabled=false; btn.innerText='چالاککردن'; return;
+  }
 
   currentUser = updatedUser;
   document.getElementById('vipCodeInput').value = '';
