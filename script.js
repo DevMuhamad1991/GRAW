@@ -1475,12 +1475,41 @@ async function selectVipCardTheme(themeId){
   currentUser = updatedUser;
   renderAuthOrProfile();
 }
+
+function renderVipPreview(){
+  const card = document.getElementById('vipPreviewCard');
+  if(!card) return;
+  card.className = 'player-item' + (currentUser.card_theme && currentUser.card_theme!=='default' ? ' theme-'+currentUser.card_theme : '');
+  const avWrap = document.getElementById('vipPreviewAvatar');
+  avWrap.className = 'avatar ' + vipFrameClass(currentUser.frame_style);
+  avWrap.innerHTML = `<img src="${avatarUrl(currentUser.avatar_seed)}">`;
+  const crownIco = ` <svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z" fill="#ffd400"/></svg>`;
+  const verifiedIco = currentUser.is_verified ? ` <svg viewBox="0 0 24 24" width="17" height="17" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : '';
+  document.getElementById('vipPreviewName').innerHTML = currentUser.username + crownIco + verifiedIco;
+}
 async function sha256Hex(text){
   const enc = new TextEncoder().encode(text);
   const buf = await crypto.subtle.digest('SHA-256', enc);
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-
+async function toggleVerifiedBadge(checked){
+  if(!isVipActive(currentUser)){
+    vib('error');
+    document.getElementById('vipVerifiedToggle').checked = !checked;
+    showModal({title:"تایبەتە بە VIP", msg:"بۆ چالاککردنی هێمای پشتڕاستکراوی پێویستە پاکێتی VIP چالاک بکەیت.", icon:"warn"});
+    return;
+  }
+  vib('medium');
+  const { data: updatedUser, error } = await sb.from('app_users').update({ is_verified: checked }).eq('id', currentUser.id).select().single();
+  if(error || !updatedUser){
+    vib('error');
+    document.getElementById('vipVerifiedToggle').checked = !checked;
+    return;
+  }
+  currentUser = updatedUser;
+  vib('success');
+  renderAuthOrProfile();
+}
 function switchAuthTab(tab){
   authCurrentTab = tab;
   document.getElementById('authTabLogin').classList.toggle('active', tab==='login');
@@ -1597,6 +1626,9 @@ function renderAuthOrProfile(){
     renderVipAvatarGrid();
     renderVipThemeRow();
     renderVipCardThemeRow();
+    renderVipPreview();
+    const vTog = document.getElementById('vipVerifiedToggle');
+    if(vTog) vTog.checked = !!currentUser.is_verified;
   } else {
     lockedView.classList.remove('hidden');
     unlockedView.classList.add('hidden');
@@ -3064,7 +3096,7 @@ function buildRoomCard(code){
   div.className = 'player-item';
   div.style.cursor = 'pointer';
   div.setAttribute('data-room', code);
-  div.onclick = ()=>{ vib(); promptJoinRoom(code, publicRoomsCache[code].hostName); };
+  div.onclick = ()=>{ vib(); promptJoinRoom(code, publicRoomsCache[code].hostName, publicRoomsCache[code].isPublic); };
   const badgeColor = r.isPublic ? '#22c55e' : '#ff4d4d';
   const badgeIcon = r.isPublic
     ? '<svg viewBox="0 0 24 24" width="11" height="11" fill="#fff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>'
@@ -3244,11 +3276,15 @@ function subscribePublicRooms(){
 
 let _joinCodeTarget = null;
 
-function promptJoinRoom(code, hostName){
+function promptJoinRoom(code, hostName, isPublicRoom){
   const name = document.getElementById('onlinePlayerName').value.trim();
   if(!name){
     vib('error');
     showModal({title:"ناوت بنووسە", msg:"تکایە پێش چوونەژوورەوە ناوی خۆت بنووسە.", icon:"warn"});
+    return;
+  }
+  if(isPublicRoom){
+    joinOnlineRoomByCode(code, name);
     return;
   }
   _joinCodeTarget = { code, hostName };
