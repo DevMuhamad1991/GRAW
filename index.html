@@ -1523,19 +1523,29 @@ background: rgba(0,0,0,.2);
 .vip-theme-row{display:flex;gap:10px;flex-wrap:wrap;}
 .vip-theme-opt{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;border-radius:16px;background:#f5f5f5;border:2.5px solid transparent;cursor:pointer;flex:1;min-width:64px;}
 .vip-theme-opt.active{border-color:#ffd400;background:#fffbe8;}
-.player-item.theme-fire{background:linear-gradient(135deg,#ff512f,#f09819);box-shadow:0 6px 20px rgba(255,81,47,.35);}
+@keyframes vipCardFireGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,70,40,.4),0 6px 20px rgba(0,0,0,.3);border-color:rgba(255,90,60,.5);}50%{box-shadow:0 0 0 3px rgba(255,70,40,.2),0 6px 26px rgba(255,60,30,.55);border-color:#ff6a3d;}}
+.player-item.theme-fire{background:linear-gradient(135deg,#0a0a0a,#c0392b 150%);border:2px solid rgba(255,90,60,.5);animation:vipCardFireGlow 1.8s ease-in-out infinite;}
 .player-item.theme-fire .player-name{color:#fff;}
-.player-item.theme-neon{background:linear-gradient(135deg,#0f2027,#2c5364);box-shadow:0 6px 20px rgba(15,32,39,.4);}
-.player-item.theme-neon .player-name{color:#00e5ff;text-shadow:0 0 8px rgba(0,229,255,.55);}
-.player-item.theme-royal{background:linear-gradient(135deg,#141e30,#243b55);box-shadow:0 6px 20px rgba(20,30,48,.4);}
+
+@keyframes vipCardNeonGlow{0%,100%{box-shadow:0 0 0 0 rgba(0,200,255,.4),0 6px 20px rgba(0,0,0,.3);border-color:rgba(0,200,255,.5);}50%{box-shadow:0 0 0 3px rgba(0,200,255,.2),0 6px 26px rgba(0,200,255,.55);border-color:#00e5ff;}}
+.player-item.theme-neon{background:linear-gradient(135deg,#0a0a0a,#0d6efd 150%);border:2px solid rgba(0,200,255,.5);animation:vipCardNeonGlow 1.8s ease-in-out infinite;}
+.player-item.theme-neon .player-name{color:#e0feff;}
+
+@keyframes vipCardRoyalGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,212,0,.4),0 6px 20px rgba(0,0,0,.3);border-color:rgba(255,212,0,.5);}50%{box-shadow:0 0 0 3px rgba(255,212,0,.2),0 6px 26px rgba(255,212,0,.55);border-color:#ffd400;}}
+.player-item.theme-royal{background:linear-gradient(135deg,#0a0a0a,#8a5cf6 150%);border:2px solid rgba(255,212,0,.5);animation:vipCardRoyalGlow 1.8s ease-in-out infinite;}
 .player-item.theme-royal .player-name{color:#ffd700;}
-.player-item.theme-dark{background:linear-gradient(135deg,#232526,#414345);box-shadow:0 6px 20px rgba(0,0,0,.3);}
+
+@keyframes vipCardDarkGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.15),0 6px 20px rgba(0,0,0,.3);border-color:rgba(255,255,255,.25);}50%{box-shadow:0 0 0 3px rgba(255,255,255,.08),0 6px 26px rgba(255,255,255,.3);border-color:rgba(255,255,255,.55);}}
+.player-item.theme-dark{background:linear-gradient(135deg,#0a0a0a,#555 150%);border:2px solid rgba(255,255,255,.25);animation:vipCardDarkGlow 2s ease-in-out infinite;}
 .player-item.theme-dark .player-name{color:#fff;}
 .vip-theme-swatch{width:38px;height:38px;border-radius:50%;flex-shrink:0;}
 .vip-theme-opt span{font-size:11px;font-weight:800;color:#555;}
-.vip-frame-gold{border-color:#ffd400 !important;box-shadow:0 0 0 3px rgba(255,212,0,.35);}
-.vip-frame-spy{border-color:#111 !important;box-shadow:0 0 0 3px rgba(0,0,0,.25);}
-.vip-frame-confetti{border-color:transparent !important;background:linear-gradient(135deg,#ff3b3b,#ffd400,#22c55e,#6366f1) !important;box-shadow:0 0 0 3px rgba(255,255,255,.5);}
+@keyframes vipRoyalPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,212,0,.5),0 0 12px 2px rgba(255,212,0,.3);border-color:#ffd400;}50%{box-shadow:0 0 0 4px rgba(255,212,0,.15),0 0 22px 6px rgba(255,212,0,.55);border-color:#fff3b0;}}
+.vip-frame-royal{border-width:3px !important;animation:vipRoyalPulse 2.2s ease-in-out infinite;}
+@keyframes vipSpyScan{0%,100%{box-shadow:0 0 0 0 rgba(255,59,59,.45),0 0 10px 2px rgba(0,0,0,.4);border-color:#111;}50%{box-shadow:0 0 0 4px rgba(255,59,59,.25),0 0 20px 6px rgba(255,59,59,.5);border-color:#ff3b3b;}}
+.vip-frame-spy{border-width:3px !important;animation:vipSpyScan 1.8s ease-in-out infinite;}
+@keyframes vipElectricPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,229,255,.5),0 0 10px 2px rgba(0,229,255,.3);border-color:#00e5ff;}50%{box-shadow:0 0 0 4px rgba(0,229,255,.15),0 0 22px 6px rgba(0,229,255,.6);border-color:#e0feff;}}
+.vip-frame-electric{border-width:3px !important;animation:vipElectricPulse 1.6s ease-in-out infinite;}
 .vip-mini-badge{position:absolute;bottom:-3px;left:-3px;width:16px;height:16px;border-radius:50%;background:#1da1f2;border:2px solid #fff;display:flex;align-items:center;justify-content:center;z-index:2;}
 .vip-mini-badge svg{width:9px;height:9px;fill:#fff;}
 .vip-lock-badge{
@@ -3049,10 +3059,11 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
         <button onclick="vib('medium');logoutUser()" title="دەرچوون" style="position:absolute;top:16px;left:16px;width:36px;height:36px;border-radius:11px;background:rgba(255,59,59,.1);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;">
           <svg viewBox="0 0 24 24" width="17" height="17" fill="#c62828"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
         </button>
-              <div style="position:relative;">
+                  <div style="position:relative;">
           <div id="profileAvatarWrap" style="width:84px;height:84px;border-radius:50%;overflow:hidden;border:3px solid #ffd400;background:#fff;">
             <img id="profileAvatarImg" src="" style="width:100%;height:100%;object-fit:cover;">
           </div>
+          <div id="profileFrameIcon" class="hidden" style="position:absolute;bottom:-4px;left:-4px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2.5px solid #fff7cf;z-index:2;"></div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <div style="font-weight:800;font-size:var(--fs-lg);" id="profileUsernameText"></div>
@@ -3106,10 +3117,10 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
         <div style="height:1px;background:rgba(0,0,0,.07);margin:18px 0;"></div>
 
         <div class="vip-section-title">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="#111"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-          ڕازاندنەوەی کارت
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="#111"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+          ئیتارەی پرۆفایل
         </div>
-                <div class="vip-theme-row" id="vipThemeRow"></div>
+        <div class="vip-theme-row" id="vipThemeRow"></div>
 
         <div style="height:1px;background:rgba(0,0,0,.07);margin:18px 0;"></div>
         <div class="vip-section-title">🔥 کارتی لۆبی</div>
