@@ -5257,10 +5257,13 @@ function switchAuthTab(tab){
 }
 function onAuthUsernameInput(){
   const input = document.getElementById('authUsername');
-  const cleaned = input.value.replace(/[^a-zA-Z0-9_]/g,'');
-  if(cleaned !== input.value) input.value = cleaned;
+  const cleaned = input.value.replace(/[^\u0600-\u06FF\u200c\s]/g,'');
+  if(cleaned !== input.value){
+    input.value = cleaned;
+    vib('error');
+    showKurdishToast();
+  }
 }
-
 function showAuthError(msg){
   const el = document.getElementById('authErrMsg');
   el.innerText = msg;
