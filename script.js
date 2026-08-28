@@ -1450,6 +1450,31 @@ async function selectVipTheme(themeId){
   currentUser = updatedUser;
   renderAuthOrProfile();
 }
+
+const vipCardThemes = [
+  { id:'default', label:'ئاسایی', color:'#f5f5f5' },
+  { id:'fire', label:'ئاگرین 🔥', color:'linear-gradient(135deg,#ff512f,#f09819)' },
+  { id:'neon', label:'نیۆن', color:'linear-gradient(135deg,#0f2027,#2c5364)' },
+  { id:'royal', label:'شاهانە', color:'linear-gradient(135deg,#141e30,#243b55)' },
+  { id:'dark', label:'تاریک', color:'linear-gradient(135deg,#232526,#414345)' }
+];
+function renderVipCardThemeRow(){
+  const row = document.getElementById('vipCardThemeRow');
+  if(!row) return;
+  row.innerHTML = '';
+  vipCardThemes.forEach(t=>{
+    const div = document.createElement('div');
+    div.className = 'vip-theme-opt' + (currentUser.card_theme===t.id ? ' active' : '');
+    div.innerHTML = `<div class="vip-theme-swatch" style="background:${t.color};"></div><span>${t.label}</span>`;
+    div.onclick = () => { vib('medium'); selectVipCardTheme(t.id); };
+    row.appendChild(div);
+  });
+}
+async function selectVipCardTheme(themeId){
+  const { data: updatedUser } = await sb.from('app_users').update({ card_theme: themeId }).eq('id', currentUser.id).select().single();
+  currentUser = updatedUser;
+  renderAuthOrProfile();
+}
 async function sha256Hex(text){
   const enc = new TextEncoder().encode(text);
   const buf = await crypto.subtle.digest('SHA-256', enc);
@@ -1571,6 +1596,7 @@ function renderAuthOrProfile(){
     }
     renderVipAvatarGrid();
     renderVipThemeRow();
+    renderVipCardThemeRow();
   } else {
     lockedView.classList.remove('hidden');
     unlockedView.classList.add('hidden');
@@ -3299,7 +3325,8 @@ async function createOnlineRoom(){
     avatar_seed: (currentUser && isVipActive(currentUser)) ? currentUser.avatar_seed : name+'_'+Date.now(),
     is_host: true, last_seen_at: new Date().toISOString(),
     is_verified: !!(currentUser && isVipActive(currentUser)),
-    frame_style: (currentUser && isVipActive(currentUser)) ? currentUser.frame_style : 'default'
+    frame_style: (currentUser && isVipActive(currentUser)) ? currentUser.frame_style : 'default',
+    card_theme: (currentUser && isVipActive(currentUser)) ? currentUser.card_theme : 'default'
   });
   if(playerErr){ vib('error'); showModal({title:"هەڵە", msg:"نەتوانرا زیاد بکرێیت.", icon:"err"}); return; }
 
@@ -3332,7 +3359,8 @@ async function joinOnlineRoomByCode(code, name){
     avatar_seed: (currentUser && isVipActive(currentUser)) ? currentUser.avatar_seed : name+'_'+Date.now(),
     is_host: false, last_seen_at: new Date().toISOString(),
     is_verified: !!(currentUser && isVipActive(currentUser)),
-    frame_style: (currentUser && isVipActive(currentUser)) ? currentUser.frame_style : 'default'
+    frame_style: (currentUser && isVipActive(currentUser)) ? currentUser.frame_style : 'default',
+    card_theme: (currentUser && isVipActive(currentUser)) ? currentUser.card_theme : 'default'
   });
   if(playerErr){ vib('error'); showModal({title:"هەڵە", msg:"نەتوانرا بچیتە ژوورەوە.", icon:"err"}); return; }
 
@@ -3438,7 +3466,7 @@ function refreshLobbyPlayersUI(){
   box.innerHTML = '';
   onlinePlayers.forEach(p=>{
     const div = document.createElement('div');
-    div.className = 'player-item' + (isStale(p.last_seen_at, STALE_MS) ? ' is-disconnected' : '');
+    div.className = 'player-item' + (isStale(p.last_seen_at, STALE_MS) ? ' is-disconnected' : '') + (p.card_theme && p.card_theme!=='default' ? ' theme-'+p.card_theme : '');
     div.setAttribute('data-player-row', p.client_id);
     const canKick = isHost && p.client_id !== CLIENT_ID;
     const pingMs = p.ping_ms || 0;
@@ -3448,8 +3476,11 @@ function refreshLobbyPlayersUI(){
           ? '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#c62828" opacity=".35"/><line x1="3" y1="3" x2="21" y2="21" stroke="#c62828" stroke-width="2.4" stroke-linecap="round"/></svg>'
           : '<svg viewBox="0 0 24 24" width="16" height="16" fill="#555"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>'
         }</button>` : ''}`;
- div.innerHTML = `<div class="avatar-disc-wrap"><div class="avatar ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="${avatarUrl(p.avatar_seed)}">${vipBadgeHtml(p.is_verified)}</div><div class="disc-badge-lobby">🔌</div></div>
-      <div class="player-name">${p.name}${p.is_host?' 👑':''}<span data-mute-emoji="${p.client_id}">${p.is_muted?' 🔇':''}</span></div>
+    const crownIco = p.is_host ? ` <svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z" fill="#ffd400"/></svg>` : '';
+    const verifiedIco = p.is_verified ? ` <svg viewBox="0 0 24 24" width="17" height="17" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : '';
+    const muteIco = p.is_muted ? ` <svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align:-2px"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#c62828" opacity=".85"/><line x1="3" y1="3" x2="21" y2="21" stroke="#fff7cf" stroke-width="2.4"/></svg>` : '';
+    div.innerHTML = `<div class="avatar-disc-wrap"><div class="avatar ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="${avatarUrl(p.avatar_seed)}"></div><div class="disc-badge-lobby">🔌</div></div>
+      <div class="player-name">${p.name}${crownIco}${verifiedIco}<span data-mute-emoji="${p.client_id}">${muteIco}</span></div>
       <div class="lobby-ping-badge ${pc}" data-ping="${p.client_id}" style="background:rgba(0,0,0,.05);">${pingMs>0?pingMs+' ms':'...'}</div>
       ${muteBtn}
       ${canKick ? `<button class="remove-player" onclick="vib('medium');kickPlayer('${p.client_id}','${p.name}')">&#x2715;</button>` : ''}`;
