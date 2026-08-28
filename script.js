@@ -205,63 +205,6 @@ function adResetProgress() {
  }, 100);
 }
 buildAdBanner();
-function adUpdateUI() {
-  document.getElementById('adTrack').style.transform = `translateX(${adCurrent * 100}%)`;
-  document.querySelectorAll('.ad-dot').forEach((d, i) => {
-    d.classList.toggle('active', i === adCurrent);
-  });
-}
-function adGoTo(idx) {
-  adCurrent = (idx + adSlides.length) % adSlides.length;
-  adUpdateUI();
-  adResetProgress();
-}
-function adNext() { adGoTo(adCurrent + 1); }
-function adPrev() { adGoTo(adCurrent - 1); }
-function adStartAuto() {
-  adStopAuto();
-  adResetProgress();
-  adAutoTimer = setInterval(() => {
-    adGoTo(adCurrent + 1);
-  }, AD_INTERVAL);
-}
-function adStopAuto() {
-  clearInterval(adAutoTimer);
-  clearInterval(adProgressTimer);
-}
-function adResetProgress() {
-  clearInterval(adProgressTimer);
-  adProgress = 100;
-  const fill = document.getElementById('adProgressFill');
-  if (!fill) return;
-  fill.style.width = '100%';
-  const step = 100 / (AD_INTERVAL / 100);
-  adProgressTimer = setInterval(() => {
-    adProgress = Math.max(0, adProgress - step);
-    fill.style.width = adProgress + '%';
-  }, 100);
-}
-
-// touch/swipe on ad banner
-(function(){
-  const banner = document.getElementById('adBanner');
-  let tx = 0, dragging = false;
-  banner.addEventListener('touchstart', e => {
-    tx = e.touches[0].clientX;
-    dragging = true;
-    adStopAuto();
-  }, {passive:true});
-  banner.addEventListener('touchend', e => {
-    if (!dragging) return;
-    dragging = false;
-    const dx = e.changedTouches[0].clientX - tx;
-    if (Math.abs(dx) > 40) { dx > 0 ? adPrev() : adNext(); }
-    adStartAuto();
-  }, {passive:true});
-})();
-
-buildAdBanner();
-
 // Skeleton loader
 function hideLoader(){
   const l=document.getElementById('loadingScreen');
@@ -656,18 +599,6 @@ const allPools = [];
  }
  currentIndex = 0;
 }
-
-function startCards(){
-  if(selectedCategories.length === 0 && customWords.length === 0){
-    vib('error');
-    showModal({title:"لیستی وشە هەڵبژێرە",msg:"تکایە لانیکەم یەک وشە هەڵبژێرە پێش دەستپێکردن.",icon:"warn"});
-    return;
-  }
-  prepareGame();
-  showScreen("screen3");
-  showPlayer();
-}
-
 function showPlayer(){
   cardWasOpened=false;
   document.getElementById("wordCard").classList.remove("flip");
@@ -701,13 +632,7 @@ card.addEventListener("mouseup",()=>{clearTimeout(holdTimer);if(cardWasOpened)cl
 card.addEventListener("mouseleave",()=>{clearTimeout(holdTimer);if(cardWasOpened)closeCard();});
 
 function nextPlayer(){currentIndex++;if(currentIndex>=players.length){vib('success');showStarter();return;}vib();showPlayer();}
-function showStarter(){
-  showScreen("screen4");
-  const starter=Math.floor(Math.random()*players.length);
-  document.getElementById("starterName").innerText=players[starter];
-  document.getElementById("starterAvatar").src=avatars[playerAvatarIndexes[starter]];
-  resetTimerUI();
-}
+
 function resetTimerUI(){
   clearInterval(timerInterval);timerStarted=false;isPaused=false;
   document.getElementById("pauseOverlay").classList.remove("active");
@@ -788,12 +713,6 @@ function showResults(){
   }
   // ← ئەمە زیاد بکە
   setTimeout(() => openScores(), 600);
-}
-function playAgain(){
-  prepareGame();
-  updateRoundBtn(); // ← زیاد بکە
-  showScreen("screen3");
-  showPlayer();
 }
 function updateRoundBtn(){
   const rounds = getTotalRounds();
@@ -3919,7 +3838,7 @@ function refreshOnlineVoteList(){
     div.className = 'dadga-suspect-item' + themeClass + (p.client_id === prevSelected ? ' selected' : '');
     if(p.client_id === prevSelected) stillValid = true;
     div.onclick = ()=>{ vib('light'); selectOnlineVote(p.client_id, div); };
-<div class="dadga-suspect-avatar ${vipFrameClass(p.frame_style)}"><img src="${avatarUrl(p.avatar_seed)}"></div>
+    div.innerHTML = `<div class="dadga-suspect-avatar ${vipFrameClass(p.frame_style)}"><img src="${avatarUrl(p.avatar_seed)}"></div>
       <div class="dadga-suspect-name">${p.name}${p.is_verified ? ` <svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : ''}</div>
       <div class="dadga-suspect-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>`;
     list.appendChild(div);
