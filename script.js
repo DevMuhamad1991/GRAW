@@ -4,7 +4,6 @@ function vib(type='light'){
   const patterns={light:[8],medium:[15],heavy:[30],double:[10,60,10],success:[10,40,20],error:[20,60,20,60,20]};
   navigator.vibrate(patterns[type]||patterns.light);
 }
-
 const avatars=[
   "https://api.dicebear.com/7.x/adventurer/svg?seed=Zara",
   "https://api.dicebear.com/7.x/adventurer/svg?seed=Titan",
@@ -3448,7 +3447,7 @@ function refreshLobbyPlayersUI(){
           ? '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#c62828" opacity=".35"/><line x1="3" y1="3" x2="21" y2="21" stroke="#c62828" stroke-width="2.4" stroke-linecap="round"/></svg>'
           : '<svg viewBox="0 0 24 24" width="16" height="16" fill="#555"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>'
         }</button>` : ''}`;
-    div.innerHTML = `<div class="avatar-disc-wrap"><div class="avatar ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="${avatarUrl(p.avatar_seed)}">${vipBadgeHtml(p.is_verified)}</div><div class="disc-badge-lobby">🔌</div></div>`
+ div.innerHTML = `<div class="avatar-disc-wrap"><div class="avatar ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="${avatarUrl(p.avatar_seed)}">${vipBadgeHtml(p.is_verified)}</div><div class="disc-badge-lobby">🔌</div></div>
       <div class="player-name">${p.name}${p.is_host?' 👑':''}<span data-mute-emoji="${p.client_id}">${p.is_muted?' 🔇':''}</span></div>
       <div class="lobby-ping-badge ${pc}" data-ping="${p.client_id}" style="background:rgba(0,0,0,.05);">${pingMs>0?pingMs+' ms':'...'}</div>
       ${muteBtn}
