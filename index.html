@@ -2947,20 +2947,46 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 <section class="screen hidden" id="creatorScreen">
   <div class="creator-wrap">
 
-    <!-- ══ کاتێک لۆگین نییت — فۆرمی چوونەژوورەوە/دروستکردن ══ -->    <!-- ══ کارتی پرۆفایل — هەمیشە دیارە ══ -->
-    <div class="glass" id="profileCard" style="padding:var(--pad-card);margin-bottom:var(--gap-md);position:relative;overflow:hidden;text-align:center;">
+    <!-- ══ کاتێک لۆگین نییت — فۆرمی چوونەژوورەوە/دروستکردن ══ -->    <!-- ══ کارتی پرۆفایل — هەمیشە دیارە ══ -->    <div class="glass" id="profileCard" style="padding:var(--pad-card);margin-bottom:var(--gap-md);position:relative;overflow:hidden;">
 
-      <!-- دۆخی قوفڵکراو -->
+      <!-- دۆخی قوفڵکراو — فۆرمی چوونەژوورەوە/دروستکردن -->
       <div id="profileLockedView" style="display:flex;flex-direction:column;align-items:center;gap:10px;">
-        <div style="width:84px;height:84px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;filter:grayscale(1);opacity:.5;">
-          <svg viewBox="0 0 24 24" width="34" height="34" fill="#888"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
+        <div style="width:64px;height:64px;border-radius:50%;background:rgba(255,212,0,.16);display:flex;align-items:center;justify-content:center;margin-bottom:2px;">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="#b88600"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
         </div>
-        <div style="font-weight:800;font-size:var(--fs-md);opacity:.6;">پرۆفایلەکەت قوفڵکراوە</div>
-        <div style="font-size:13px;font-weight:700;opacity:.45;">بچۆ ژوورەوە بۆ بینینی پرۆفایلی خۆت</div>
+        <div style="font-weight:800;font-size:var(--fs-md);text-align:center;">هەژمارێک دروست بکە یان بچۆ ژوورەوە</div>
+        <div style="font-size:12px;font-weight:700;opacity:.5;text-align:center;margin-bottom:8px;">بۆ کۆنترۆڵی پرۆفایلی خۆت</div>
+
+        <div class="mode-toggle" style="width:100%;">
+          <button class="mode-btn active" id="authTabLogin" onclick="vib();switchAuthTab('login')" style="display:flex;align-items:center;justify-content:center;gap:6px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" style="fill:currentColor;flex-shrink:0;"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
+            چوونەژوورەوە
+          </button>
+          <button class="mode-btn" id="authTabRegister" onclick="vib();switchAuthTab('register')" style="display:flex;align-items:center;justify-content:center;gap:6px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" style="fill:currentColor;flex-shrink:0;"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            هەژماری نوێ
+          </button>
+        </div>
+
+        <div style="width:100%;margin-top:14px;">
+          <label>ناوی بەکارهێنەر</label>
+          <input type="text" id="authUsername" placeholder="یوزەرنەیم بنووسە" autocomplete="off"
+            oninput="onAuthUsernameInput()" style="margin-bottom:14px;">
+          <label>وشەی نهێنی</label>
+          <input type="password" id="authPassword" placeholder="پاسۆرد بنووسە" autocomplete="off">
+          <div id="authErrMsg" style="display:none;color:#ff4d4d;font-size:13px;font-weight:700;margin-top:10px;padding:8px 14px;background:rgba(255,77,77,.08);border-radius:12px;"></div>
+          <button class="start-btn" id="authSubmitBtn" onclick="vib('medium');submitAuth()" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+            <svg id="authSubmitIcon" viewBox="0 0 24 24" width="18" height="18" style="fill:currentColor;flex-shrink:0;"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
+            <span id="authSubmitText">چوونەژوورەوە</span>
+          </button>
+        </div>
       </div>
 
       <!-- دۆخی کراوە -->
-      <div id="profileUnlockedView" class="hidden" style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+      <div id="profileUnlockedView" class="hidden" style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;">
+        <button onclick="vib('medium');logoutUser()" title="دەرچوون" style="position:absolute;top:16px;left:16px;width:36px;height:36px;border-radius:11px;background:rgba(255,59,59,.1);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="#c62828"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+        </button>
         <div style="position:relative;">
           <div style="width:84px;height:84px;border-radius:50%;overflow:hidden;border:3px solid #ffd400;background:#fff;">
             <img id="profileAvatarImg" src="" style="width:100%;height:100%;object-fit:cover;">
@@ -2971,32 +2997,8 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
         </div>
         <div style="font-weight:800;font-size:var(--fs-lg);" id="profileUsernameText"></div>
         <div style="font-size:12px;font-weight:700;color:#22c55e;background:rgba(34,197,94,.1);padding:4px 12px;border-radius:100px;">یاریزانی سیخوڕ</div>
-        <button class="restart-btn dark-btn" style="margin-top:8px;" onclick="vib('medium');logoutUser()">دەرچوون لە هەژمار</button>
       </div>
 
-    </div>
-
-    <!-- ══ کاتێک لۆگین نییت — فۆرمی چوونەژوورەوە/دروستکردن ══ -->
-    <div id="authWrap">
-      <div class="review-hero">
-        <div class="review-hero-title">بەشی سیخوڕ</div>
-        <div class="review-hero-sub">هەژمارێک دروست بکە بۆ کۆنترۆڵی پرۆفایلی خۆت</div>
-      </div>
-
-      <div class="mode-toggle" style="margin-bottom:var(--gap-md);">
-        <button class="mode-btn active" id="authTabLogin" onclick="vib();switchAuthTab('login')">چوونەژوورەوە</button>
-        <button class="mode-btn" id="authTabRegister" onclick="vib();switchAuthTab('register')">هەژماری نوێ</button>
-      </div>
-
-      <div class="glass input-card" style="margin-bottom:0;">
-        <label>ناوی بەکارهێنەر</label>
-        <input type="text" id="authUsername" placeholder="یوزەرنەیم بنووسە" autocomplete="off"
-          oninput="onAuthUsernameInput()" style="margin-bottom:14px;">
-        <label>وشەی نهێنی</label>
-        <input type="password" id="authPassword" placeholder="پاسۆرد بنووسە" autocomplete="off">
-        <div id="authErrMsg" style="display:none;color:#ff4d4d;font-size:13px;font-weight:700;margin-top:10px;padding:8px 14px;background:rgba(255,77,77,.08);border-radius:12px;"></div>
-        <button class="start-btn" id="authSubmitBtn" onclick="vib('medium');submitAuth()">چوونەژوورەوە</button>
-      </div>
     </div>
     <!-- ══ کاتێک لۆگین بوویت — پرۆفایل ══ -->    <!-- ══ CONTACT MEGA CARD ══ -->
     <div class="contact-mega-card">
@@ -5243,10 +5245,16 @@ function switchAuthTab(tab){
   authCurrentTab = tab;
   document.getElementById('authTabLogin').classList.toggle('active', tab==='login');
   document.getElementById('authTabRegister').classList.toggle('active', tab==='register');
-  document.getElementById('authSubmitBtn').innerText = tab==='login' ? 'چوونەژوورەوە' : 'دروستکردنی هەژمار';
+  document.getElementById('authSubmitText').innerText = tab==='login' ? 'چوونەژوورەوە' : 'دروستکردنی هەژمار';
+  document.getElementById('authSubmitIcon').innerHTML = tab==='login'
+    ? '<path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>'
+    : '<path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>';
+  const btn = document.getElementById('authSubmitBtn');
+  btn.style.background = tab==='login' ? '' : 'linear-gradient(135deg,#22c55e,#16a34a)';
+  btn.style.color = tab==='login' ? '' : '#fff';
+  btn.style.boxShadow = tab==='login' ? '' : '0 6px 20px rgba(34,197,94,.35)';
   document.getElementById('authErrMsg').style.display = 'none';
 }
-
 function onAuthUsernameInput(){
   const input = document.getElementById('authUsername');
   const cleaned = input.value.replace(/[^a-zA-Z0-9_]/g,'');
@@ -5321,13 +5329,11 @@ function logoutUser(){
 }
 
 function renderAuthOrProfile(){
-  const authWrap = document.getElementById('authWrap');
   const lockedView = document.getElementById('profileLockedView');
   const unlockedView = document.getElementById('profileUnlockedView');
-  if(!authWrap || !lockedView || !unlockedView) return;
+  if(!lockedView || !unlockedView) return;
 
   if(currentUser){
-    authWrap.classList.add('hidden');
     lockedView.classList.add('hidden');
     unlockedView.classList.remove('hidden');
 
@@ -5335,7 +5341,6 @@ function renderAuthOrProfile(){
     document.getElementById('profileUsernameText').innerText = currentUser.username;
     document.getElementById('profileVerifiedBadge').classList.toggle('hidden', !currentUser.is_verified);
   } else {
-    authWrap.classList.remove('hidden');
     lockedView.classList.remove('hidden');
     unlockedView.classList.add('hidden');
     document.getElementById('authUsername').value = '';
@@ -5343,7 +5348,6 @@ function renderAuthOrProfile(){
     switchAuthTab('login');
   }
 }
-
 window.addEventListener('load', () => setTimeout(loadUserSession, 300));
 
 /* ══════════════════════════════════════
