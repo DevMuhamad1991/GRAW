@@ -1523,6 +1523,14 @@ background: rgba(0,0,0,.2);
 .vip-theme-row{display:flex;gap:10px;flex-wrap:wrap;}
 .vip-theme-opt{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;border-radius:16px;background:#f5f5f5;border:2.5px solid transparent;cursor:pointer;flex:1;min-width:64px;}
 .vip-theme-opt.active{border-color:#ffd400;background:#fffbe8;}
+.player-item.theme-fire{background:linear-gradient(135deg,#ff512f,#f09819);box-shadow:0 6px 20px rgba(255,81,47,.35);}
+.player-item.theme-fire .player-name{color:#fff;}
+.player-item.theme-neon{background:linear-gradient(135deg,#0f2027,#2c5364);box-shadow:0 6px 20px rgba(15,32,39,.4);}
+.player-item.theme-neon .player-name{color:#00e5ff;text-shadow:0 0 8px rgba(0,229,255,.55);}
+.player-item.theme-royal{background:linear-gradient(135deg,#141e30,#243b55);box-shadow:0 6px 20px rgba(20,30,48,.4);}
+.player-item.theme-royal .player-name{color:#ffd700;}
+.player-item.theme-dark{background:linear-gradient(135deg,#232526,#414345);box-shadow:0 6px 20px rgba(0,0,0,.3);}
+.player-item.theme-dark .player-name{color:#fff;}
 .vip-theme-swatch{width:38px;height:38px;border-radius:50%;flex-shrink:0;}
 .vip-theme-opt span{font-size:11px;font-weight:800;color:#555;}
 .vip-frame-gold{border-color:#ffd400 !important;box-shadow:0 0 0 3px rgba(255,212,0,.35);}
@@ -3096,7 +3104,11 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
           <svg viewBox="0 0 24 24" width="16" height="16" fill="#111"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
           ڕازاندنەوەی کارت
         </div>
-        <div class="vip-theme-row" id="vipThemeRow"></div>
+                <div class="vip-theme-row" id="vipThemeRow"></div>
+
+        <div style="height:1px;background:rgba(0,0,0,.07);margin:18px 0;"></div>
+        <div class="vip-section-title">🔥 کارتی لۆبی</div>
+        <div class="vip-theme-row" id="vipCardThemeRow"></div>
       </div>
     </div>
 
