@@ -1540,12 +1540,30 @@ background: rgba(0,0,0,.2);
 .player-item.theme-dark .player-name{color:#fff;}
 .vip-theme-swatch{width:38px;height:38px;border-radius:50%;flex-shrink:0;}
 .vip-theme-opt span{font-size:11px;font-weight:800;color:#555;}
-@keyframes vipRoyalPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,212,0,.5),0 0 12px 2px rgba(255,212,0,.3);border-color:#ffd400;}50%{box-shadow:0 0 0 4px rgba(255,212,0,.15),0 0 22px 6px rgba(255,212,0,.55);border-color:#fff3b0;}}
-.vip-frame-royal{border-width:3px !important;animation:vipRoyalPulse 2.2s ease-in-out infinite;}
-@keyframes vipSpyScan{0%,100%{box-shadow:0 0 0 0 rgba(255,59,59,.45),0 0 10px 2px rgba(0,0,0,.4);border-color:#111;}50%{box-shadow:0 0 0 4px rgba(255,59,59,.25),0 0 20px 6px rgba(255,59,59,.5);border-color:#ff3b3b;}}
-.vip-frame-spy{border-width:3px !important;animation:vipSpyScan 1.8s ease-in-out infinite;}
-@keyframes vipElectricPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,229,255,.5),0 0 10px 2px rgba(0,229,255,.3);border-color:#00e5ff;}50%{box-shadow:0 0 0 4px rgba(0,229,255,.15),0 0 22px 6px rgba(0,229,255,.6);border-color:#e0feff;}}
-.vip-frame-electric{border-width:3px !important;animation:vipElectricPulse 1.6s ease-in-out infinite;}
+.vip-frame-royal, .vip-frame-spy, .vip-frame-electric{
+  position: relative;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+.vip-frame-royal::before,
+.vip-frame-spy::before,
+.vip-frame-electric::before{
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  padding: 3px;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: vipRingSpin 3s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+.vip-frame-royal::before{ background: conic-gradient(from 0deg, #ffd400, #fff3b0 25%, #ffd400 50%, #b8860b 75%, #ffd400); }
+.vip-frame-spy::before{ background: conic-gradient(from 0deg, #ff3b3b, #111 25%, #ff3b3b 50%, #7a0000 75%, #ff3b3b); }
+.vip-frame-electric::before{ background: conic-gradient(from 0deg, #00e5ff, #0d6efd 25%, #00e5ff 50%, #003a5c 75%, #00e5ff); }
+@keyframes vipRingSpin{ to { transform: rotate(360deg); } }
 .vip-mini-badge{position:absolute;bottom:-3px;left:-3px;width:16px;height:16px;border-radius:50%;background:#1da1f2;border:2px solid #fff;display:flex;align-items:center;justify-content:center;z-index:2;}
 .vip-mini-badge svg{width:9px;height:9px;fill:#fff;}
 .vip-lock-badge{
@@ -3063,7 +3081,6 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
           <div id="profileAvatarWrap" style="width:84px;height:84px;border-radius:50%;overflow:hidden;border:3px solid #ffd400;background:#fff;">
             <img id="profileAvatarImg" src="" style="width:100%;height:100%;object-fit:cover;">
           </div>
-          <div id="profileFrameIcon" class="hidden" style="position:absolute;bottom:-4px;left:-4px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2.5px solid #fff7cf;z-index:2;"></div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <div style="font-weight:800;font-size:var(--fs-lg);" id="profileUsernameText"></div>
@@ -3121,11 +3138,10 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
           ئیتارەی پرۆفایل
         </div>
         <div class="vip-theme-row" id="vipThemeRow"></div>
-
         <div style="height:1px;background:rgba(0,0,0,.07);margin:18px 0;"></div>
         <div class="vip-section-title">🔥 کارتی لۆبی</div>
              <div class="vip-theme-row" id="vipCardThemeRow"></div>
-
+             <div id="vipCardThemePreview" style="margin-top:12px;"></div>
         <div style="height:1px;background:rgba(0,0,0,.07);margin:18px 0;"></div>
         <div style="display:flex;align-items:center;justify-content:space-between;">
           <div>
@@ -3720,13 +3736,17 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
     <div class="title">ژووری چاوەڕوانی</div>
   </div>
 
-  <div class="room-code-box">
+  <div class="room-code-box" id="lobbyRoomCodeBox">
     <div class="room-code-label">کۆدی ژوور</div>
     <div class="room-code-text" id="lobbyRoomCode">-----</div>
     <button class="room-code-copy" onclick="copyRoomCode()">
       <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
       کۆپیکردنی کۆد
     </button>
+  </div>
+  <div class="room-code-box hidden" id="lobbyPublicBox">
+    <div class="room-code-label">جۆری ژوور</div>
+    <div class="room-code-text" style="font-size:clamp(22px,6vw,30px);">🌍 ژوورەکە گشتییە</div>
   </div>
 
   <div class="lobby-count-badge" id="lobbyCount">٠ / ١٠ یاریزان</div>
