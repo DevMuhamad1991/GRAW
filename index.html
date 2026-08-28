@@ -5228,8 +5228,7 @@ async function redeemVipCode(){
 
   const { error: e1 } = await sb.from('redeem_codes').update({
     used_by_username: currentUser.username, used_at: now.toISOString()
-  ).eq('id', row.id).is('used_by_username', null);
-
+  }).eq('id', row.id).is('used_by_username', null);
   console.error('Redeem update error:', e1);
   if(e1){
     vib('error');
