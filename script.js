@@ -1249,9 +1249,15 @@ function isVipActive(user){
   return !!(user && user.vip_until && new Date(user.vip_until) > new Date());
 }
 function vipFrameClass(frameStyle){
-  if(frameStyle==='gold') return 'vip-frame-gold';
+  if(frameStyle==='royal') return 'vip-frame-royal';
   if(frameStyle==='spy') return 'vip-frame-spy';
-  if(frameStyle==='confetti') return 'vip-frame-confetti';
+  if(frameStyle==='electric') return 'vip-frame-electric';
+  return '';
+}
+function vipFrameIconSvg(id){
+  if(id==='royal') return '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z" fill="#ffd400"/></svg>';
+  if(id==='spy') return '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z" fill="#ff3b3b"/></svg>';
+  if(id==='electric') return '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M11 21h-1l1-7H7l6-11h1l-1 7h4l-6 11z" fill="#00e5ff"/></svg>';
   return '';
 }
 function vipBadgeHtml(isVerified){
@@ -1427,10 +1433,10 @@ async function saveCustomAvatar(dataUrl){
 }
 
 const vipThemes = [
-  { id:'default', label:'ئاسایی', color:'#ddd' },
-  { id:'gold', label:'ئاڵتوونی', color:'#ffd400' },
-  { id:'spy', label:'سیخوڕ', color:'#111' },
-  { id:'confetti', label:'جاڵجالۆکە', color:'linear-gradient(135deg,#ff3b3b,#ffd400,#22c55e,#6366f1)' }
+  { id:'default', label:'ئاسایی' },
+  { id:'royal', label:'شاهانە' },
+  { id:'spy', label:'سیخوڕ' },
+  { id:'electric', label:'کارەبایی' }
 ];
 function renderVipThemeRow(){
   const row = document.getElementById('vipThemeRow');
@@ -1439,23 +1445,33 @@ function renderVipThemeRow(){
   vipThemes.forEach(t=>{
     const div = document.createElement('div');
     div.className = 'vip-theme-opt' + (currentUser.frame_style===t.id ? ' active' : '');
-    div.innerHTML = `<div class="vip-theme-swatch" style="background:${t.color};"></div><span>${t.label}</span>`;
+    div.innerHTML = `<div class="vip-theme-swatch ${vipFrameClass(t.id)}" style="border:2.5px solid #eee;background:#fff;display:flex;align-items:center;justify-content:center;">${vipFrameIconSvg(t.id)}</div><span>${t.label}</span>`;
     div.onclick = () => { vib('medium'); selectVipTheme(t.id); };
     row.appendChild(div);
   });
 }
+
 async function selectVipTheme(themeId){
   const { data: updatedUser } = await sb.from('app_users').update({ frame_style: themeId }).eq('id', currentUser.id).select().single();
   currentUser = updatedUser;
   renderAuthOrProfile();
 }
-
+function renderProfileFrameIcon(){
+  const el = document.getElementById('profileFrameIcon');
+  if(!el) return;
+  const bgMap = { royal:'#111', spy:'#111', electric:'#111' };
+  const bg = bgMap[currentUser.frame_style];
+  if(!bg){ el.classList.add('hidden'); return; }
+  el.classList.remove('hidden');
+  el.style.background = bg;
+  el.innerHTML = vipFrameIconSvg(currentUser.frame_style);
+}
 const vipCardThemes = [
   { id:'default', label:'ئاسایی', color:'#f5f5f5' },
-  { id:'fire', label:'ئاگرین 🔥', color:'linear-gradient(135deg,#ff512f,#f09819)' },
-  { id:'neon', label:'نیۆن', color:'linear-gradient(135deg,#0f2027,#2c5364)' },
-  { id:'royal', label:'شاهانە', color:'linear-gradient(135deg,#141e30,#243b55)' },
-  { id:'dark', label:'تاریک', color:'linear-gradient(135deg,#232526,#414345)' }
+  { id:'fire', label:'ئاگرین 🔥', color:'linear-gradient(135deg,#0a0a0a,#c0392b)' },
+  { id:'neon', label:'کارەبایی ⚡', color:'linear-gradient(135deg,#0a0a0a,#0d6efd)' },
+  { id:'royal', label:'شاهانە 👑', color:'linear-gradient(135deg,#0a0a0a,#8a5cf6)' },
+  { id:'dark', label:'تاریک', color:'linear-gradient(135deg,#0a0a0a,#555)' }
 ];
 function renderVipCardThemeRow(){
   const row = document.getElementById('vipCardThemeRow');
@@ -1487,10 +1503,12 @@ async function toggleVerifiedBadge(checked){
     return;
   }
   vib('medium');
+  document.getElementById('profileVerifiedBadge').classList.toggle('hidden', !checked);
   const { data: updatedUser, error } = await sb.from('app_users').update({ is_verified: checked }).eq('id', currentUser.id).select().single();
   if(error || !updatedUser){
     vib('error');
     document.getElementById('vipVerifiedToggle').checked = !checked;
+    document.getElementById('profileVerifiedBadge').classList.toggle('hidden', !currentUser.is_verified);
     return;
   }
   currentUser = updatedUser;
@@ -1597,8 +1615,9 @@ function renderAuthOrProfile(){
     lockedView.classList.add('hidden');
     unlockedView.classList.remove('hidden');
 
-            document.getElementById('profileAvatarImg').src = avatarUrl(currentUser.avatar_seed);
+    document.getElementById('profileAvatarImg').src = avatarUrl(currentUser.avatar_seed);
     document.getElementById('profileAvatarWrap').className = vipFrameClass(currentUser.frame_style);
+    renderProfileFrameIcon();
     document.getElementById('profileUsernameText').innerText = currentUser.username;
     document.getElementById('profileVerifiedBadge').classList.toggle('hidden', !currentUser.is_verified);
 
