@@ -1328,25 +1328,27 @@ function renderVipAvatarGrid(){
   const grid = document.getElementById('vipAvatarGrid');
   if(!grid) return;
 
-  const isCustom = currentUser.avatar_seed && (currentUser.avatar_seed.startsWith('data:') || currentUser.avatar_seed.startsWith('http'));
+  const hasCustom = !!currentUser.custom_avatar;
+  const isCustomActive = hasCustom && currentUser.avatar_seed === currentUser.custom_avatar;
 
   // ئەگەر پێشتر دروستکراوە، تەنها چالاککردنەکە نوێ بکەرەوە — بێ دروستکردنەوەی وێنەکان (ریفرێش نابنەوە)
   if(grid.dataset.built === '1'){
     grid.querySelectorAll('.vip-avatar-opt[data-seed]').forEach(el=>{
-      el.classList.toggle('active', !isCustom && el.dataset.seed === currentUser.avatar_seed);
+      el.classList.toggle('active', !isCustomActive && el.dataset.seed === currentUser.avatar_seed);
     });
     const customTile = grid.querySelector('.vip-avatar-opt[data-custom]');
-    if(isCustom){
+    if(hasCustom){
       if(customTile){
-        if(customTile.querySelector('img').src !== currentUser.avatar_seed){
-          customTile.querySelector('img').src = currentUser.avatar_seed;
+        if(customTile.querySelector('img').src !== currentUser.custom_avatar){
+          customTile.querySelector('img').src = currentUser.custom_avatar;
         }
-        customTile.classList.add('active');
+        customTile.classList.toggle('active', isCustomActive);
       } else {
         const div = document.createElement('div');
-        div.className = 'vip-avatar-opt active';
+        div.className = 'vip-avatar-opt' + (isCustomActive ? ' active' : '');
         div.setAttribute('data-custom','1');
-        div.innerHTML = `<img src="${currentUser.avatar_seed}" loading="lazy">`;
+        div.innerHTML = `<img src="${currentUser.custom_avatar}" loading="lazy">`;
+        div.onclick = () => { vib('medium'); selectCustomAvatar(); };
         grid.insertBefore(div, grid.children[1] || null);
       }
     } else if(customTile){
@@ -1366,23 +1368,30 @@ function renderVipAvatarGrid(){
   uploadDiv.onclick = () => { vib('medium'); document.getElementById('vipPhotoInput').click(); };
   grid.appendChild(uploadDiv);
 
-  if(isCustom){
+  if(hasCustom){
     const div = document.createElement('div');
-    div.className = 'vip-avatar-opt active';
+    div.className = 'vip-avatar-opt' + (isCustomActive ? ' active' : '');
     div.setAttribute('data-custom','1');
-    div.innerHTML = `<img src="${currentUser.avatar_seed}" loading="lazy">`;
+    div.innerHTML = `<img src="${currentUser.custom_avatar}" loading="lazy">`;
+    div.onclick = () => { vib('medium'); selectCustomAvatar(); };
     grid.appendChild(div);
   }
 
   vipAvatarSeeds.forEach(seed=>{
     const url = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
     const div = document.createElement('div');
-    div.className = 'vip-avatar-opt' + (!isCustom && currentUser.avatar_seed===seed ? ' active' : '');
+    div.className = 'vip-avatar-opt' + (!isCustomActive && currentUser.avatar_seed===seed ? ' active' : '');
     div.setAttribute('data-seed', seed);
     div.innerHTML = `<img src="${url}" loading="lazy">`;
     div.onclick = () => { vib('medium'); selectVipAvatar(seed); };
     grid.appendChild(div);
   });
+}
+
+async function selectCustomAvatar(){
+  const { data: updatedUser } = await sb.from('app_users').update({ avatar_seed: currentUser.custom_avatar }).eq('id', currentUser.id).select().single();
+  currentUser = updatedUser;
+  renderAuthOrProfile();
 }
 async function selectVipAvatar(seed){
   const { data: updatedUser } = await sb.from('app_users').update({ avatar_seed: seed }).eq('id', currentUser.id).select().single();
@@ -1421,7 +1430,7 @@ function handleCustomPhotoUpload(event){
 
 async function saveCustomAvatar(dataUrl){
   vib('medium');
-  const { data: updatedUser, error } = await sb.from('app_users').update({ avatar_seed: dataUrl }).eq('id', currentUser.id).select().single();
+  const { data: updatedUser, error } = await sb.from('app_users').update({ avatar_seed: dataUrl, custom_avatar: dataUrl }).eq('id', currentUser.id).select().single();
   if(error || !updatedUser){
     vib('error');
     showModal({title:"هەڵە", msg:"نەتوانرا وێنەکە هەڵبگیرێت.", icon:"err"});
@@ -1484,6 +1493,17 @@ function renderVipCardThemeRow(){
     div.onclick = () => { vib('medium'); selectVipCardTheme(t.id); };
     row.appendChild(div);
   });
+  renderVipCardThemePreview();
+}
+function renderVipCardThemePreview(){
+  const box = document.getElementById('vipCardThemePreview');
+  if(!box) return;
+  const theme = currentUser.card_theme && currentUser.card_theme!=='default' ? currentUser.card_theme : '';
+  box.innerHTML = `
+    <div class="player-item${theme?' theme-'+theme:''}">
+      <div class="avatar"><img src="${avatarUrl(currentUser.avatar_seed)}" loading="lazy"></div>
+      <div class="player-name">${currentUser.username}</div>
+    </div>`;
 }
 async function selectVipCardTheme(themeId){
   const { data: updatedUser } = await sb.from('app_users').update({ card_theme: themeId }).eq('id', currentUser.id).select().single();
@@ -1616,8 +1636,7 @@ function renderAuthOrProfile(){
     unlockedView.classList.remove('hidden');
 
     document.getElementById('profileAvatarImg').src = avatarUrl(currentUser.avatar_seed);
-    document.getElementById('profileAvatarWrap').className = vipFrameClass(currentUser.frame_style);
-    renderProfileFrameIcon();
+     document.getElementById('profileAvatarWrap').className = vipFrameClass(currentUser.frame_style);
     document.getElementById('profileUsernameText').innerText = currentUser.username;
     document.getElementById('profileVerifiedBadge').classList.toggle('hidden', !currentUser.is_verified);
 
@@ -2522,6 +2541,7 @@ async function reconnectOnlineSession(){
 
     onlineRoomCode = savedCode;
     isHost = !!myRow.is_host;
+    roomIsPublic = !!room.is_public;
     gameMode = 'online';
     document.getElementById('modeOffline').classList.remove('active');
     document.getElementById('modeOnline').classList.add('active');
@@ -2786,8 +2806,10 @@ async function confirmLeaveOnlineGame(){
   const yes = await showModal({title:"دەرچوون لە یاری", msg:"دڵنیایت لە دەرچوون؟ ناتوانیت بگەڕێیتەوە ئەم یارییە.", icon:"danger", dangerConfirm:true});
   if(!yes) return;
   if(!onlineRoomCode){ showScreen('screen1'); return; }
+  const _leftCode2 = onlineRoomCode;
   await sb.from('room_players').delete().eq('room_code', onlineRoomCode).eq('client_id', CLIENT_ID);
   if(isHost) await sb.from('rooms').delete().eq('code', onlineRoomCode);
+  else await deleteRoomIfEmpty(_leftCode2);
   if(roomChannel) sb.removeChannel(roomChannel);
   clearInterval(roundTimerInterval);
   stopPingLoop();
@@ -2945,8 +2967,11 @@ onclick="vib('medium');toggleMutePlayer('${payload.clientId}')">
           : '<svg viewBox="0 0 24 24" width="13" height="13" fill="#888"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>'
         }</button>`
     : '';
+  const vipNameHtml = payload.isVerified
+    ? `<div class="chat-msg-name" style="color:#c8960a;display:flex;align-items:center;gap:4px;">${payload.name}<svg viewBox="0 0 24 24" width="11" height="11"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z" fill="#ffd400"/></svg></div>`
+    : `<div class="chat-msg-name">${payload.name}</div>`;
   div.innerHTML = `<div class="chat-msg-avatar ${vipFrameClass(payload.frameStyle)}" style="position:relative;"><img src="${avatarUrl(payload.avatarSeed)}" loading="lazy">${vipBadgeHtml(payload.isVerified)}</div>
-    <div class="chat-msg-bubble">${isMine ? '' : `<div class="chat-msg-name">${payload.name}</div>`}<div>${payload.text}</div></div>
+    <div class="chat-msg-bubble" style="${payload.isVerified ? 'border:1.5px solid rgba(255,212,0,.5);background:linear-gradient(135deg,#fffbe8,#fff5cc);' : ''}">${isMine ? '' : vipNameHtml}<div>${payload.text}</div></div>
     ${muteBtnHtml}`;
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
@@ -3072,6 +3097,10 @@ async function loadPublicRoomsInitial(){
   const { data: allPlayers } = await sb.from('room_players').select('room_code,name,avatar_seed,is_host').in('room_code', codes);
   rooms.forEach(r=>{
     const rp = (allPlayers||[]).filter(p=>p.room_code===r.code);
+    if(rp.length === 0){
+      sb.from('rooms').delete().eq('code', r.code);
+      return;
+    }
     const host = rp.find(p=>p.is_host);
     publicRoomsCache[r.code] = {
       hostName: host ? host.name : 'نەناسراو',
@@ -3387,9 +3416,10 @@ async function createOnlineRoom(){
 async function joinOnlineRoomByCode(code, name){
   const { data: room, error: roomErr } = await sb.from('rooms').select('*').eq('code', code).maybeSingle();
   if(roomErr || !room){ vib('error'); showModal({title:"ژوور نەدۆزرایەوە", msg:"ژوورەکە نەماوە.", icon:"err"}); return; }
-  if(room.status !== 'lobby'){ vib('error'); showModal({title:"یاری دەستی پێکردووە", msg:"ناتوانیت بچیتە ژوورێک کە دەستی پێکردووە.", icon:"warn"}); return; }
+  if(room.status !== 'lobby'){ vib('error'); showModal({title:"یاری دەستی پێکردووە", msg:"ناتوانیت بچیتە ژوورەوە، یاری دەستی پێکردووە.", icon:"warn"}); return; }
+  roomIsPublic = !!room.is_public;
 
-  const { data: existing } = await sb.from('room_players').select('*').eq('room_code', code);
+  const { data: existing } = await sb.from('room_players').select('*').eq('room_code', code)
   if(existing && existing.some(p => p.name === name)){
     vib('error'); showModal({title:"ناوەکە بەکارهاتووە", msg:"ناوێکی تر بنووسە.", icon:"warn"}); return;
   }
@@ -3418,6 +3448,8 @@ async function joinOnlineRoomByCode(code, name){
 function enterLobby(){
   showScreen('onlineLobbyScreen');
   document.getElementById('lobbyRoomCode').innerText = onlineRoomCode;
+  document.getElementById('lobbyRoomCodeBox').classList.toggle('hidden', roomIsPublic);
+  document.getElementById('lobbyPublicBox').classList.toggle('hidden', !roomIsPublic);
   document.getElementById('lobbyHostControls').classList.toggle('hidden', !isHost);
   document.getElementById('lobbyWaitMsg').classList.toggle('hidden', isHost);
     subscribeRoom();
@@ -3425,7 +3457,6 @@ function enterLobby(){
   startPingLoop();
   showChatFab();
 }
-
 function subscribeRoom(){
   if(roomChannel) sb.removeChannel(roomChannel);
   roomChannel = sb.channel('room_' + onlineRoomCode)
@@ -3566,9 +3597,9 @@ async function kickPlayer(clientId, name){
     event: 'player_kicked',
     payload: { clientId, name }
   });
-
   // ٣. لە دیتابەیس بیسڕەوە بۆ مانەوەی دروستی
   await sb.from('room_players').delete().eq('room_code', onlineRoomCode).eq('client_id', clientId);
+  await deleteRoomIfEmpty(onlineRoomCode);
 }
 
 /* وەرگرتنی broadcast‌ی کیک — بۆ هەموو ئامێرەکان دەستبەجێ */
@@ -3592,6 +3623,13 @@ function handleKickBroadcast(clientId, name){
   refreshLobbyPlayersUI();
   syncOnlinePlayerUI();
 }
+async function deleteRoomIfEmpty(code){
+  const { data: remaining } = await sb.from('room_players').select('client_id').eq('room_code', code);
+  if(!remaining || remaining.length === 0){
+    await sb.from('rooms').delete().eq('code', code);
+  }
+}
+
 function copyRoomCode(){
   navigator.clipboard?.writeText(onlineRoomCode).then(()=>{
     vib('success');
@@ -3601,8 +3639,10 @@ function copyRoomCode(){
 
 async function leaveLobby(){
   if(!onlineRoomCode){ showScreen('screen1'); return; }
+  const _leftCode = onlineRoomCode;
   await sb.from('room_players').delete().eq('room_code', onlineRoomCode).eq('client_id', CLIENT_ID);
   if(isHost) await sb.from('rooms').delete().eq('code', onlineRoomCode);
+  else await deleteRoomIfEmpty(_leftCode);
   if(roomChannel) sb.removeChannel(roomChannel);
   clearInterval(roundTimerInterval);
   stopPingLoop();
@@ -3956,18 +3996,21 @@ async function showOnlineReveal(room){
   nextBtn.innerText = `خولی ${(room.current_round || 1) + 1}`;
   nextBtn.classList.toggle('hidden', !isHost);
 
-  const { data: players } = await sb.from('room_players').select('*').eq('room_code', onlineRoomCode).order('score', { ascending:false });
+    const { data: players } = await sb.from('room_players').select('*').eq('room_code', onlineRoomCode).order('score', { ascending:false });
   const box = document.getElementById('onlineRevealScoreBox');
   if(box && players){
-    box.innerHTML = players.map(p=>`
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#fff;border-radius:16px;margin-bottom:8px;">
-        <div class="${vipFrameClass(p.frame_style)}" style="width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;position:relative;border:2px solid transparent;">
-          <img src="${avatarUrl(p.avatar_seed)}" style="width:100%;height:100%;object-fit:cover;">
+    box.innerHTML = players.map(p=>{
+      const themeClass = p.card_theme && p.card_theme!=='default' ? ' theme-'+p.card_theme : '';
+      return `
+      <div class="player-item${themeClass}" style="margin-bottom:8px;">
+        <div class="avatar ${vipFrameClass(p.frame_style)}" style="position:relative;">
+          <img src="${avatarUrl(p.avatar_seed)}" loading="lazy">
           ${vipBadgeHtml(p.is_verified)}
         </div>
-        <div style="flex:1;font-size:14px;font-weight:700;">${p.name}</div>
-        <div style="font-size:16px;font-weight:800;color:#c8960a;">${p.score||0}</div>
-      </div>`).join('');
+        <div class="player-name" style="flex:1;">${p.name}</div>
+        <div style="font-size:16px;font-weight:800;color:#c8960a;flex-shrink:0;">${p.score||0}</div>
+      </div>`;
+    }).join('');
   }
 }
 async function nextOnlineRound(){
