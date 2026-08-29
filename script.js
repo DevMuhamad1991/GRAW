@@ -3495,12 +3495,12 @@ function refreshLobbyPlayersUI(){
           ? '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#c62828" opacity=".35"/><line x1="3" y1="3" x2="21" y2="21" stroke="#c62828" stroke-width="2.4" stroke-linecap="round"/></svg>'
           : '<svg viewBox="0 0 24 24" width="16" height="16" fill="#555"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>'
         }</button>` : ''}`;
-    const crownIco = p.is_host ? ` <svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z" fill="#ffd400"/></svg>` : '';
+    const crownIco = p.is_host ? `<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;flex-shrink:0;"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z" fill="#ffd400"/></svg>` : '';
     const verifiedIco = p.is_verified ? ` <svg viewBox="0 0 24 24" width="17" height="17" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : '';
     const muteIco = p.is_muted ? ` <svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align:-2px"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#c62828" opacity=".85"/><line x1="3" y1="3" x2="21" y2="21" stroke="#fff7cf" stroke-width="2.4"/></svg>` : '';
     div.innerHTML = `<div class="avatar-disc-wrap"><div class="avatar ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="${avatarUrl(p.avatar_seed)}"></div><div class="disc-badge-lobby">🔌</div></div>
-      <div class="player-name">${p.name}${crownIco}${verifiedIco}<span data-mute-emoji="${p.client_id}">${muteIco}</span></div>
-      <div class="lobby-ping-badge ${pc}" data-ping="${p.client_id}" style="background:rgba(0,0,0,.05);">${pingMs>0?pingMs+' ms':'...'}</div>
+      <div class="player-name">${p.name}${verifiedIco}<span data-mute-emoji="${p.client_id}">${muteIco}</span></div>
+      <div class="lobby-ping-badge ${pc}" data-ping="${p.client_id}" style="background:rgba(0,0,0,.05);display:flex;align-items:center;gap:4px;">${crownIco}${pingMs>0?pingMs+' ms':'...'}</div>
       ${muteBtn}
       ${canKick ? `<button class="remove-player" onclick="vib('medium');kickPlayer('${p.client_id}','${p.name}')">&#x2715;</button>` : ''}`;
     box.appendChild(div);
