@@ -1628,9 +1628,11 @@ function renderAuthOrProfile(){
     if(vip && currentUser.card_theme && currentUser.card_theme !== 'default'){
       document.getElementById('profileCard').classList.add('theme-' + currentUser.card_theme);
     }
-    document.getElementById('vipRedeemWrap').classList.toggle('hidden', vip);
+    document.getElementById('vipPricingWrap').classList.toggle('hidden', vip);
+    document.getElementById('vipRedeemInputWrap').classList.toggle('hidden', vip);
+    document.getElementById('vipActiveStatusWrap').classList.toggle('hidden', !vip);
     document.getElementById('profileVipStatusRow').classList.toggle('hidden', !vip);
-    document.getElementById('vipCustomizeCard').classList.toggle('vip-locked', !vip);
+    document.getElementById('vipCustomizeSection').classList.toggle('vip-locked', !vip);
     document.getElementById('vipLockBadge').classList.toggle('hidden', vip);
     if(vip){
       const daysLeft = Math.max(0, Math.ceil((new Date(currentUser.vip_until) - new Date())/(24*60*60*1000)));
