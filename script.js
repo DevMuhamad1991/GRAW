@@ -795,7 +795,7 @@ function navClick(tab) {
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   document.getElementById('nav-' + tab).classList.add('active');
   if (tab === 'home') showScreen('screen1');
-  if (tab === 'stats') { showScreen('statsScreen'); renderStats(); }
+  if (tab === 'stats') { showScreen('statsScreen'); renderStats(); switchStatsMode('offline'); }
   if (tab === 'review') { showScreen('reviewScreen'); loadReviews(); }
 if (tab === 'creator') {
   showScreen('creatorScreen');
@@ -956,6 +956,71 @@ async function confirmResetStats() {
     renderStats();
     vib('success');
   }
+}
+
+/* ══════════════════════════════════════
+   ONLINE STATS (LEADERBOARD)
+══════════════════════════════════════ */
+function switchStatsMode(mode){
+  document.getElementById('statsModeOffline').classList.toggle('active', mode==='offline');
+  document.getElementById('statsModeOnline').classList.toggle('active', mode==='online');
+  document.getElementById('statsContent').classList.toggle('hidden', mode!=='offline');
+  document.getElementById('onlineStatsContent').classList.toggle('hidden', mode!=='online');
+  if(mode==='online') loadOnlineStats();
+}
+
+function buildOnlineStatRow(u, val, rank){
+  const vip = isVipActive(u);
+  const themeClass = vip && u.card_theme && u.card_theme!=='default' ? ' theme-'+u.card_theme : '';
+  const frameClass = vip ? vipFrameClass(u.frame_style) : '';
+  const rankClass = rank<=3 ? ' rank-'+rank : '';
+  const verifiedIco = u.is_verified
+    ? ` <svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align:-2px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>`
+    : '';
+  return `
+    <div class="player-item${themeClass}" style="margin-bottom:8px;">
+      <div class="stat-rank-num${rankClass}">${rank}</div>
+      <div class="avatar ${frameClass}"><div class="avatar-clip"><img src="${avatarUrl(u.avatar_seed)}" loading="lazy"></div></div>
+      <div class="player-name">${u.username}${verifiedIco}</div>
+      <div class="online-stat-badge">${val}</div>
+    </div>`;
+}
+
+function buildOnlineStatSection(title, iconSvg, list, key){
+  if(list.length === 0){
+    return `<div class="stat-section"><div class="stat-section-title">${iconSvg}${title}</div><div class="stat-empty">هێشتا داتا نییە</div></div>`;
+  }
+  const rows = list.map((u,i)=> buildOnlineStatRow(u, u[key]||0, i+1)).join('');
+  return `<div class="stat-section"><div class="stat-section-title">${iconSvg}${title}</div>${rows}</div>`;
+}
+
+async function loadOnlineStats(){
+  const box = document.getElementById('onlineStatsContent');
+  if(!box) return;
+  box.innerHTML = '<div class="stat-empty">چاوەڕوانبە...</div>';
+
+  const { data: users, error } = await sb.from('app_users')
+    .select('username,avatar_seed,is_verified,frame_style,card_theme,total_games,spy_wins,detective_wins,vip_until')
+    .order('total_games', { ascending:false })
+    .limit(200);
+
+  if(error || !users){
+    box.innerHTML = '<div class="stat-empty">نەتوانرا ئامار بار بکرێت</div>';
+    return;
+  }
+
+  const topGames = [...users].filter(u=>u.total_games>0).sort((a,b)=>(b.total_games||0)-(a.total_games||0)).slice(0,10);
+  const topSpy = [...users].filter(u=>u.spy_wins>0).sort((a,b)=>(b.spy_wins||0)-(a.spy_wins||0)).slice(0,10);
+  const topDet = [...users].filter(u=>u.detective_wins>0).sort((a,b)=>(b.detective_wins||0)-(a.detective_wins||0)).slice(0,10);
+
+  const gamesIcon = `<svg viewBox="0 0 24 24" width="18" height="18" fill="#111"><path d="M15 7.5V2H9v5.5l3 3 3-3zM7.5 9H2v6h5.5l3-3-3-3zM9 16.5V22h6v-5.5l-3-3-3 3zM16.5 9l-3 3 3 3H22V9h-5.5z"/></svg>`;
+  const spyIcon = `<svg viewBox="0 0 24 24" width="18" height="18" fill="#111"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>`;
+  const detIcon = `<svg viewBox="0 0 24 24" width="18" height="18" fill="#111"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>`;
+
+  box.innerHTML =
+    buildOnlineStatSection('چالاکترین یاریزانەکان', gamesIcon, topGames, 'total_games') +
+    buildOnlineStatSection('باشترین سیخورەکان', spyIcon, topSpy, 'spy_wins') +
+    buildOnlineStatSection('باشترین لێکۆڵەرەکان', detIcon, topDet, 'detective_wins');
 }
 
 /* ══════════════════════════════════════
@@ -3336,13 +3401,14 @@ async function createOnlineRoom(){
   const { error: roomErr } = await sb.from('rooms').insert({ code, host_client_id: CLIENT_ID, status: 'lobby', is_public: roomIsPublic });
   if(roomErr){ vib('error'); showModal({title:"هەڵە", msg:"نەتوانرا ژوور دروست بکرێت.", icon:"err"}); return; }
 
-  const { error: playerErr } = await sb.from('room_players').insert({
+   const { error: playerErr } = await sb.from('room_players').insert({
     room_code: code, client_id: CLIENT_ID, name,
     avatar_seed: (currentUser && isVipActive(currentUser)) ? currentUser.avatar_seed : name+'_'+Date.now(),
     is_host: true, last_seen_at: new Date().toISOString(),
     is_verified: !!(currentUser && isVipActive(currentUser)),
     frame_style: (currentUser && isVipActive(currentUser)) ? currentUser.frame_style : 'default',
-    card_theme: (currentUser && isVipActive(currentUser)) ? currentUser.card_theme : 'default'
+    card_theme: (currentUser && isVipActive(currentUser)) ? currentUser.card_theme : 'default',
+    user_id: currentUser ? currentUser.id : null
   });
   if(playerErr){ vib('error'); showModal({title:"هەڵە", msg:"نەتوانرا زیاد بکرێیت.", icon:"err"}); return; }
 
@@ -3378,7 +3444,8 @@ async function joinOnlineRoomByCode(code, name){
     is_host: false, last_seen_at: new Date().toISOString(),
     is_verified: !!(currentUser && isVipActive(currentUser)),
     frame_style: (currentUser && isVipActive(currentUser)) ? currentUser.frame_style : 'default',
-    card_theme: (currentUser && isVipActive(currentUser)) ? currentUser.card_theme : 'default'
+    card_theme: (currentUser && isVipActive(currentUser)) ? currentUser.card_theme : 'default',
+    user_id: currentUser ? currentUser.id : null
   });
   if(playerErr){ vib('error'); showModal({title:"هەڵە", msg:"نەتوانرا بچیتە ژوورەوە.", icon:"err"}); return; }
 
@@ -3921,10 +3988,32 @@ async function checkAllVoted(){
         }
       }
 
-      if(delta !== 0){
+       if(delta !== 0){
         await sb.from('room_players').update({ score: (p.score||0) + delta }).eq('room_code', onlineRoomCode).eq('client_id', p.client_id);
       }
     }
+
+    // ── نوێکردنەوەی ئاماری هەژمار بۆ یاریزانانی لۆگینکراو ──
+    const statUserIds = players.filter(p=>p.user_id).map(p=>p.user_id);
+    if(statUserIds.length){
+      const { data: userRows } = await sb.from('app_users').select('id,total_games,spy_wins,detective_wins').in('id', statUserIds);
+      const userStatMap = {};
+      (userRows||[]).forEach(u=>{ userStatMap[u.id] = u; });
+      for(const p of players){
+        const su = p.user_id ? userStatMap[p.user_id] : null;
+        if(!su) continue;
+        const isSpy = spyIds.includes(p.client_id);
+        const statUpdates = { total_games: (su.total_games||0) + 1 };
+        if(isSpy && spyWon){
+          statUpdates.spy_wins = (su.spy_wins||0) + 1;
+        }
+        if(!isSpy && !spyWon && p.vote_for && spyIds.includes(p.vote_for)){
+          statUpdates.detective_wins = (su.detective_wins||0) + 1;
+        }
+        await sb.from('app_users').update(statUpdates).eq('id', p.user_id);
+      }
+    }
+
     window._lastSpyWon = spyWon;
 
     await sb.from('room_players').update({ vote_for: null }).eq('room_code', onlineRoomCode);
