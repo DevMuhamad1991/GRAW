@@ -3300,13 +3300,15 @@ function onChatInput(){
 async function createOnlineRoom(){
   const name = document.getElementById('onlinePlayerName').value.trim();
   if(!name){ vib('error'); showModal({title:"ناوت بنووسە", msg:"تکایە ناوی خۆت بنووسە.", icon:"warn"}); return; }
-
-  // ── پشکنین: ئایا ئەم ناوە ئێستا لەلایەن کەسێکی تر بۆ هۆستکردنی ژوورێک بەکاردێت؟ ──
-  const { data: existingHosts } = await sb.from('room_players').select('name').eq('is_host', true);
-  if(existingHosts && existingHosts.some(p => p.name === name)){
-    vib('error');
-    showModal({title:"ناوەکە بەکارهاتووە", msg:"کەسێکی تر ئێستا بەم ناوە ژوورێکی دروست کردووە. تکایە ناوێکی تر هەڵبژێرە بۆ ئەوەی تێکەڵ نەبن.", icon:"warn"});
-    return;
+  // پلەیەری لۆگینکراوی VIP لەم پشکنینە ئازادە
+  const isVipUser = !!(currentUser && isVipActive(currentUser));
+  if(!isVipUser){
+    const { data: existingHosts } = await sb.from('room_players').select('name').eq('is_host', true);
+    if(existingHosts && existingHosts.some(p => p.name === name)){
+      vib('error');
+      showModal({title:"ناوەکە بەکارهاتووە", msg:"کەسێکی تر ئێستا بەم ناوە ژوورێکی دروست کردووە. تکایە ناوێکی تر هەڵبژێرە بۆ ئەوەی تێکەڵ نەبن.", icon:"warn"});
+      return;
+    }
   }
   isHost = true;
   const code = generateRoomCode();
@@ -3341,8 +3343,9 @@ async function joinOnlineRoomByCode(code, name){
   if(room.status !== 'lobby'){ vib('error'); showModal({title:"یاری دەستی پێکردووە", msg:"ناتوانیت بچیتە ژوورەوە، یاری دەستی پێکردووە.", icon:"warn"}); return; }
   roomIsPublic = !!room.is_public;
 
-  const { data: existing } = await sb.from('room_players').select('*').eq('room_code', code)
-  if(existing && existing.some(p => p.name === name)){
+    const { data: existing } = await sb.from('room_players').select('*').eq('room_code', code)
+  const isVipUser = !!(currentUser && isVipActive(currentUser));
+  if(!isVipUser && existing && existing.some(p => p.name === name)){
     vib('error'); showModal({title:"ناوەکە بەکارهاتووە", msg:"ناوێکی تر بنووسە.", icon:"warn"}); return;
   }
   if(existing && existing.length >= 10){
