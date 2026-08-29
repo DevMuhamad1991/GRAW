@@ -1619,9 +1619,9 @@ function renderAuthOrProfile(){
   console.log('DEBUG isVipActive →', currentUser ? isVipActive(currentUser) : null);
 
   if(currentUser){
-   try{
     lockedView.classList.add('hidden');
     unlockedView.classList.remove('hidden');
+    document.getElementById('vipMegaCard').classList.remove('hidden');
 
     document.getElementById('profileAvatarImg').src = avatarUrl(currentUser.avatar_seed);
      document.getElementById('profileAvatarWrap').className = vipFrameClass(currentUser.frame_style);
@@ -1653,6 +1653,7 @@ function renderAuthOrProfile(){
   } else {
     lockedView.classList.remove('hidden');
     unlockedView.classList.add('hidden');
+    document.getElementById('vipMegaCard').classList.add('hidden');
     document.getElementById('authUsername').value = '';
     document.getElementById('authPassword').value = '';
     switchAuthTab('login');
