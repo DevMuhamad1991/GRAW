@@ -1615,16 +1615,13 @@ function renderAuthOrProfile(){
   const unlockedView = document.getElementById('profileUnlockedView');
   if(!lockedView || !unlockedView) return;
 
-  console.log('DEBUG currentUser →', currentUser);
-  console.log('DEBUG isVipActive →', currentUser ? isVipActive(currentUser) : null);
-
   if(currentUser){
     lockedView.classList.add('hidden');
     unlockedView.classList.remove('hidden');
     document.getElementById('vipMegaCard').classList.remove('hidden');
 
     document.getElementById('profileAvatarImg').src = avatarUrl(currentUser.avatar_seed);
-     document.getElementById('profileAvatarWrap').className = vipFrameClass(currentUser.frame_style);
+    document.getElementById('profileAvatarWrap').className = vipFrameClass(currentUser.frame_style);
     document.getElementById('profileUsernameText').innerText = currentUser.username;
     document.getElementById('profileVerifiedBadge').classList.toggle('hidden', !currentUser.is_verified);
     const vip = isVipActive(currentUser);
@@ -1647,9 +1644,6 @@ function renderAuthOrProfile(){
     renderVipCardThemeRow();
     const vTog = document.getElementById('vipVerifiedToggle');
     if(vTog) vTog.checked = !!currentUser.is_verified;
-   } catch(err){
-     console.error('renderAuthOrProfile ERROR:', err);
-   }
   } else {
     lockedView.classList.remove('hidden');
     unlockedView.classList.add('hidden');
