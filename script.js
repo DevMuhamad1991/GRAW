@@ -795,7 +795,7 @@ function navClick(tab) {
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   document.getElementById('nav-' + tab).classList.add('active');
   if (tab === 'home') showScreen('screen1');
-  if (tab === 'stats') { showScreen('statsScreen'); renderStats(); switchStatsMode('offline'); }
+  if (tab === 'stats') { showScreen('statsScreen'); switchStatsMode('online'); }
   if (tab === 'review') { showScreen('reviewScreen'); loadReviews(); }
 if (tab === 'creator') {
   showScreen('creatorScreen');
