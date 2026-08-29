@@ -2974,6 +2974,15 @@ function handleModeStart(){
   if(gameMode === 'online'){
     showScreen('onlineChooseScreen');
     startPublicRoomsPolling();
+    const nameInput = document.getElementById('onlinePlayerName');
+    if(currentUser && isVipActive(currentUser)){
+      nameInput.value = currentUser.username;
+      nameInput.disabled = true;
+      nameInput.placeholder = currentUser.username;
+    } else {
+      nameInput.disabled = false;
+      nameInput.value = '';
+    }
   } else {
     goCategory();
   }
@@ -3170,7 +3179,7 @@ function buildFakeRoomCard(fr){
 }
 
 function promptJoinFakeRoom(fr){
-  const name = document.getElementById('onlinePlayerName').value.trim();
+  const name = getOnlinePlayerName();
   if(!name){
     vib('error');
     showModal({title:"ناوت بنووسە", msg:"تکایە پێش چوونەژوورەوە ناوی خۆت بنووسە.", icon:"warn"});
@@ -3242,7 +3251,7 @@ function subscribePublicRooms(){
 let _joinCodeTarget = null;
 
 function promptJoinRoom(code, hostName, isPublicRoom){
-  const name = document.getElementById('onlinePlayerName').value.trim();
+  const name = getOnlinePlayerName();
   if(!name){
     vib('error');
     showModal({title:"ناوت بنووسە", msg:"تکایە پێش چوونەژوورەوە ناوی خۆت بنووسە.", icon:"warn"});
@@ -3283,6 +3292,10 @@ async function confirmJoinCodeModal(){
 }
 
 /* ── سنووردارکردنی ناوی یاریزان بە پیتی کوردی — وەک مۆدی ئۆفڵاین ── */
+function getOnlinePlayerName(){
+  if(currentUser && isVipActive(currentUser)) return currentUser.username;
+  return document.getElementById('onlinePlayerName').value.trim();
+}
 function onOnlineNameInput(){
   const input = document.getElementById('onlinePlayerName');
   const val = input.value;
@@ -3306,7 +3319,7 @@ function onChatInput(){
   }
 }
 async function createOnlineRoom(){
-  const name = document.getElementById('onlinePlayerName').value.trim();
+  const name = getOnlinePlayerName();
   if(!name){ vib('error'); showModal({title:"ناوت بنووسە", msg:"تکایە ناوی خۆت بنووسە.", icon:"warn"}); return; }
   // پلەیەری لۆگینکراوی VIP لەم پشکنینە ئازادە
   const isVipUser = !!(currentUser && isVipActive(currentUser));
