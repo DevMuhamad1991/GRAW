@@ -3016,7 +3016,7 @@ async function loadPublicRoomsInitial(){
     return;
   }
   const codes = rooms.map(r=>r.code);
-  const { data: allPlayers } = await sb.from('room_players').select('room_code,name,avatar_seed,is_host').in('room_code', codes);
+  const { data: allPlayers } = await sb.from('room_players').select('room_code,name,avatar_seed,is_host,is_verified,frame_style,card_theme').in('room_code', codes);
   rooms.forEach(r=>{
     const rp = (allPlayers||[]).filter(p=>p.room_code===r.code);
     if(rp.length === 0){
@@ -3028,7 +3028,10 @@ async function loadPublicRoomsInitial(){
       hostName: host ? host.name : 'نەناسراو',
       avatarSeed: host ? host.avatar_seed : r.code,
       count: rp.length,
-      isPublic: r.is_public
+      isPublic: r.is_public,
+      isVerified: host ? !!host.is_verified : false,
+      frameStyle: host ? host.frame_style : 'default',
+      cardTheme: host ? host.card_theme : 'default'
     };
   });
   renderAllPublicRooms();
@@ -3050,7 +3053,8 @@ function renderAllPublicRooms(){
 function buildRoomCard(code){
   const r = publicRoomsCache[code];
   const div = document.createElement('div');
-  div.className = 'player-item';
+  const themeClass = r.cardTheme && r.cardTheme!=='default' ? ' theme-'+r.cardTheme : '';
+  div.className = 'player-item' + themeClass;
   div.style.cursor = 'pointer';
   div.setAttribute('data-room', code);
   div.onclick = ()=>{ vib(); promptJoinRoom(code, publicRoomsCache[code].hostName, publicRoomsCache[code].isPublic); };
@@ -3059,14 +3063,15 @@ function buildRoomCard(code){
     ? '<svg viewBox="0 0 24 24" width="11" height="11" fill="#fff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>'
     : '<svg viewBox="0 0 24 24" width="11" height="11" fill="#fff"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>';
   const roomTypeLabel = r.isPublic ? '' : ' — تایبەت';
+  const verifiedIco = r.isVerified ? ` <svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : '';
   div.innerHTML = `
     <div class="avatar-disc-wrap">
-    <div class="avatar"><img src="${avatarUrl(r.avatarSeed)}" loading="lazy"></div>
+    <div class="avatar ${vipFrameClass(r.frameStyle)}"><img src="${avatarUrl(r.avatarSeed)}" loading="lazy"></div>
       <div style="position:absolute;bottom:-2px;right:-2px;width:19px;height:19px;border-radius:50%;background:${badgeColor};border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
         ${badgeIcon}
       </div>
     </div>
-    <div class="player-name">ژووری ${r.hostName}<div class="room-count-label" style="font-size:12px;font-weight:700;opacity:.55;margin-top:2px;">${r.count} / ١٠ یاریزان${roomTypeLabel}</div></div>
+    <div class="player-name">ژووری ${r.hostName}${verifiedIco}<div class="room-count-label" style="font-size:12px;font-weight:700;opacity:.55;margin-top:2px;">${r.count} / ١٠ یاریزان${roomTypeLabel}</div></div>
     <svg viewBox="0 0 24 24" width="20" height="20" style="fill:#bbb;flex-shrink:0;"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>`;
   return div;
 }
@@ -3103,6 +3108,9 @@ async function refreshRoomCardFull(code){
   publicRoomsCache[code].hostName = host ? host.name : 'نەناسراو';
   publicRoomsCache[code].avatarSeed = host ? host.avatar_seed : code;
   publicRoomsCache[code].count = rp.length;
+  publicRoomsCache[code].isVerified = host ? !!host.is_verified : false;
+  publicRoomsCache[code].frameStyle = host ? host.frame_style : 'default';
+  publicRoomsCache[code].cardTheme = host ? host.card_theme : 'default';
   const box = document.getElementById('publicRoomsList');
   const oldCard = box && box.querySelector(`[data-room="${code}"]`);
   if(oldCard){
