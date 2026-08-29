@@ -1618,8 +1618,6 @@ function renderAuthOrProfile(){
   if(currentUser){
     lockedView.classList.add('hidden');
     unlockedView.classList.remove('hidden');
-    document.getElementById('vipMegaCard').classList.remove('hidden');
-
     document.getElementById('profileAvatarImg').src = avatarUrl(currentUser.avatar_seed);
     document.getElementById('profileAvatarWrap').className = vipFrameClass(currentUser.frame_style);
     document.getElementById('profileUsernameText').innerText = currentUser.username;
@@ -1647,7 +1645,11 @@ function renderAuthOrProfile(){
   } else {
     lockedView.classList.remove('hidden');
     unlockedView.classList.add('hidden');
-    document.getElementById('vipMegaCard').classList.add('hidden');
+    document.getElementById('vipPricingWrap').classList.remove('hidden');
+    document.getElementById('vipRedeemInputWrap').classList.remove('hidden');
+    document.getElementById('vipActiveStatusWrap').classList.add('hidden');
+    document.getElementById('vipCustomizeSection').classList.add('vip-locked');
+    document.getElementById('vipLockBadge').classList.remove('hidden');
     document.getElementById('authUsername').value = '';
     document.getElementById('authPassword').value = '';
     switchAuthTab('login');
