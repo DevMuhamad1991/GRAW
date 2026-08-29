@@ -3076,7 +3076,7 @@ function buildRoomCard(code){
   div.innerHTML = `
     <div class="avatar-disc-wrap">
     <div class="avatar ${vipFrameClass(r.frameStyle)}"><img src="${avatarUrl(r.avatarSeed)}" loading="lazy"></div>
-      <div style="position:absolute;bottom:-2px;right:-2px;width:19px;height:19px;border-radius:50%;background:${badgeColor};border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
+         <div style="position:absolute;bottom:-2px;right:-2px;width:19px;height:19px;border-radius:50%;background:${badgeColor};border:2px solid #fff;display:flex;align-items:center;justify-content:center;z-index:2;">
         ${badgeIcon}
       </div>
     </div>
