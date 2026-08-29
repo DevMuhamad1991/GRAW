@@ -3160,7 +3160,7 @@ function buildFakeRoomCard(fr){
   div.innerHTML = `
     <div class="avatar-disc-wrap">
       <div class="avatar"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(fr.avatarSeed)}" loading="lazy"></div>
-      <div style="position:absolute;bottom:-2px;right:-2px;width:19px;height:19px;border-radius:50%;background:#888;border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
+      <div style="position:absolute;bottom:-2px;right:-2px;width:19px;height:19px;border-radius:50%;background:#ff4d4d;border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
         <svg viewBox="0 0 24 24" width="10" height="10" fill="#fff"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
       </div>
     </div>
