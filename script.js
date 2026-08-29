@@ -3716,9 +3716,9 @@ function renderReadyStatus(){
     slot.innerHTML = `
       <div class="ready-av-wrap">
         ${canKick ? `<div class="ready-kick" onclick="event.stopPropagation();vib('medium');kickPlayer('${p.client_id}','${p.name}')">✕</div>` : ''}
-<div class="ready-av ${vipFrameClass(p.frame_style)}"><img src="${avatarUrl(p.avatar_seed)}" loading="lazy"></div>
+<div class="ready-av ${vipFrameClass(p.frame_style)}"><div class="avatar-clip"><img src="${avatarUrl(p.avatar_seed)}" loading="lazy"></div></div>
         <div class="ready-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
-        <div class="disc-badge">🔌</div>
+        <div class="disc-badge">🔴</div>
       </div>
        <div class="ready-name">${p.name}${p.is_verified ? ` <svg viewBox="0 0 24 24" width="12" height="12" style="vertical-align:-2px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : ''}</div>
       <div class="ready-ping ${pingClass(pingMs)}" data-ping="${p.client_id}">${pingMs>0?pingMs+' ms':'...'}</div>`;
