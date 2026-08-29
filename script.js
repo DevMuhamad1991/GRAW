@@ -1615,7 +1615,11 @@ function renderAuthOrProfile(){
   const unlockedView = document.getElementById('profileUnlockedView');
   if(!lockedView || !unlockedView) return;
 
+  console.log('DEBUG currentUser →', currentUser);
+  console.log('DEBUG isVipActive →', currentUser ? isVipActive(currentUser) : null);
+
   if(currentUser){
+   try{
     lockedView.classList.add('hidden');
     unlockedView.classList.remove('hidden');
 
@@ -1643,6 +1647,9 @@ function renderAuthOrProfile(){
     renderVipCardThemeRow();
     const vTog = document.getElementById('vipVerifiedToggle');
     if(vTog) vTog.checked = !!currentUser.is_verified;
+   } catch(err){
+     console.error('renderAuthOrProfile ERROR:', err);
+   }
   } else {
     lockedView.classList.remove('hidden');
     unlockedView.classList.add('hidden');
