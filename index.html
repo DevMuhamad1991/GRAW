@@ -1551,16 +1551,16 @@ background: rgba(0,0,0,.2);
 .player-item.theme-fire .player-name, .dadga-suspect-item.theme-fire .dadga-suspect-name, #profileCard.theme-fire #profileUsernameText{color:#fff;}
 
 @keyframes vipCardNeonGlow{0%,100%{box-shadow:0 0 0 0 rgba(0,200,255,.4),0 6px 20px rgba(0,0,0,.3);border-color:rgba(0,200,255,.5);}50%{box-shadow:0 0 0 3px rgba(0,200,255,.2),0 6px 26px rgba(0,200,255,.55);border-color:#00e5ff;}}
-.player-item.theme-neon, #profileCard.theme-neon{background:linear-gradient(135deg,#0a0a0a,#0d6efd 150%);border:2px solid rgba(0,200,255,.5);animation:vipCardNeonGlow 1.8s ease-in-out infinite;}
-.player-item.theme-neon .player-name, #profileCard.theme-neon #profileUsernameText{color:#e0feff;}
+.player-item.theme-neon, .dadga-suspect-item.theme-neon, #profileCard.theme-neon{background:linear-gradient(135deg,#0a0a0a,#0d6efd 150%);border:2px solid rgba(0,200,255,.5);animation:vipCardNeonGlow 1.8s ease-in-out infinite;}
+.player-item.theme-neon .player-name, .dadga-suspect-item.theme-neon .dadga-suspect-name, #profileCard.theme-neon #profileUsernameText{color:#e0feff;}
 
 @keyframes vipCardRoyalGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,212,0,.4),0 6px 20px rgba(0,0,0,.3);border-color:rgba(255,212,0,.5);}50%{box-shadow:0 0 0 3px rgba(255,212,0,.2),0 6px 26px rgba(255,212,0,.55);border-color:#ffd400;}}
-.player-item.theme-royal, #profileCard.theme-royal{background:linear-gradient(135deg,#0a0a0a,#8a5cf6 150%);border:2px solid rgba(255,212,0,.5);animation:vipCardRoyalGlow 1.8s ease-in-out infinite;}
-.player-item.theme-royal .player-name, #profileCard.theme-royal #profileUsernameText{color:#ffd700;}
+.player-item.theme-royal, .dadga-suspect-item.theme-royal, #profileCard.theme-royal{background:linear-gradient(135deg,#0a0a0a,#8a5cf6 150%);border:2px solid rgba(255,212,0,.5);animation:vipCardRoyalGlow 1.8s ease-in-out infinite;}
+.player-item.theme-royal .player-name, .dadga-suspect-item.theme-royal .dadga-suspect-name, #profileCard.theme-royal #profileUsernameText{color:#ffd700;}
 
 @keyframes vipCardDarkGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.15),0 6px 20px rgba(0,0,0,.3);border-color:rgba(255,255,255,.25);}50%{box-shadow:0 0 0 3px rgba(255,255,255,.08),0 6px 26px rgba(255,255,255,.3);border-color:rgba(255,255,255,.55);}}
-.player-item.theme-dark, #profileCard.theme-dark{background:linear-gradient(135deg,#0a0a0a,#555 150%);border:2px solid rgba(255,255,255,.25);animation:vipCardDarkGlow 2s ease-in-out infinite;}
-.player-item.theme-dark .player-name, #profileCard.theme-dark #profileUsernameText{color:#fff;}
+.player-item.theme-dark, .dadga-suspect-item.theme-dark, #profileCard.theme-dark{background:linear-gradient(135deg,#0a0a0a,#555 150%);border:2px solid rgba(255,255,255,.25);animation:vipCardDarkGlow 2s ease-in-out infinite;}
+.player-item.theme-dark .player-name, .dadga-suspect-item.theme-dark .dadga-suspect-name, #profileCard.theme-dark #profileUsernameText{color:#fff;}
 .vip-theme-swatch{width:38px;height:38px;border-radius:50%;flex-shrink:0;}
 .vip-theme-opt span{font-size:11px;font-weight:800;color:#555;}
 .vip-frame-royal, .vip-frame-spy, .vip-frame-electric{
@@ -1580,6 +1580,7 @@ background: rgba(0,0,0,.2);
 .profile-avatar-inner{width:100%;height:100%;border-radius:50%;overflow:hidden;border:3px solid #ffd400;background:#fff;}
 .vip-frame-royal .profile-avatar-inner, .vip-frame-spy .profile-avatar-inner, .vip-frame-electric .profile-avatar-inner{border-color:transparent;}
 .avatar-clip{width:100%;height:100%;border-radius:50%;overflow:hidden;}
+.avatar-clip img{width:100%;height:100%;object-fit:cover;display:block;}
 .vip-frame-royal::before,
 .vip-frame-spy::before,
 .vip-frame-electric::before{
@@ -1995,6 +1996,22 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 .dadga-suspect-item.selected {
   border-color: #ffd400;
   background: #fffbe8;
+}
+.dadga-suspect-item.theme-fire.selected{
+  background: linear-gradient(135deg,#0a0a0a,#c0392b 150%);
+  box-shadow: 0 0 0 3px #ffd400 inset;
+}
+.dadga-suspect-item.theme-neon.selected{
+  background: linear-gradient(135deg,#0a0a0a,#0d6efd 150%);
+  box-shadow: 0 0 0 3px #ffd400 inset;
+}
+.dadga-suspect-item.theme-royal.selected{
+  background: linear-gradient(135deg,#0a0a0a,#8a5cf6 150%);
+  box-shadow: 0 0 0 3px #ffd400 inset;
+}
+.dadga-suspect-item.theme-dark.selected{
+  background: linear-gradient(135deg,#0a0a0a,#555 150%);
+  box-shadow: 0 0 0 3px #ffd400 inset;
 }
 .dadga-suspect-avatar {
   width: 44px; height: 44px; border-radius: 50%;
