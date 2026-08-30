@@ -738,7 +738,7 @@ function showScreen(id){
     const el=document.getElementById(s);
     if(el) el.classList.toggle('hidden',s!==id);
   });
-const gameScreens = ['screen3','screen4','screen5','onlineChooseScreen','onlineLobbyScreen','onlineCardScreen','onlineTimerScreen','onlineVotingScreen','onlineRevealScreen'];
+const gameScreens = ['screen3','screen4','screen5','onlineChooseScreen','onlineLobbyScreen','onlineCardScreen','onlineTimerScreen','onlineVotingScreen','onlineLastChanceScreen','onlineRevealScreen'];
   document.getElementById('bottomNav')
     .classList.toggle('hidden', gameScreens.includes(id));
 }
@@ -2750,6 +2750,8 @@ let roomChannel = null;
 let roundTimerInterval = null;
 let onlineCardOpened = false;
 let onlineSelectedVote = null;
+let _onlineGuessSubmitted = false;
+let _finalizingLastChance = false;
 let lobbyCustomWords = [];
 let roomIsPublic = true;
 
@@ -3707,15 +3709,58 @@ async function startOnlineGame(){
   }).eq('code', onlineRoomCode);
 }
 /* ── وەرگرتنی گۆڕانکاری ژوور بۆ هەموو ئامێرەکان ── */
-/* ── وەرگرتنی گۆڕانکاری ژوور بۆ هەموو ئامێرەکان ── */
 function onRoomUpdate(room){
   if(room.status === 'playing'){
     if(room.round_start_at){ showOnlineTimerScreen(room); }
     else { showOnlineCard(room); }
   }
   if(room.status === 'voting') showOnlineVoting(room);
+  if(room.status === 'lastchance') handleOnlineLastChanceUpdate(room);
   if(room.status === 'reveal') showOnlineReveal(room);
   if(room.status === 'lobby' && onlineRoomCode){ showScreen('onlineLobbyScreen'); refreshLobbyPlayers(); }
+}
+
+function showOnlineLastChance(room){
+  showScreen('onlineLastChanceScreen');
+  showChatFab();
+  const accusedPlayer = onlinePlayers.find(p=>p.client_id === room.accused_id);
+  document.getElementById('onlineLastChanceAvatar').src = accusedPlayer ? avatarUrl(accusedPlayer.avatar_seed) : '';
+  document.getElementById('onlineLastChanceName').innerText = accusedPlayer ? accusedPlayer.name : '';
+  const isMe = CLIENT_ID === room.accused_id;
+  document.getElementById('onlineLastChanceSelfBox').classList.toggle('hidden', !isMe);
+  document.getElementById('onlineLastChanceWaitBox').classList.toggle('hidden', isMe);
+  if(isMe){
+    _onlineGuessSubmitted = false;
+    const input = document.getElementById('onlineGuessInput');
+    input.value = '';
+    input.disabled = false;
+  }
+}
+
+async function handleOnlineLastChanceUpdate(room){
+  if(room.spy_guess_correct === null || room.spy_guess_correct === undefined){
+    showOnlineLastChance(room);
+    return;
+  }
+  if(!isHost || _finalizingLastChance) return;
+  _finalizingLastChance = true;
+  const { data: players } = await sb.from('room_players').select('*').eq('room_code', onlineRoomCode);
+  const spyIds = room.spy_client_ids || [];
+  await finalizeOnlineRound(room.accused_id, room.spy_guess_correct, spyIds, players);
+  _finalizingLastChance = false;
+}
+
+async function submitOnlineSpyGuess(){
+  if(_onlineGuessSubmitted) return;
+  const { data: room } = await sb.from('rooms').select('*').eq('code', onlineRoomCode).single();
+  if(!room || room.accused_id !== CLIENT_ID) return;
+  _onlineGuessSubmitted = true;
+  const input = document.getElementById('onlineGuessInput');
+  input.disabled = true;
+  const normalize = s => s.trim().replace(/\s+/g,' ').replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/ة/g,'ە').replace(/\u200c/g,'').replace(/\u200d/g,'');
+  const correct = normalize(input.value) === normalize(room.game_word);
+  input.value = correct ? '✓ راستە' : '✗ هەڵەیە';
+  await sb.from('rooms').update({ spy_guess_correct: correct }).eq('code', onlineRoomCode);
 }
 
 /* ── شاشەی کات (وەک ئۆفڵاین) ── */
@@ -3759,6 +3804,7 @@ async function toggleOnlinePause(){
 function showOnlineCard(room){
   showScreen('onlineCardScreen');
   showChatFab();
+  _onlineGuessSubmitted = false;
   const amSpy = (room.spy_client_ids || []).includes(CLIENT_ID);
   document.getElementById('onlineCatBadge').innerText = room.current_category;
   document.getElementById('onlineRoundBadge').innerText = 'خول ' + (room.current_round||1);
@@ -3970,61 +4016,69 @@ async function checkAllVoted(){
     players.forEach(p=>{ if(p.vote_for) tally[p.vote_for] = (tally[p.vote_for]||0)+1; });
     const sorted = Object.entries(tally).sort((a,b)=>b[1]-a[1]);
     const accusedId = sorted[0][0];
-    window._lastAccusedId = accusedId;
 
-    const { data: room } = await sb.from('rooms').select('spy_client_ids').eq('code', onlineRoomCode).single();
-    const spyIds = room.spy_client_ids || [];
-    const spyWon = !spyIds.includes(accusedId); // سیخور نەدۆزرایەوە → سیخور براوەیە
+    const { data: roomRow } = await sb.from('rooms').select('spy_client_ids').eq('code', onlineRoomCode).single();
+    const spyIds = roomRow.spy_client_ids || [];
 
-    for(const p of players){
-      const isSpy = spyIds.includes(p.client_id);
-      let delta = 0;
-
-      if(isSpy){
-        if(spyWon) delta += 3;
-      } else {
-        if(!spyWon){
-          delta += 2; // سیخور دەستگیرکرا — هەموو یاریزانانی ئاسایی خاڵ وەردەگرن
-        } else if(p.vote_for && spyIds.includes(p.vote_for)){
-          delta += 2; // سیخور براوە بوو، بەڵام ئەم یاریزانە دەنگی ڕاستی دا بۆ سیخور
-        }
-        // خالی -1 بۆ دەنگی هەڵە (دەنگدان بۆ کەسێکی بێتاوان)
-        if(p.vote_for && !spyIds.includes(p.vote_for)){
-          delta -= 1;
-        }
-      }
-
-       if(delta !== 0){
-        await sb.from('room_players').update({ score: (p.score||0) + delta }).eq('room_code', onlineRoomCode).eq('client_id', p.client_id);
-      }
+    if(spyIds.includes(accusedId)){
+      // سیخور دۆزرایەوە — شانسی ئاخری بدەرێ پێش بڕیاردان
+      await sb.from('rooms').update({ status:'lastchance', accused_id: accusedId, spy_guess_correct: null }).eq('code', onlineRoomCode);
+      return;
     }
 
-    // ── نوێکردنەوەی ئاماری هەژمار بۆ یاریزانانی لۆگینکراو ──
-    const statUserIds = players.filter(p=>p.user_id).map(p=>p.user_id);
-    if(statUserIds.length){
-      const { data: userRows } = await sb.from('app_users').select('id,total_games,spy_wins,detective_wins').in('id', statUserIds);
-      const userStatMap = {};
-      (userRows||[]).forEach(u=>{ userStatMap[u.id] = u; });
-      for(const p of players){
-        const su = p.user_id ? userStatMap[p.user_id] : null;
-        if(!su) continue;
-        const isSpy = spyIds.includes(p.client_id);
-        const statUpdates = { total_games: (su.total_games||0) + 1 };
-        if(isSpy && spyWon){
-          statUpdates.spy_wins = (su.spy_wins||0) + 1;
-        }
-        if(!isSpy && !spyWon && p.vote_for && spyIds.includes(p.vote_for)){
-          statUpdates.detective_wins = (su.detective_wins||0) + 1;
-        }
-        await sb.from('app_users').update(statUpdates).eq('id', p.user_id);
-      }
-    }
-
-    window._lastSpyWon = spyWon;
-
-    await sb.from('room_players').update({ vote_for: null }).eq('room_code', onlineRoomCode);
-    await sb.from('rooms').update({ status:'reveal' }).eq('code', onlineRoomCode);
+    // بێتاوان دەستگیرکرا — سیخور ڕاستەوخۆ براوەیە، پێویست بە شانس نییە
+    await finalizeOnlineRound(accusedId, true, spyIds, players);
   }
+}
+
+async function finalizeOnlineRound(accusedId, spyWon, spyIds, players){
+  for(const p of players){
+    const isSpy = spyIds.includes(p.client_id);
+    let delta = 0;
+
+    if(isSpy){
+      if(spyWon) delta += 3;
+    } else {
+      if(!spyWon){
+        delta += 2;
+      } else if(p.vote_for && spyIds.includes(p.vote_for)){
+        delta += 2;
+      }
+      if(p.vote_for && !spyIds.includes(p.vote_for)){
+        delta -= 1;
+      }
+    }
+
+    if(delta !== 0){
+      await sb.from('room_players').update({ score: (p.score||0) + delta }).eq('room_code', onlineRoomCode).eq('client_id', p.client_id);
+    }
+  }
+
+  const statUserIds = players.filter(p=>p.user_id).map(p=>p.user_id);
+  if(statUserIds.length){
+    const { data: userRows } = await sb.from('app_users').select('id,total_games,spy_wins,detective_wins').in('id', statUserIds);
+    const userStatMap = {};
+    (userRows||[]).forEach(u=>{ userStatMap[u.id] = u; });
+    for(const p of players){
+      const su = p.user_id ? userStatMap[p.user_id] : null;
+      if(!su) continue;
+      const isSpy = spyIds.includes(p.client_id);
+      const statUpdates = { total_games: (su.total_games||0) + 1 };
+      if(isSpy && spyWon){
+        statUpdates.spy_wins = (su.spy_wins||0) + 1;
+      }
+      if(!isSpy && !spyWon && p.vote_for && spyIds.includes(p.vote_for)){
+        statUpdates.detective_wins = (su.detective_wins||0) + 1;
+      }
+      await sb.from('app_users').update(statUpdates).eq('id', p.user_id);
+    }
+  }
+
+  window._lastAccusedId = accusedId;
+  window._lastSpyWon = spyWon;
+
+  await sb.from('room_players').update({ vote_for: null }).eq('room_code', onlineRoomCode);
+  await sb.from('rooms').update({ status:'reveal', accused_id: null, spy_guess_correct: null }).eq('code', onlineRoomCode);
 }
 
 /* ── ئاشکراکردن ── */
@@ -4059,4 +4113,4 @@ async function nextOnlineRound(){
   await sb.from('rooms').update({ status:'lobby', current_round: (await sb.from('rooms').select('current_round').eq('code',onlineRoomCode).single()).data.current_round + 1 }).eq('code', onlineRoomCode);
 }
 /* ئەم فایلانە پێویستیان بە _screens زیادکردنە بۆ ئەوەی showScreen بتوانێت بیانبینێت */
-_screens.push('onlineChooseScreen','onlineLobbyScreen','onlineCardScreen','onlineTimerScreen','onlineVotingScreen','onlineRevealScreen');
+_screens.push('onlineChooseScreen','onlineLobbyScreen','onlineCardScreen','onlineTimerScreen','onlineVotingScreen','onlineLastChanceScreen','onlineRevealScreen');
