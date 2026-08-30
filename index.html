@@ -4016,6 +4016,39 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
   <button class="dadga-vote-btn" id="onlineVoteBtn" onclick="vib();submitOnlineVote()">دەنگدان</button>
 </section>
 
+<!-- ئاشکراکردن ئۆنڵاین --><!-- شانسی ئاخری سیخور - ئۆنڵاین -->
+<section class="screen hidden" id="onlineLastChanceScreen">
+  <div class="screen-top-bar"><div class="title">شانسی کۆتایی</div></div>
+  <div class="dadga-lastchance-wrap">
+    <div class="dadga-spy-reveal">
+      <div class="dadga-spy-reveal-avatar"><img id="onlineLastChanceAvatar" src=""></div>
+      <div class="dadga-spy-reveal-name" id="onlineLastChanceName"></div>
+      <div class="dadga-spy-reveal-tag">
+        <svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>
+        سیخور دۆزرایەوە
+      </div>
+    </div>
+
+    <div id="onlineLastChanceSelfBox" class="hidden">
+      <div class="dadga-guess-label">وشەکە چییە؟</div>
+      <input class="dadga-guess-input" id="onlineGuessInput" type="text" placeholder="وشەکە بنووسە...">
+      <div class="dadga-guess-btns">
+        <button class="dadga-guess-correct" onclick="vib('medium');submitOnlineSpyGuess()">
+          <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:#fff;vertical-align:middle;margin-left:6px">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+          پشتڕاستکردنەوەی وشەکە
+        </button>
+      </div>
+    </div>
+
+    <div id="onlineLastChanceWaitBox" class="wait-msg-box hidden" style="margin-top:10px;">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+      <span>چاوەڕوانی سیخوربە بۆ وەڵامدانەوە...</span>
+    </div>
+  </div>
+</section>
+
 <!-- ئاشکراکردن ئۆنڵاین -->
 <section class="screen hidden" id="onlineRevealScreen">
   <div class="screen-top-bar"><div class="title">ئەنجام</div></div>
