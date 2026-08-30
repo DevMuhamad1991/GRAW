@@ -43,6 +43,21 @@ const words={
   شوێن:["بازار","مارکێت","قەڵای هەولێر","مەلەوانگە","سلێمانی","هەولێر خەبات","دارەتوو","هەورامان","بارزان","خەلیفان"],
   رەنگ:["مۆر "," سەوز"," سور"," زەرد","پرتەقالی ","شین"]
 };
+function initDefaultOnlineMode(){
+  gameMode = 'online';
+  document.querySelectorAll('.offline-only').forEach(el=>{
+    el.classList.add('locked');
+  });
+  const mainBtn = document.getElementById('mainStartBtn');
+  if(mainBtn){
+    mainBtn.innerText = 'دەستپێکردنی یاری ئۆنڵاین';
+    mainBtn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+    mainBtn.style.color = '#fff';
+    mainBtn.style.boxShadow = '0 6px 20px rgba(34,197,94,.35)';
+  }
+}
+document.addEventListener('DOMContentLoaded', initDefaultOnlineMode);
+
 let players=[],playerAvatarIndexes=[],selectedCategories=[],selectedCategory="";
 let currentIndex=0,spyIndexes=[],gameWord="",usedWords=[];
 let holdTimer,timerInterval,currentTime=0,timerStarted=false,isPaused=false,cardWasOpened=false;
