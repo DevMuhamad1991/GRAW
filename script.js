@@ -2140,9 +2140,9 @@ function awardPoints(spyWon) {
 function openScores() {
   renderScores();
   updateRoundBtn();
+  document.getElementById('scoresResetBtn').classList.remove('hidden');
   document.getElementById('scoresOverlay').classList.add('active');
 }
-
 
 function closeScores() {
   document.getElementById('scoresOverlay').classList.remove('active');
@@ -2752,6 +2752,9 @@ let onlineCardOpened = false;
 let onlineSelectedVote = null;
 let _onlineGuessSubmitted = false;
 let _finalizingLastChance = false;
+let onlineLastRoundPoints = {};
+let _onlineScoresSnapshot = [];
+let _onlineScoresRound = 1;
 let lobbyCustomWords = [];
 let roomIsPublic = true;
 
@@ -4032,6 +4035,8 @@ async function checkAllVoted(){
 }
 
 async function finalizeOnlineRound(accusedId, spyWon, spyIds, players){
+  onlineLastRoundPoints = {};
+
   for(const p of players){
     const isSpy = spyIds.includes(p.client_id);
     let delta = 0;
@@ -4039,15 +4044,11 @@ async function finalizeOnlineRound(accusedId, spyWon, spyIds, players){
     if(isSpy){
       if(spyWon) delta += 3;
     } else {
-      if(!spyWon){
-        delta += 2;
-      } else if(p.vote_for && spyIds.includes(p.vote_for)){
-        delta += 2;
-      }
-      if(p.vote_for && !spyIds.includes(p.vote_for)){
-        delta -= 1;
-      }
+      if(!spyWon) delta += 2;
+      if(p.vote_for && !spyIds.includes(p.vote_for)) delta -= 1;
     }
+
+    onlineLastRoundPoints[p.client_id] = delta;
 
     if(delta !== 0){
       await sb.from('room_players').update({ score: (p.score||0) + delta }).eq('room_code', onlineRoomCode).eq('client_id', p.client_id);
@@ -4082,6 +4083,7 @@ async function finalizeOnlineRound(accusedId, spyWon, spyIds, players){
 }
 
 /* ── ئاشکراکردن ── */
+/* ── ئاشکراکردن ── */
 async function showOnlineReveal(room){
   showScreen('onlineRevealScreen');
   showChatFab();
@@ -4093,21 +4095,50 @@ async function showOnlineReveal(room){
   nextBtn.innerText = `خولی ${(room.current_round || 1) + 1}`;
   nextBtn.classList.toggle('hidden', !isHost);
 
-    const { data: players } = await sb.from('room_players').select('*').eq('room_code', onlineRoomCode).order('score', { ascending:false });
-  const box = document.getElementById('onlineRevealScoreBox');
-  if(box && players){
-    box.innerHTML = players.map(p=>{
-      const themeClass = p.card_theme && p.card_theme!=='default' ? ' theme-'+p.card_theme : '';
-      return `
-      <div class="player-item${themeClass}" style="margin-bottom:8px;">
-        <div class="avatar ${vipFrameClass(p.frame_style)}">
-          <img src="${avatarUrl(p.avatar_seed)}" loading="lazy">
-        </div>
-        <div class="player-name" style="flex:1;">${p.name}${p.is_verified ? ` <svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : ''}</div>
-        <div style="font-size:16px;font-weight:800;color:#c8960a;flex-shrink:0;">${p.score||0}</div>
+  const { data: players } = await sb.from('room_players').select('*').eq('room_code', onlineRoomCode).order('score', { ascending:false });
+  _onlineScoresSnapshot = players || [];
+  _onlineScoresRound = room.current_round || 1;
+
+  setTimeout(() => openOnlineScores(_onlineScoresSnapshot, _onlineScoresRound), 600);
+}
+
+function openOnlineScoresManual(){
+  vib();
+  openOnlineScores(_onlineScoresSnapshot, _onlineScoresRound);
+}
+
+function renderOnlineScoresSheet(players, round){
+  document.getElementById('scoresRoundBadge').innerText = `خول ${round}`;
+  const sorted = [...players].sort((a,b)=> (b.score||0) - (a.score||0));
+  const list = document.getElementById('scoresList');
+  list.innerHTML = '';
+  sorted.forEach((p, i) => {
+    const rank = i + 1;
+    const rankClass = rank <= 3 ? ` rank-${rank}` : '';
+    const rankSymbol = rank === 1 ? '١' : rank === 2 ? '٢' : rank === 3 ? '٣' : rank + '';
+    const newPts = onlineLastRoundPoints[p.client_id];
+    const div = document.createElement('div');
+    div.className = 'scores-row' + rankClass;
+    div.style.animationDelay = (i * 0.06) + 's';
+    div.innerHTML = `
+  ${newPts !== undefined && newPts !== 0 ? `<div class="scores-new-pts" style="${newPts < 0 ? 'background:linear-gradient(135deg,#ff3b3b,#c62828);box-shadow:0 3px 10px rgba(255,59,59,.35);' : newPts >= 2 ? 'background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 3px 10px rgba(34,197,94,.35);' : 'background:linear-gradient(135deg,#ffd400,#ffbc00);color:#111;box-shadow:0 3px 10px rgba(255,188,0,.35);'}">${newPts > 0 ? '+' : ''}${newPts}${newPts < 0 ? ' ✗' : ' ✓'}</div>` : ''}
+      <div class="scores-rank">${rankSymbol}</div>
+      <div class="scores-avatar">
+        <img src="${avatarUrl(p.avatar_seed)}" loading="lazy">
+      </div>
+      <div class="scores-name">${p.name}</div>
+      <div class="scores-pts-wrap">
+        <div class="scores-pts">${p.score||0}</div>
+        <div class="scores-pts-label">خال</div>
       </div>`;
-    }).join('');
-  }
+    list.appendChild(div);
+  });
+}
+
+function openOnlineScores(players, round){
+  renderOnlineScoresSheet(players, round);
+  document.getElementById('scoresResetBtn').classList.add('hidden');
+  document.getElementById('scoresOverlay').classList.add('active');
 }
 async function nextOnlineRound(){
   await sb.from('rooms').update({ status:'lobby', current_round: (await sb.from('rooms').select('current_round').eq('code',onlineRoomCode).single()).data.current_round + 1 }).eq('code', onlineRoomCode);
