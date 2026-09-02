@@ -980,8 +980,116 @@ function switchStatsMode(mode){
   document.getElementById('statsModeOffline').classList.toggle('active', mode==='offline');
   document.getElementById('statsModeOnline').classList.toggle('active', mode==='online');
   document.getElementById('statsContent').classList.toggle('hidden', mode!=='offline');
-  document.getElementById('onlineStatsContent').classList.toggle('hidden', mode!=='online');
+  document.getElementById('onlineStatsWrap').classList.toggle('hidden', mode!=='online');
   if(mode==='online') loadOnlineStats();
+}
+
+const kurdishDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+function toKurdishNum(n){
+  return String(n).split('').map(d => kurdishDigits[+d] ?? d).join('');
+}
+
+let currentStatCategory = 'games';
+const statCategoryConfig = {
+  games: { key:'total_games', color:'#ffd400',
+    icon:'<svg viewBox="0 0 24 24" width="20" height="20" fill="#ffd400"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>' },
+  spy: { key:'spy_wins', color:'#ff3b3b',
+    icon:'<svg viewBox="0 0 24 24" width="20" height="20" fill="#ff3b3b"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>' },
+  detective: { key:'detective_wins', color:'#3b82f6',
+    icon:'<svg viewBox="0 0 24 24" width="20" height="20" fill="#3b82f6"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>' }
+};
+
+function switchStatCategory(cat){
+  currentStatCategory = cat;
+  document.querySelectorAll('.stat-chip').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  renderStatCategory();
+}
+
+function buildYourRankCard(user, rank, val, cfg){
+  const vip = isVipActive(user);
+  const frameClass = vip ? vipFrameClass(user.frame_style) : '';
+  const rankText = rank ? '#' + toKurdishNum(rank) : '—';
+  return `
+    <div class="stat-your-rank" style="border-color:${cfg.color}55;">
+      <div class="stat-your-rank-label">پلەی تۆ</div>
+      <div class="stat-your-rank-row">
+        <div class="avatar ${frameClass}"><div class="avatar-clip"><img src="${avatarUrl(user.avatar_seed)}" loading="lazy"></div></div>
+        <div class="stat-your-rank-name">${user.username}</div>
+        <div class="stat-your-rank-badge" style="background:${cfg.color};">${rankText}</div>
+        <div class="stat-your-rank-val">${val}</div>
+      </div>
+    </div>`;
+}
+
+function buildPodiumFirst(u, cfg){
+  const vip = isVipActive(u);
+  const frameClass = vip ? vipFrameClass(u.frame_style) : '';
+  const verifiedIco = u.is_verified ? ` <svg viewBox="0 0 24 24" width="15" height="15"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : '';
+  return `
+    <div class="stat-podium-first">
+      <div class="stat-podium-crown"><svg viewBox="0 0 24 24" width="22" height="22" fill="${cfg.color}"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z"/></svg></div>
+      <div class="stat-podium-first-avatar ${frameClass}"><img src="${avatarUrl(u.avatar_seed)}" loading="lazy"></div>
+      <div class="stat-podium-first-name">${u.username}${verifiedIco}</div>
+      <div class="stat-podium-first-val" style="color:${cfg.color};">${u[cfg.key]||0}</div>
+    </div>`;
+}
+
+function buildPodiumCard(u, cfg, rank){
+  const vip = isVipActive(u);
+  const frameClass = vip ? vipFrameClass(u.frame_style) : '';
+  return `
+    <div class="stat-podium-card">
+      <div class="stat-podium-rank">${toKurdishNum(rank)}</div>
+      <div class="avatar ${frameClass}" style="width:52px;height:52px;"><div class="avatar-clip"><img src="${avatarUrl(u.avatar_seed)}" loading="lazy"></div></div>
+      <div class="stat-podium-card-name">${u.username}</div>
+      <div class="stat-podium-card-val" style="color:${cfg.color};">${u[cfg.key]||0}</div>
+    </div>`;
+}
+
+function buildPodium(top3, cfg){
+  if(top3.length === 0) return '';
+  const [first, second, third] = top3;
+  let html = '<div class="stat-podium-wrap">';
+  if(first) html += buildPodiumFirst(first, cfg);
+  if(second || third){
+    html += '<div class="stat-podium-row23">';
+    if(second) html += buildPodiumCard(second, cfg, 2);
+    if(third) html += buildPodiumCard(third, cfg, 3);
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+let _statUsersCache = null;
+
+function renderStatCategory(){
+  const box = document.getElementById('onlineStatsContent');
+  if(!box || !_statUsersCache) return;
+  const cfg = statCategoryConfig[currentStatCategory];
+  const sorted = [..._statUsersCache].filter(u => (u[cfg.key]||0) > 0).sort((a,b) => (b[cfg.key]||0) - (a[cfg.key]||0));
+
+  let html = '';
+
+  if(currentUser){
+    const allSorted = [..._statUsersCache].sort((a,b) => (b[cfg.key]||0) - (a[cfg.key]||0));
+    const idx = allSorted.findIndex(u => u.username === currentUser.username);
+    const rank = idx >= 0 ? idx + 1 : null;
+    const val = currentUser[cfg.key] || 0;
+    html += buildYourRankCard(currentUser, rank, val, cfg);
+  }
+
+  if(sorted.length === 0){
+    html += `<div class="stat-empty">هێشتا داتا نییە</div>`;
+  } else {
+    const top3 = sorted.slice(0, 3);
+    const rest = sorted.slice(3, 10);
+    html += buildPodium(top3, cfg);
+    if(rest.length){
+      html += `<div class="stat-section">` + rest.map((u,i) => buildOnlineStatRow(u, u[cfg.key]||0, i+4)).join('') + `</div>`;
+    }
+  }
+  box.innerHTML = html;
 }
 
 function buildOnlineStatRow(u, val, rank){
@@ -1024,18 +1132,8 @@ async function loadOnlineStats(){
     return;
   }
 
-  const topGames = [...users].filter(u=>u.total_games>0).sort((a,b)=>(b.total_games||0)-(a.total_games||0)).slice(0,10);
-  const topSpy = [...users].filter(u=>u.spy_wins>0).sort((a,b)=>(b.spy_wins||0)-(a.spy_wins||0)).slice(0,10);
-  const topDet = [...users].filter(u=>u.detective_wins>0).sort((a,b)=>(b.detective_wins||0)-(a.detective_wins||0)).slice(0,10);
-
-  const gamesIcon = `<svg viewBox="0 0 24 24" width="18" height="18" fill="#111"><path d="M15 7.5V2H9v5.5l3 3 3-3zM7.5 9H2v6h5.5l3-3-3-3zM9 16.5V22h6v-5.5l-3-3-3 3zM16.5 9l-3 3 3 3H22V9h-5.5z"/></svg>`;
-  const spyIcon = `<svg viewBox="0 0 24 24" width="18" height="18" fill="#111"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>`;
-  const detIcon = `<svg viewBox="0 0 24 24" width="18" height="18" fill="#111"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>`;
-
-  box.innerHTML =
-    buildOnlineStatSection('چالاکترین یاریزانەکان', gamesIcon, topGames, 'total_games') +
-    buildOnlineStatSection('باشترین سیخورەکان', spyIcon, topSpy, 'spy_wins') +
-    buildOnlineStatSection('باشترین لێکۆڵەرەکان', detIcon, topDet, 'detective_wins');
+  _statUsersCache = users;
+  renderStatCategory();
 }
 
 /* ══════════════════════════════════════
