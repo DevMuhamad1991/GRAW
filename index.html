@@ -2700,6 +2700,17 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 .mini-cat.active{border-color:#111;background:#ffe066;}
 .wait-msg-box{display:flex;align-items:center;gap:12px;background:#fffbe8;
   border-radius:18px;padding:16px;margin-top:10px;}
+.starter-announce-box{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(135deg,#ffd400,#ffbc00);
+  border-radius:18px;padding:14px 18px;margin-bottom:var(--gap-md);
+  box-shadow:0 6px 20px rgba(255,188,0,.3);
+  animation:starterIn .4s cubic-bezier(.34,1.3,.64,1) both;
+  transition:opacity .4s ease, transform .4s ease;
+}
+.starter-announce-box.fading{opacity:0;transform:translateY(-10px);}
+.starter-announce-box span{font-size:var(--fs-md);font-weight:800;color:#111;}
+@keyframes starterIn{from{opacity:0;transform:translateY(-14px) scale(.95);}to{opacity:1;transform:translateY(0) scale(1);}}
 .wait-msg-box svg{width:24px;height:24px;fill:#b88600;flex-shrink:0;}
 .wait-msg-box span{font-size:var(--fs-sm);font-weight:700;color:#7a5200;}
 .online-ready-badge{text-align:center;padding:14px;background:rgba(34,197,94,.1);
@@ -4016,14 +4027,18 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 
 </section>
 
-<!-- شاشەی کات — دیزاینی وەک ئۆفڵاین -->
+<!-- شاشەی کات — دیزاینی وەک ئۆفڵاین --><!-- شاشەی کات — دیزاینی وەک ئۆفڵاین -->
 <section class="screen hidden" id="onlineTimerScreen">
   <div class="screen-top-bar">
     <div class="badge" id="onlineTimerRoundBadge"></div>
     <div class="title" style="font-size:var(--fs-lg);">کاتی یاری</div>
   </div>
+  <div class="starter-announce-box hidden" id="starterAnnounceBox">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="#111"><path d="M8 5v14l11-7z"/></svg>
+    <span id="starterAnnounceText"></span>
+  </div>
   <div class="glass start-player-box">
-    <div class="start-text">وشەکە وەسف بکە بەبێ ئاشکراکردنی</div>
+    <div class="start-text">وشەکە وەسف بکەن بەبێ ئاشکراکردنی</div>
     <div class="timer" id="onlineTimer">00:00</div>
 
     <div class="timer-controls" id="onlineTimerControlsHost">
