@@ -4094,8 +4094,9 @@ function updateOnlineTimerDisplay(sec){
 async function confirmEndOnlineRound(){
   const yes = await showModal({title:"کۆتایی خول", msg:"دەچیتە بەشی دەنگدان — ناچیتە دادگای مۆدی ئۆفڵاین.", icon:"warn", confirm:true});
   if(yes && isHost){
+    clearInterval(roundTimerInterval);
     await sb.from('room_players').update({ vote_for: null }).eq('room_code', onlineRoomCode);
-    await hostStartRoundTimer();
+    await sb.from('rooms').update({ status:'voting' }).eq('code', onlineRoomCode);
   }
 }
 
