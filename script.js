@@ -2551,6 +2551,7 @@ async function reconnectOnlineSession(){
     onlineRoomCode = savedCode;
     isHost = !!myRow.is_host;
     roomIsPublic = !!room.is_public;
+    currentRoomMaxPlayers = room.max_players || 10;
     gameMode = 'online';
     document.getElementById('modeOffline').classList.remove('active');
     document.getElementById('modeOnline').classList.add('active');
@@ -3423,7 +3424,8 @@ async function createOnlineRoom(){
   }
   isHost = true;
   const code = generateRoomCode();
-  const { error: roomErr } = await sb.from('rooms').insert({ code, host_client_id: CLIENT_ID, status: 'lobby', is_public: roomIsPublic });
+  const maxPlayers = isVipUser ? 30 : 10;
+  const { error: roomErr } = await sb.from('rooms').insert({ code, host_client_id: CLIENT_ID, status: 'lobby', is_public: roomIsPublic, max_players: maxPlayers });
   if(roomErr){ vib('error'); showModal({title:"هەڵە", msg:"نەتوانرا ژوور دروست بکرێت.", icon:"err"}); return; }
 
    const { error: playerErr } = await sb.from('room_players').insert({
@@ -3460,9 +3462,11 @@ async function joinOnlineRoomByCode(code, name){
   if(!isVipUser && existing && existing.some(p => p.name === name)){
     vib('error'); showModal({title:"ناوەکە بەکارهاتووە", msg:"ناوێکی تر بنووسە.", icon:"warn"}); return;
   }
-  if(existing && existing.length >= 10){
-    vib('error'); showModal({title:"ژوورەکە پڕە", msg:"زیاتر لە ١٠ کەس ناتوانرێت.", icon:"warn"}); return;
+  const roomMax = room.max_players || 10;
+  if(existing && existing.length >= roomMax){
+    vib('error'); showModal({title:"ژوورەکە پڕە", msg:`زیاتر لە ${roomMax} کەس ناتوانرێت.`, icon:"warn"}); return;
   }
+  
     const { error: playerErr } = await sb.from('room_players').insert({
     room_code: code, client_id: CLIENT_ID, name,
     avatar_seed: (currentUser && isVipActive(currentUser)) ? currentUser.avatar_seed : name+'_'+Date.now(),
@@ -3483,18 +3487,22 @@ async function joinOnlineRoomByCode(code, name){
 }
 
 /* ── لۆبی + ڕیئلتایم ── */
-function enterLobby(){
+let currentRoomMaxPlayers = 10;
+async function enterLobby(){
   showScreen('onlineLobbyScreen');
   document.getElementById('lobbyRoomCode').innerText = onlineRoomCode;
   document.getElementById('lobbyRoomCodeBox').classList.toggle('hidden', roomIsPublic);
   document.getElementById('lobbyPublicBox').classList.toggle('hidden', !roomIsPublic);
   document.getElementById('lobbyHostControls').classList.toggle('hidden', !isHost);
   document.getElementById('lobbyWaitMsg').classList.toggle('hidden', isHost);
+  const { data: roomRow } = await sb.from('rooms').select('max_players').eq('code', onlineRoomCode).maybeSingle();
+  currentRoomMaxPlayers = roomRow?.max_players || 10;
     subscribeRoom();
   refreshLobbyPlayers();
   startPingLoop();
   showChatFab();
 }
+
 function subscribeRoom(){
   if(roomChannel) sb.removeChannel(roomChannel);
   roomChannel = sb.channel('room_' + onlineRoomCode)
@@ -3597,7 +3605,7 @@ function refreshLobbyPlayersUI(){
       ${canKick ? `<button class="remove-player" onclick="vib('medium');kickPlayer('${p.client_id}','${p.name}')">&#x2715;</button>` : ''}`;
     box.appendChild(div);
   });
-  document.getElementById('lobbyCount').innerText = onlinePlayers.length + ' / ١٠ یاریزان';
+    document.getElementById('lobbyCount').innerText = onlinePlayers.length + ' / ' + currentRoomMaxPlayers + ' یاریزان';
 }
 
 /* نوێکردنەوەی تەنها دۆخی میوت — بەبێ ری‌ڕێندەری هەموو لیستەکە */
@@ -3781,6 +3789,7 @@ async function submitOnlineSpyGuess(){
 }
 
 /* ── شاشەی کات (وەک ئۆفڵاین) ── */
+let _shownStarterFor = null;
 function showOnlineTimerScreen(room){
   showScreen('onlineTimerScreen');
   showChatFab();
@@ -3789,6 +3798,22 @@ function showOnlineTimerScreen(room){
   document.getElementById('onlineTimerWaitMsg').classList.toggle('hidden', isHost);
   syncOnlinePauseUI(room);
   startOnlineTimer(room);
+
+  const key = room.code + '_' + room.round_start_at;
+  if(room.starter_client_id && _shownStarterFor !== key){
+    _shownStarterFor = key;
+    const starter = onlinePlayers.find(p=>p.client_id === room.starter_client_id);
+    const box = document.getElementById('starterAnnounceBox');
+    if(starter && box){
+      document.getElementById('starterAnnounceText').innerText = `${starter.name} دەست پێدەکات`;
+      box.classList.remove('hidden','fading');
+      clearTimeout(box._hideTimer);
+      box._hideTimer = setTimeout(()=>{
+        box.classList.add('fading');
+        setTimeout(()=> box.classList.add('hidden'), 400);
+      }, 6000);
+    }
+  }
 }
 
 function syncOnlinePauseUI(room){
@@ -3920,6 +3945,14 @@ async function markReady(){
   await sb.from('room_players').update({ vote_for: 'READY' }).eq('room_code', onlineRoomCode).eq('client_id', CLIENT_ID);
 }
 
+async function hostStartRoundTimer(){
+  const starter = onlinePlayers[Math.floor(Math.random()*onlinePlayers.length)];
+  await sb.from('rooms').update({
+    round_start_at: new Date().toISOString(),
+    starter_client_id: starter ? starter.client_id : null
+  }).eq('code', onlineRoomCode);
+}
+
 async function checkAllReady(){
   if(!isHost) return;
   const { data } = await sb.from('rooms').select('status').eq('code', onlineRoomCode).single();
@@ -3927,7 +3960,7 @@ async function checkAllReady(){
   const { data: players } = await sb.from('room_players').select('*').eq('room_code', onlineRoomCode);
   if(players && players.length && players.every(p => p.vote_for === 'READY')){
     await sb.from('room_players').update({ vote_for: null }).eq('room_code', onlineRoomCode);
-    await sb.from('rooms').update({ round_start_at: new Date().toISOString() }).eq('code', onlineRoomCode);
+    await hostStartRoundTimer();
   }
 }
 
@@ -3963,10 +3996,11 @@ function updateOnlineTimerDisplay(sec){
 async function confirmEndOnlineRound(){
   const yes = await showModal({title:"کۆتایی خول", msg:"دەچیتە بەشی دەنگدان — ناچیتە دادگای مۆدی ئۆفڵاین.", icon:"warn", confirm:true});
   if(yes && isHost){
-    clearInterval(roundTimerInterval);
-    await sb.from('rooms').update({ status:'voting' }).eq('code', onlineRoomCode);
+    await sb.from('room_players').update({ vote_for: null }).eq('room_code', onlineRoomCode);
+    await hostStartRoundTimer();
   }
 }
+let onlineAlreadyReady = false;
 
 /* ── دەنگدان ── */
 /* ── هاوکاتکردنی UI بۆ گۆڕانی لیستی یاریزانان (کیک/چوونەژوورەوە) ── */
