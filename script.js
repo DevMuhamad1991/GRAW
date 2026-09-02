@@ -1132,6 +1132,34 @@ async function loadOnlineStats(){
     return;
   }
 
+  const topGames = [...users].filter(u=>u.total_games>0).sort((a,b)=>(b.total_games||0)-(a.total_games||0)).slice(0,10);
+  const topSpy = [...users].filter(u=>u.spy_wins>0).sort((a,b)=>(b.spy_wins||0)-(a.spy_wins||0)).slice(0,10);
+  const topDet = [...users].filter(u=>u.detective_wins>0).sort((a,b)=>(b.detective_wins||0)-(a.detective_wins||0)).slice(0,10);
+
+  const gamesIcon = `<svg viewBox="0 0 24 24" width="18" height="18" fill="#111"><path d="M15 7.5V2H9v5.5l3 3 3-3zM7.5 9H2v6h5.5l3-3-3-3zM9 16.5V22h6v-5.5l-3-3-3 3zM16.5 9l-3 3 3 3H22V9h-5.5z"/></svg>`;
+  const spyIcon = `<svg viewBox="0 0 24 24" width="18" height="18" fill="#111"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>`;
+  const detIcon = `<svg viewBox="0 0 24 24" width="18" height="18" fill="#111"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>`;
+
+  box.innerHTML =
+    buildOnlineStatSection('چالاکترین یاریزانەکان', gamesIcon, topGames, 'total_games') +
+    buildOnlineStatSection('باشترین سیخورەکان', spyIcon, topSpy, 'spy_wins') +
+    buildOnlineStatSection('باشترین لێکۆڵەرەکان', detIcon, topDet, 'detective_wins');
+}
+
+  const box = document.getElementById('onlineStatsContent');
+  if(!box) return;
+  box.innerHTML = '<div class="stat-empty">چاوەڕوانبە...</div>';
+
+  const { data: users, error } = await sb.from('app_users')
+    .select('username,avatar_seed,is_verified,frame_style,card_theme,total_games,spy_wins,detective_wins,vip_until')
+    .order('total_games', { ascending:false })
+    .limit(200);
+
+  if(error || !users){
+    box.innerHTML = '<div class="stat-empty">نەتوانرا ئامار بار بکرێت</div>';
+    return;
+  }
+
   _statUsersCache = users;
   renderStatCategory();
 }
