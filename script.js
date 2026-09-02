@@ -1543,11 +1543,12 @@ function switchAuthTab(tab){
     ? '<path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>'
     : '<path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>';
   const btn = document.getElementById('authSubmitBtn');
-  btn.style.background = tab==='login' ? '' : 'linear-gradient(135deg,#22c55e,#16a34a)';
-  btn.style.color = tab==='login' ? '' : '#fff';
-  btn.style.boxShadow = tab==='login' ? '' : '0 6px 20px rgba(34,197,94,.35)';
+  btn.style.background = tab==='login' ? 'linear-gradient(135deg,#3b82f6,#2563eb)' : 'linear-gradient(135deg,#22c55e,#16a34a)';
+  btn.style.color = '#fff';
+  btn.style.boxShadow = tab==='login' ? '0 6px 20px rgba(59,130,246,.35)' : '0 6px 20px rgba(34,197,94,.35)';
   document.getElementById('authErrMsg').style.display = 'none';
 }
+
 function onAuthUsernameInput(){
   const input = document.getElementById('authUsername');
   const cleaned = input.value.replace(/[^\u0600-\u06FF\u200c\s]/g,'');
