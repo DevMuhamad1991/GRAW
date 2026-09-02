@@ -2804,13 +2804,11 @@ function renderChatQuickButtons(){
 renderChatQuickButtons();
 
 function showChatFab(){
-  document.getElementById('chatFab')?.classList.remove('hidden');
-  document.getElementById('leaveRoomFab')?.classList.remove('hidden');
+  document.getElementById('chatFabWrap')?.classList.remove('hidden');
   syncChatMuteUI();
 }
 function hideChatFab(){
-  document.getElementById('chatFab')?.classList.add('hidden');
-  document.getElementById('leaveRoomFab')?.classList.add('hidden');
+  document.getElementById('chatFabWrap')?.classList.add('hidden');
   document.getElementById('chatPanel')?.classList.remove('open');
   chatOpen = false;
 }
