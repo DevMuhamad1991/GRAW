@@ -2772,9 +2772,38 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 .join-toast-text b{color:#ffd400;}
 
 /* ══ CHAT ══ */
-.chat-fab{position:fixed;bottom:clamp(90px,20vw,110px);left:clamp(14px,4vw,26px);width:56px;height:56px;border-radius:50%;background:#ffd400;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(255,188,0,.4);z-index:900;transition:transform .3s cubic-bezier(.34,1.56,.64,1);}
+.chat-fab-wrap{
+  position:fixed;bottom:clamp(90px,20vw,110px);left:clamp(14px,4vw,26px);
+  z-index:900;
+}
+.chat-fab-wrap.hidden{display:none;}
+.chat-fab{
+  position:relative;
+  width:58px;height:58px;
+  border-radius:20px;
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+  border:none;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 28px rgba(37,99,235,.4), 0 0 0 1px rgba(255,255,255,.1) inset;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
+}
 .chat-fab:active{transform:scale(.92);}
-.chat-badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:#ff3b3b;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #fff;}
+.chat-badge{position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:#ff3b3b;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #fff;}
+.leave-room-fab{
+  position:absolute;
+  top:-8px;left:-8px;
+  width:26px;height:26px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+  border:2.5px solid #fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(239,68,68,.45);
+  cursor:pointer;
+  z-index:2;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.leave-room-fab:active{transform:scale(.85);}
+.leave-room-fab svg{width:13px;height:13px;}
 .chat-panel{position:fixed;left:0;right:0;bottom:0;max-width:540px;margin:0 auto;background:#fff;border-radius:28px 28px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.2);z-index:950;display:flex;flex-direction:column;height:min(64vh,520px);transform:translateY(105%);transition:transform .35s cubic-bezier(.34,1.1,.64,1), height .3s cubic-bezier(.34,1.1,.64,1), border-radius .3s ease;overscroll-behavior:contain;touch-action:none;}
 .chat-panel.open{transform:translateY(0);}
 .chat-panel.fullscreen{height:100dvh;border-radius:0;}
@@ -4144,16 +4173,17 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 <div class="suggestion-portal" id="suggPortal"></div>
 <div id="joinToastStack" style="position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:5000;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;"></div>
 
-<!-- LEAVE ROOM -->
-<button class="chat-fab hidden" id="leaveRoomFab" style="left:auto;right:clamp(14px,4vw,26px);background:#ff4d4d;" onclick="vib();confirmLeaveOnlineGame()">
-  <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-</button>
+<!-- CHAT + LEAVE ROOM -->
+<div class="chat-fab-wrap hidden" id="chatFabWrap">
+  <div class="leave-room-fab" id="leaveRoomFab" onclick="vib();confirmLeaveOnlineGame()" title="دەرچوون لە ژوور">
+    <svg viewBox="0 0 24 24" fill="#fff"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+  </div>
+  <button class="chat-fab" id="chatFab" onclick="vib();toggleChatPanel()">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    <span class="chat-badge hidden" id="chatBadge">0</span>
+  </button>
+</div>
 
-<!-- CHAT -->
-<button class="chat-fab hidden" id="chatFab" onclick="vib();toggleChatPanel()">
-  <svg viewBox="0 0 24 24" width="26" height="26" fill="#111"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-  <span class="chat-badge hidden" id="chatBadge">0</span>
-</button>
 <div class="chat-panel" id="chatPanel">
   <div class="chat-drag-handle" id="chatDragHandle"></div>
   <div class="chat-header">
