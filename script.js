@@ -4000,7 +4000,6 @@ async function confirmEndOnlineRound(){
     await hostStartRoundTimer();
   }
 }
-let onlineAlreadyReady = false;
 
 /* ── دەنگدان ── */
 /* ── هاوکاتکردنی UI بۆ گۆڕانی لیستی یاریزانان (کیک/چوونەژوورەوە) ── */
