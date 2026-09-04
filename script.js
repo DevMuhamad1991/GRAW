@@ -1073,6 +1073,12 @@ let _statUsersCache = null;
 function renderStatCategory(){
   const box = document.getElementById('onlineStatsContent');
   if(!box || !_statUsersCache) return;
+
+  if(currentStatCategory === 'vip'){
+    renderVipStatCategory(box);
+    return;
+  }
+
   const cfg = statCategoryConfig[currentStatCategory];
   const sorted = [..._statUsersCache].filter(u => (u[cfg.key]||0) > 0).sort((a,b) => (b[cfg.key]||0) - (a[cfg.key]||0));
 
@@ -1096,6 +1102,57 @@ function renderStatCategory(){
       html += `<div class="stat-section">` + rest.map((u,i) => buildOnlineStatRow(u, u[cfg.key]||0, i+4)).join('') + `</div>`;
     }
   }
+  box.innerHTML = html;
+}
+
+function buildVipStatRow(u, rank){
+  const frameClass = vipFrameClass(u.frame_style);
+  const rankClass = rank<=3 ? ' rank-'+rank : '';
+  const verifiedIco = u.is_verified
+    ? ` <svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align:-2px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>`
+    : '';
+  const daysLeft = Math.max(0, Math.ceil((new Date(u.vip_until) - new Date())/(24*60*60*1000)));
+  return `
+    <div class="player-item" style="margin-bottom:8px;">
+      <div class="stat-rank-num${rankClass}">${rank}</div>
+      <div class="avatar ${frameClass}"><div class="avatar-clip"><img src="${avatarUrl(u.avatar_seed)}" loading="lazy"></div></div>
+      <div class="player-name">${u.username}${verifiedIco}</div>
+      <div class="vip-days-badge">${toKurdishNum(daysLeft)} ڕۆژ</div>
+    </div>`;
+}
+
+function renderVipStatCategory(box){
+  const vipUsers = _statUsersCache.filter(u => isVipActive(u))
+    .sort((a,b) => new Date(b.vip_until) - new Date(a.vip_until));
+
+  let html = '';
+
+  if(currentUser){
+    if(isVipActive(currentUser)){
+      const daysLeft = Math.max(0, Math.ceil((new Date(currentUser.vip_until) - new Date())/(24*60*60*1000)));
+      html += `
+        <div class="stat-your-rank" style="border-color:#4fc3f755;">
+          <div class="stat-your-rank-label">پاکێتی تۆ</div>
+          <div class="stat-your-rank-row">
+            <div class="avatar ${vipFrameClass(currentUser.frame_style)}"><div class="avatar-clip"><img src="${avatarUrl(currentUser.avatar_seed)}" loading="lazy"></div></div>
+            <div class="stat-your-rank-name">${currentUser.username}</div>
+            <div class="vip-days-badge">${toKurdishNum(daysLeft)} ڕۆژ</div>
+          </div>
+        </div>`;
+    } else {
+      html += `
+        <div class="stat-your-rank" style="border-color:#4fc3f755;text-align:center;">
+          <div style="font-size:13px;font-weight:800;color:#888;">هێشتا پاکێتی VIP چالاک نەکردووە</div>
+        </div>`;
+    }
+  }
+
+  if(vipUsers.length === 0){
+    html += `<div class="stat-empty">هێشتا کەس پاکێتی VIP چالاک نەکردووە</div>`;
+  } else {
+    html += `<div class="stat-section">` + vipUsers.map((u,i) => buildVipStatRow(u, i+1)).join('') + `</div>`;
+  }
+
   box.innerHTML = html;
 }
 
