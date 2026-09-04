@@ -1713,8 +1713,7 @@ background: rgba(0,0,0,.2);
 .vip-frame-spy::before{ background: conic-gradient(from 0deg, #ff3b3b, #111 25%, #ff3b3b 50%, #7a0000 75%, #ff3b3b); }
 .vip-frame-electric::before{ background: conic-gradient(from 0deg, #00e5ff, #0d6efd 25%, #00e5ff 50%, #003a5c 75%, #00e5ff); }
 @keyframes vipRingSpin{ to { transform: rotate(360deg); } }
-.vip-mini-badge{position:absolute;bottom:-3px;left:-3px;width:16px;height:16px;border-radius:50%;background:#1da1f2;border:2px solid #fff;display:flex;align-items:center;justify-content:center;z-index:2;}
-.vip-mini-badge svg{width:9px;height:9px;fill:#fff;}
+.vip-mini-badge{position:absolute;bottom:-3px;left:-3px;display:flex;align-items:center;justify-content:center;z-index:2;}
 .vip-lock-badge{
   position:absolute;top:14px;left:14px;z-index:2;
   display:inline-flex;align-items:center;gap:5px;
@@ -3316,8 +3315,8 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <div style="font-weight:800;font-size:var(--fs-lg);" id="profileUsernameText"></div>
-          <div id="profileVerifiedBadge" class="hidden" style="width:30px;height:30px;border-radius:50%;background:#1da1f2;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg viewBox="0 0 24 24" width="17" height="17" fill="#fff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                  <div id="profileVerifiedBadge" class="hidden" style="display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="30" height="30"><path fill="#1877F2" d="M22 11.5c0-1.06-.62-1.97-1.5-2.4.14-.94-.16-1.94-.87-2.65-.71-.71-1.71-1.01-2.65-.87-.43-.88-1.34-1.5-2.4-1.5s-1.97.62-2.4 1.5c-.94-.14-1.94.16-2.65.87-.71.71-1.01 1.71-.87 2.65-.88.43-1.5 1.34-1.5 2.4s.62 1.97 1.5 2.4c-.14.94.16 1.94.87 2.65.71.71 1.71 1.01 2.65.87.43.88 1.34 1.5 2.4 1.5s1.97-.62 2.4-1.5c.94.14 1.94-.16 2.65-.87.71-.71 1.01-1.71.87-2.65.88-.43 1.5-1.34 1.5-2.4z"/><path fill="#fff" d="M10.09 14.72l-2.3-2.3-1.06 1.06 3.36 3.36 6.18-6.18-1.06-1.06z"/></svg>
           </div>
         </div>
         <div style="font-size:12px;font-weight:700;color:#22c55e;background:rgba(34,197,94,.1);padding:4px 12px;border-radius:100px;">یاریزانی سیخوڕ</div>
