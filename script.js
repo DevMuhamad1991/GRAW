@@ -1031,7 +1031,7 @@ function buildYourRankCard(user, rank, val, cfg){
 function buildPodiumFirst(u, cfg){
   const vip = isVipActive(u);
   const frameClass = vip ? vipFrameClass(u.frame_style) : '';
-  const verifiedIco = u.is_verified ? ` <svg viewBox="0 0 24 24" width="15" height="15"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : '';
+  const verifiedIco = u.is_verified ? ` ${verifiedBadgeSvg(15)}` : '';
   return `
     <div class="stat-podium-first">
       <div class="stat-podium-crown"><svg viewBox="0 0 24 24" width="22" height="22" fill="${cfg.color}"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z"/></svg></div>
@@ -1109,17 +1109,17 @@ function buildVipStatRow(u, rank){
   const frameClass = vipFrameClass(u.frame_style);
   const rankClass = rank<=3 ? ' rank-'+rank : '';
   const verifiedIco = u.is_verified
-    ? ` <svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align:-2px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>`
+    ? ` ${verifiedBadgeSvg(14)}`
     : '';
   const daysLeft = Math.max(0, Math.ceil((new Date(u.vip_until) - new Date())/(24*60*60*1000)));
   return `
-    <div class="player-item" style="margin-bottom:8px;">
+    <div class="player-item vip-list-row" style="margin-bottom:8px;">
       <div class="stat-rank-num${rankClass}">${rank}</div>
       <div class="avatar ${frameClass}"><div class="avatar-clip"><img src="${avatarUrl(u.avatar_seed)}" loading="lazy"></div></div>
       <div class="player-name">${u.username}${verifiedIco}</div>
       <div class="vip-days-badge">${toKurdishNum(daysLeft)} ڕۆژ</div>
     </div>`;
-}
+
 
 function renderVipStatCategory(box){
   const vipUsers = _statUsersCache.filter(u => isVipActive(u))
@@ -1162,7 +1162,7 @@ function buildOnlineStatRow(u, val, rank){
   const frameClass = vip ? vipFrameClass(u.frame_style) : '';
   const rankClass = rank<=3 ? ' rank-'+rank : '';
   const verifiedIco = u.is_verified
-    ? ` <svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align:-2px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>`
+    ? ` ${verifiedBadgeSvg(14)}`
     : '';
   return `
     <div class="player-item${themeClass}" style="margin-bottom:8px;">
@@ -1421,8 +1421,12 @@ function vipFrameIconSvg(id){
   if(id==='electric') return '<svg viewBox="0 0 24 24" width="16" height="16"><path d="M11 21h-1l1-7H7l6-11h1l-1 7h4l-6 11z" fill="#00e5ff"/></svg>';
   return '';
 }
+function verifiedBadgeSvg(size){
+  size = size || 14;
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" style="vertical-align:-2px;flex-shrink:0;"><path fill="#1877F2" d="M22 11.5c0-1.06-.62-1.97-1.5-2.4.14-.94-.16-1.94-.87-2.65-.71-.71-1.71-1.01-2.65-.87-.43-.88-1.34-1.5-2.4-1.5s-1.97.62-2.4 1.5c-.94-.14-1.94.16-2.65.87-.71.71-1.01 1.71-.87 2.65-.88.43-1.5 1.34-1.5 2.4s.62 1.97 1.5 2.4c-.14.94.16 1.94.87 2.65.71.71 1.71 1.01 2.65.87.43.88 1.34 1.5 2.4 1.5s1.97-.62 2.4-1.5c.94.14 1.94-.16 2.65-.87.71-.71 1.01-1.71.87-2.65.88-.43 1.5-1.34 1.5-2.4z"/><path fill="#fff" d="M10.09 14.72l-2.3-2.3-1.06 1.06 3.36 3.36 6.18-6.18-1.06-1.06z"/></svg>`;
+}
 function vipBadgeHtml(isVerified){
-  return isVerified ? `<div class="vip-mini-badge"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>` : '';
+  return isVerified ? `<div class="vip-mini-badge">${verifiedBadgeSvg(11)}</div>` : '';
 }
 
 async function redeemVipCode(){
@@ -3150,7 +3154,7 @@ onclick="vib('medium');toggleMutePlayer('${payload.clientId}')">
         }</button>`
     : '';
   const vipNameHtml = payload.isVerified
-    ? `<div class="chat-msg-name" style="color:#c8960a;display:flex;align-items:center;gap:4px;">${payload.name}<svg viewBox="0 0 24 24" width="11" height="11"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z" fill="#ffd400"/></svg></div>`
+    ? `<div class="chat-msg-name" style="color:#1877F2;display:flex;align-items:center;gap:4px;">${payload.name}${verifiedBadgeSvg(11)}</div>`
     : `<div class="chat-msg-name">${payload.name}</div>`;
   div.innerHTML = `<div class="chat-msg-avatar ${vipFrameClass(payload.frameStyle)}"><img src="${avatarUrl(payload.avatarSeed)}" loading="lazy"></div>
     <div class="chat-msg-bubble" style="${payload.isVerified ? 'border:1.5px solid rgba(255,212,0,.5);background:linear-gradient(135deg,#fffbe8,#fff5cc);' : ''}">${isMine ? '' : vipNameHtml}<div>${payload.text}</div></div>
@@ -3332,7 +3336,7 @@ function buildRoomCard(code){
     ? '<svg viewBox="0 0 24 24" width="11" height="11" fill="#fff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>'
     : '<svg viewBox="0 0 24 24" width="11" height="11" fill="#fff"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>';
   const roomTypeLabel = r.isPublic ? '' : ' — تایبەت';
-  const verifiedIco = r.isVerified ? ` <svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : '';
+  const verifiedIco = r.isVerified ? ` ${verifiedBadgeSvg(15)}` : '';
   div.innerHTML = `
     <div class="avatar-disc-wrap">
     <div class="avatar ${vipFrameClass(r.frameStyle)}"><img src="${avatarUrl(r.avatarSeed)}" loading="lazy"></div>
@@ -3765,7 +3769,7 @@ function refreshLobbyPlayersUI(){
           : '<svg viewBox="0 0 24 24" width="16" height="16" fill="#555"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>'
         }</button>` : ''}`;
     const crownIco = p.is_host ? `<svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px;flex-shrink:0;"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z" fill="#ffd400"/></svg>` : '';
-    const verifiedIco = p.is_verified ? ` <svg viewBox="0 0 24 24" width="17" height="17" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : '';
+    const verifiedIco = p.is_verified ? ` ${verifiedBadgeSvg(17)}` : '';
     const muteIco = p.is_muted ? ` <svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align:-2px"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="#c62828" opacity=".85"/><line x1="3" y1="3" x2="21" y2="21" stroke="#fff7cf" stroke-width="2.4"/></svg>` : '';
     div.innerHTML = `<div class="avatar-disc-wrap"><div class="avatar ${vipFrameClass(p.frame_style)}" style="position:relative;"><img src="${avatarUrl(p.avatar_seed)}"></div><div class="disc-badge-lobby">🔌</div></div>
       <div class="player-name">${p.name}${verifiedIco}<span data-mute-emoji="${p.client_id}">${muteIco}</span></div>
@@ -4208,7 +4212,7 @@ function refreshOnlineVoteList(){
     if(p.client_id === prevSelected) stillValid = true;
     div.onclick = ()=>{ vib('light'); selectOnlineVote(p.client_id, div); };
     div.innerHTML = `<div class="dadga-suspect-avatar ${vipFrameClass(p.frame_style)}"><img src="${avatarUrl(p.avatar_seed)}"></div>
-      <div class="dadga-suspect-name">${p.name}${p.is_verified ? ` <svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-3px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : ''}</div>
+      <div class="dadga-suspect-name">${p.name}${p.is_verified ? ` ${verifiedBadgeSvg(15)}` : ''}</div>
       <div class="dadga-suspect-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>`;
     list.appendChild(div);
   });
