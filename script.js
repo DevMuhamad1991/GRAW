@@ -1119,7 +1119,7 @@ function buildVipStatRow(u, rank){
       <div class="player-name">${u.username}${verifiedIco}</div>
       <div class="vip-days-badge">${toKurdishNum(daysLeft)} ڕۆژ</div>
     </div>`;
-
+}
 
 function renderVipStatCategory(box){
   const vipUsers = _statUsersCache.filter(u => isVipActive(u))
@@ -4056,7 +4056,7 @@ function renderReadyStatus(){
         <div class="ready-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
         <div class="disc-badge">🔴</div>
       </div>
-       <div class="ready-name">${p.name}${p.is_verified ? ` <svg viewBox="0 0 24 24" width="12" height="12" style="vertical-align:-2px"><circle cx="12" cy="12" r="11" fill="#1da1f2"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="#fff"/></svg>` : ''}</div>
+       <div class="ready-name">${p.name}${p.is_verified ? ` ${verifiedBadgeSvg(12)}` : ''}</div>
       <div class="ready-ping ${pingClass(pingMs)}" data-ping="${p.client_id}">${pingMs>0?pingMs+' ms':'...'}</div>`;
     box.appendChild(slot);
   });
