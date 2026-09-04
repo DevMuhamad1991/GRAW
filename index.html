@@ -2753,6 +2753,8 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
 .mode-btn.active{background:#111;color:#ffd400;}
 #modeOffline.active{background:#888 !important;color:#fff !important;}
 #modeOnline.active{background:#22c55e !important;color:#fff !important;}
+#scoringOn.active,#lobbyScoringOn.active{background:#22c55e !important;color:#fff !important;}
+#scoringOff.active,#lobbyScoringOff.active{background:#ff4d4d !important;color:#fff !important;}
 
 .room-code-box{
   background:linear-gradient(135deg,#111,#2a2a2a);
@@ -3224,7 +3226,6 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
           <button class="mode-btn" id="scoringOff" onclick="toggleScoring(false)">ناچالاک</button>
         </div>
       </div>
-
       
     </div>
   </div>
@@ -4080,13 +4081,13 @@ background: linear-gradient(160deg, #ffffff 0%, #fafafa 40%, #fff9f0 100%);
             <option value="300">5 خولەک</option>
           </select>
         </div>
-      </div>
-    </div>
-    <div class="glass input-card">
-      <label>هەژمارکردنی خاڵ</label>
-      <div class="mode-toggle">
-        <button class="mode-btn active" id="lobbyScoringOn" onclick="toggleOnlineScoring(true)">چالاک</button>
-        <button class="mode-btn" id="lobbyScoringOff" onclick="toggleOnlineScoring(false)">ناچالاک</button>
+        <div>
+          <label>هەژمارکردنی خاڵ</label>
+          <div class="mode-toggle">
+            <button class="mode-btn active" id="lobbyScoringOn" onclick="toggleOnlineScoring(true)">چالاک</button>
+            <button class="mode-btn" id="lobbyScoringOff" onclick="toggleOnlineScoring(false)">ناچالاک</button>
+          </div>
+        </div>
       </div>
     </div>
     <button class="start-btn" id="lobbyStartBtn" onclick="vib('medium');startOnlineGame()">دەستپێکردنی یاری</button>
