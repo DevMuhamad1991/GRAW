@@ -59,6 +59,13 @@ function initDefaultOnlineMode(){
 document.addEventListener('DOMContentLoaded', initDefaultOnlineMode);
 
 let players=[],playerAvatarIndexes=[],selectedCategories=[],selectedCategory="";
+let scoringEnabled=true;
+function toggleScoring(on){
+  scoringEnabled = on;
+  vib();
+  document.getElementById('scoringOn').classList.toggle('active', on);
+  document.getElementById('scoringOff').classList.toggle('active', !on);
+}
 let currentIndex=0,spyIndexes=[],gameWord="",usedWords=[];
 let holdTimer,timerInterval,currentTime=0,timerStarted=false,isPaused=false,cardWasOpened=false;
 let suggBlurTimer=null;
@@ -693,7 +700,7 @@ function finishRound(){
   vib('double');
   document.getElementById("timer").innerText="END";
   document.getElementById("timer").style.color="#d60000";
-setTimeout(()=>openDadga(), 300);
+setTimeout(()=> scoringEnabled ? openDadga() : showResults(), 300);
 }
 function updateTimer(sec){
   const m=Math.floor(sec/60).toString().padStart(2,"0");
@@ -2858,6 +2865,13 @@ function isOnlyReadyDiff(oldP, newRow){
 }
 
 let gameMode = 'offline';
+let onlineScoringEnabled = true;
+function toggleOnlineScoring(on){
+  onlineScoringEnabled = on;
+  vib();
+  document.getElementById('lobbyScoringOn').classList.toggle('active', on);
+  document.getElementById('lobbyScoringOff').classList.toggle('active', !on);
+}
 let onlineRoomCode = null;
 let isHost = false;
 let onlinePlayers = [];
@@ -3825,14 +3839,16 @@ async function startOnlineGame(){
   const spyIds = shuffled.slice(0, Math.min(spyCount, onlinePlayers.length-1)).map(p=>p.client_id);
   const gameTime = parseInt(document.getElementById('lobbyGameTime').value);
 
-  await sb.from('room_players').update({ vote_for: null }).eq('room_code', onlineRoomCode);
+    await sb.from('room_players').update({ vote_for: null }).eq('room_code', onlineRoomCode);
   await sb.from('rooms').update({
     status: 'playing', game_word: chosen.w, current_category: chosen.c,
-    spy_client_ids: spyIds, game_time: gameTime, round_start_at: null
+    spy_client_ids: spyIds, game_time: gameTime, round_start_at: null,
+    scoring_enabled: onlineScoringEnabled
   }).eq('code', onlineRoomCode);
 }
 /* ── وەرگرتنی گۆڕانکاری ژوور بۆ هەموو ئامێرەکان ── */
 function onRoomUpdate(room){
+  onlineScoringEnabled = room.scoring_enabled !== false;
   if(room.status === 'playing'){
     if(room.round_start_at){ showOnlineTimerScreen(room); }
     else { showOnlineCard(room); }
@@ -4078,7 +4094,11 @@ function startOnlineTimer(room){
     updateOnlineTimerDisplay(left);
     if(left <= 0){
       clearInterval(roundTimerInterval);
-      if(isHost) sb.from('rooms').update({ status:'voting' }).eq('code', onlineRoomCode);
+      if(isHost){
+        onlineScoringEnabled
+          ? sb.from('rooms').update({ status:'voting' }).eq('code', onlineRoomCode)
+          : sb.from('rooms').update({ status:'reveal' }).eq('code', onlineRoomCode);
+      }
     }
   };
   tick();
@@ -4096,7 +4116,7 @@ async function confirmEndOnlineRound(){
   if(yes && isHost){
     clearInterval(roundTimerInterval);
     await sb.from('room_players').update({ vote_for: null }).eq('room_code', onlineRoomCode);
-    await sb.from('rooms').update({ status:'voting' }).eq('code', onlineRoomCode);
+    await sb.from('rooms').update({ status: onlineScoringEnabled ? 'voting' : 'reveal' }).eq('code', onlineRoomCode);
   }
 }
 
@@ -4227,10 +4247,9 @@ async function finalizeOnlineRound(accusedId, spyWon, spyIds, players){
   await sb.from('room_players').update({ vote_for: null }).eq('room_code', onlineRoomCode);
   await sb.from('rooms').update({ status:'reveal', accused_id: null, spy_guess_correct: null }).eq('code', onlineRoomCode);
 }
-
-/* ── ئاشکراکردن ── */
 /* ── ئاشکراکردن ── */
 async function showOnlineReveal(room){
+  if(!room.scoring_enabled) onlineLastRoundPoints = {};
   showScreen('onlineRevealScreen');
   showChatFab();
   const spyNames = onlinePlayers.filter(p=>(room.spy_client_ids||[]).includes(p.client_id)).map(p=>p.name).join('، ');
