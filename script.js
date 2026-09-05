@@ -1848,8 +1848,10 @@ function renderAuthOrProfile(){
       document.getElementById('profileCard').classList.add('theme-' + currentUser.card_theme);
     }
     document.getElementById('vipPricingWrap').classList.toggle('hidden', vip);
-    document.getElementById('vipRedeemInputWrap').classList.toggle('hidden', vip);
     document.getElementById('vipActiveStatusWrap').classList.toggle('hidden', !vip);
+    document.getElementById('vipRedeemSubText').innerText = vip
+      ? 'کۆدێکی تر بنووسە بۆ زیادکردنی ماوەکەت'
+      : 'ئیتارەی تایبەت، ڕەنگی کارتی لۆبی، هێمای پشتڕاستکراوی و زیاتر';
     document.getElementById('profileVipStatusRow').classList.toggle('hidden', !vip);
     document.getElementById('vipCustomizeSection').classList.toggle('vip-locked', !vip);
     document.getElementById('vipLockBadge').classList.toggle('hidden', vip);
