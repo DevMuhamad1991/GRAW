@@ -93,6 +93,7 @@ function toggleScoring(on){
   document.getElementById('scoringOff').classList.toggle('active', !on);
 }
 let currentIndex=0,spyIndexes=[],gameWord="",usedWords=[];
+let spyBag=[],starterBag=[];
 let holdTimer,timerInterval,currentTime=0,timerStarted=false,isPaused=false,cardWasOpened=false;
 let suggBlurTimer=null;
 let customWords = [];
@@ -558,6 +559,7 @@ function addPlayer(value){
   if(players.length>=10){vib('error');showModal({title:"سنووری زیاتری",msg:"زیاتر لە ١٠ یاریزان ناکرێت تۆمار بکرێت.",icon:"warn"});return;}
   players.push(value);
   playerAvatarIndexes.push(getRandomAvatar());
+  spyBag=[];starterBag=[];
   vib('success');
   renderPlayers();
   const btn=document.getElementById("addBtn");
@@ -575,7 +577,7 @@ function getRandomAvatar(){
   if(available.length===0)return Math.floor(Math.random()*avatars.length);
   return available[Math.floor(Math.random()*available.length)];
 }
-function removePlayer(index){vib('medium');players.splice(index,1);playerAvatarIndexes.splice(index,1);renderPlayers();}
+function removePlayer(index){vib('medium');players.splice(index,1);playerAvatarIndexes.splice(index,1);spyBag=[];starterBag=[];renderPlayers();}
 function renderPlayers(){
   const box=document.getElementById("playersBox");
   const frag=document.createDocumentFragment();
@@ -642,7 +644,8 @@ const allPools = [];
    ? Math.floor(Math.random() * 3) + 1
    : parseInt(rawVal);
  while(spyIndexes.length < spyCount){
-   const rand = Math.floor(Math.random() * players.length);
+   if(spyBag.length === 0) spyBag = shuffleArray(players.map((_,i)=>i));
+   const rand = spyBag.shift();
    if(!spyIndexes.includes(rand)) spyIndexes.push(rand);
  }
  currentIndex = 0;
@@ -2687,7 +2690,8 @@ function updateRoundBtn() {
 
 function showStarter() {
   showScreen("screen4");
-  const starter = Math.floor(Math.random() * players.length);
+  if(starterBag.length === 0) starterBag = shuffleArray(players.map((_,i)=>i));
+  const starter = starterBag.shift();
   document.getElementById("starterName").innerText = players[starter];
   document.getElementById("starterAvatar").src = avatars[playerAvatarIndexes[starter]];
   const titleEl = document.getElementById("screen4").querySelector(".title");
@@ -2962,6 +2966,8 @@ function toggleOnlineScoring(on){
 let onlineRoomCode = null;
 let isHost = false;
 let onlinePlayers = [];
+let onlineSpyBag = [];
+let onlineStarterBag = [];
 let roomChannel = null;
 let roundTimerInterval = null;
 let onlineCardOpened = false;
@@ -3922,8 +3928,15 @@ async function startOnlineGame(){
 
   const spyCountRaw = document.getElementById('lobbySpyCount').value;
   const spyCount = spyCountRaw === 'random' ? Math.floor(Math.random()*3)+1 : parseInt(spyCountRaw);
-  const shuffled = shuffleArray(onlinePlayers);
-  const spyIds = shuffled.slice(0, Math.min(spyCount, onlinePlayers.length-1)).map(p=>p.client_id);
+  const allIds = onlinePlayers.map(p=>p.client_id);
+  onlineSpyBag = onlineSpyBag.filter(id => allIds.includes(id));
+  const spyIds = [];
+  const maxSpies = Math.min(spyCount, onlinePlayers.length-1);
+  while(spyIds.length < maxSpies){
+    if(onlineSpyBag.length === 0) onlineSpyBag = shuffleArray(allIds);
+    const id = onlineSpyBag.shift();
+    if(!spyIds.includes(id)) spyIds.push(id);
+  }
   const gameTime = parseInt(document.getElementById('lobbyGameTime').value);
 
     await sb.from('room_players').update({ vote_for: null }).eq('room_code', onlineRoomCode);
@@ -4147,7 +4160,11 @@ async function markReady(){
 }
 
 async function hostStartRoundTimer(){
-  const starter = onlinePlayers[Math.floor(Math.random()*onlinePlayers.length)];
+  const allIds = onlinePlayers.map(p=>p.client_id);
+  onlineStarterBag = onlineStarterBag.filter(id => allIds.includes(id));
+  if(onlineStarterBag.length === 0) onlineStarterBag = shuffleArray(allIds);
+  const starterId = onlineStarterBag.shift();
+  const starter = onlinePlayers.find(p=>p.client_id === starterId);
   await sb.from('rooms').update({
     round_start_at: new Date().toISOString(),
     starter_client_id: starter ? starter.client_id : null
