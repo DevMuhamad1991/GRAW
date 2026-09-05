@@ -750,7 +750,8 @@ function showResults(){
   } else {
     spyIndexes.forEach((idx,i)=>{
       const div=document.createElement("div");
-      div.className="spy-card";
+      const theme=getPlayerCardTheme(players[idx]);
+      div.className="spy-card"+(theme?' '+theme:'');
       div.style.animationDelay=(i*0.12)+"s";
       div.innerHTML=`
         <div class="spy-avatar-wrap"><img src="${avatars[playerAvatarIndexes[idx]]}" width="60" height="60"></div>
@@ -1140,9 +1141,11 @@ function buildVipStatRow(u, rank){
   const verifiedIco = u.is_verified
     ? ` ${verifiedBadgeSvg(18)}`
     : '';
+  const hasTheme = u.card_theme && u.card_theme !== 'default';
+  const rowClass = hasTheme ? ' theme-'+u.card_theme : ' vip-list-row';
   const daysLeft = Math.max(0, Math.ceil((new Date(u.vip_until) - new Date())/(24*60*60*1000)));
   return `
-    <div class="player-item vip-list-row" style="margin-bottom:8px;">
+    <div class="player-item${rowClass}" style="margin-bottom:8px;">
       <div class="stat-rank-num${rankClass}">${rank}</div>
       <div class="avatar ${frameClass}"><div class="avatar-clip"><img src="${avatarUrl(u.avatar_seed)}" loading="lazy"></div></div>
       <div class="player-name">${u.username}${verifiedIco}</div>
@@ -1442,6 +1445,12 @@ function vipFrameClass(frameStyle){
   if(frameStyle==='royal') return 'vip-frame-royal';
   if(frameStyle==='spy') return 'vip-frame-spy';
   if(frameStyle==='electric') return 'vip-frame-electric';
+  return '';
+}
+function getPlayerCardTheme(name){
+  if(currentUser && isVipActive(currentUser) && currentUser.username === name && currentUser.card_theme && currentUser.card_theme !== 'default'){
+    return 'theme-' + currentUser.card_theme;
+  }
   return '';
 }
 function vipFrameIconSvg(id){
@@ -1898,7 +1907,8 @@ function openDadga() {
   } else {
     spyIndexes.forEach((idx, i) => {
       const div = document.createElement('div');
-      div.className = 'spy-card';
+      const theme = getPlayerCardTheme(players[idx]);
+      div.className = 'spy-card'+(theme?' '+theme:'');
       div.style.animationDelay = (i * 0.12) + 's';
       div.innerHTML = `
         <div class="spy-avatar-wrap"><img src="${avatars[playerAvatarIndexes[idx]]}" width="60" height="60"></div>
@@ -1972,7 +1982,8 @@ function renderDadgaVoter() {
   players.forEach((p, i) => {
     if (i === dadgaCurrentVoterIdx) return;
     const div = document.createElement('div');
-    div.className = 'dadga-suspect-item';
+    const theme = getPlayerCardTheme(p);
+    div.className = 'dadga-suspect-item'+(theme?' '+theme:'');
     div.id = 'dsusp_' + i;
     div.onclick = () => { vib('light'); selectSuspect(i); };
     div.innerHTML = `
@@ -1989,7 +2000,6 @@ function renderDadgaVoter() {
   document.getElementById('dadgaVoteBtn').classList.remove('ready');
   document.getElementById('dadgaVoteBtn').dataset.selected = '';
 }
-
 let dadgaSelectedIdx = -1;
 function selectSuspect(idx) {
   dadgaSelectedIdx = idx;
@@ -2189,10 +2199,11 @@ function nextPhase3Spy() {
   updateDadgaStep(3);
   document.getElementById('dadgaPhase2').classList.add('hidden');
   document.getElementById('dadgaPhase3').classList.remove('hidden');
-
   document.getElementById('dadgaSpyAvatar').src = avatars[playerAvatarIndexes[spyIdx]];
   document.getElementById('dadgaSpyRevealName').innerText = spyName;
   document.getElementById('dadgaGuessInput').value = '';
+  const spyTheme = getPlayerCardTheme(spyName);
+  document.getElementById('dadgaSpyRevealCard').className = 'dadga-spy-reveal'+(spyTheme?' '+spyTheme:'');
 }
 
 function checkSpyGuess(adminSaysCorrect) {
@@ -2257,7 +2268,8 @@ function renderTieVoter() {
     if (name === voter) return;
     const idx = players.indexOf(name);
     const div = document.createElement('div');
-    div.className = 'dadga-suspect-item';
+    const theme = getPlayerCardTheme(name);
+    div.className = 'dadga-suspect-item'+(theme?' '+theme:'');
     div.id = 'dsusp_' + idx;
     div.onclick = () => { vib('light'); selectSuspect(idx); };
     div.innerHTML = `
@@ -3965,6 +3977,8 @@ function showOnlineLastChance(room){
   const accusedPlayer = onlinePlayers.find(p=>p.client_id === room.accused_id);
   document.getElementById('onlineLastChanceAvatar').src = accusedPlayer ? avatarUrl(accusedPlayer.avatar_seed) : '';
   document.getElementById('onlineLastChanceName').innerText = accusedPlayer ? accusedPlayer.name : '';
+  const accTheme = accusedPlayer && accusedPlayer.card_theme && accusedPlayer.card_theme!=='default' ? 'theme-'+accusedPlayer.card_theme : '';
+  document.getElementById('onlineLastChanceCard').className = 'dadga-spy-reveal'+(accTheme?' '+accTheme:'');
   const isMe = CLIENT_ID === room.accused_id;
   document.getElementById('onlineLastChanceSelfBox').classList.toggle('hidden', !isMe);
   document.getElementById('onlineLastChanceWaitBox').classList.toggle('hidden', isMe);
@@ -4356,10 +4370,27 @@ async function showOnlineReveal(room){
   if(!room.scoring_enabled) onlineLastRoundPoints = {};
   showScreen('onlineRevealScreen');
   showChatFab();
-  const spyNames = onlinePlayers.filter(p=>(room.spy_client_ids||[]).includes(p.client_id)).map(p=>p.name).join('، ');
+  const spies = onlinePlayers.filter(p=>(room.spy_client_ids||[]).includes(p.client_id));
   document.getElementById('onlineRevealWord').innerText = room.game_word;
   document.getElementById('onlineRevealCat').innerText = 'جۆری وشەکە: ' + room.current_category;
-  document.getElementById('onlineRevealSpies').innerText = spyNames || 'نەدۆزرایەوە';
+  const spiesBox = document.getElementById('onlineRevealSpies');
+  if(spies.length === 0){
+    spiesBox.innerHTML = '<div class="no-spies-badge">نەدۆزرایەوە</div>';
+  } else {
+    spiesBox.innerHTML = spies.map((p,i)=>{
+      const theme = p.card_theme && p.card_theme!=='default' ? ' theme-'+p.card_theme : '';
+      const verifiedIco = p.is_verified ? ` ${verifiedBadgeSvg(16)}` : '';
+      return `
+        <div class="spy-card${theme}" style="animation-delay:${i*0.12}s">
+          <div class="spy-avatar-wrap"><img src="${avatarUrl(p.avatar_seed)}" loading="lazy"></div>
+          <div class="spy-card-info">
+            <div class="spy-card-name">${p.name}${verifiedIco}</div>
+            <div class="spy-card-tag"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg>سیخور</div>
+          </div>
+          <div class="spy-shield"><svg viewBox="0 0 24 24"><path d="M12 2L4 7v5c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V7l-8-5z"/></svg></div>
+        </div>`;
+    }).join('');
+  }
   const nextBtn = document.getElementById('onlineNextRoundBtn');
   nextBtn.innerText = `خولی ${(room.current_round || 1) + 1}`;
   nextBtn.classList.toggle('hidden', !isHost);
